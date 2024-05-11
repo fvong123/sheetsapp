@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { createRouteHandlerClient } from "@supabase/auth-helpers-nextjs";
 import { cookies } from "next/headers";
-import { createCheckout } from "@/libs/stripe";
+import { createCheckout } from "../../../../libs/stripe";
 
 // This function is used to create a Stripe Checkout Session (one-time payment or subscription)
 // It's called by the <ButtonCheckout /> component
@@ -19,7 +19,7 @@ export async function POST(req) {
     if (!session) {
       return NextResponse.json(
         { error: "You must be logged in to make a purchase." },
-        { status: 401 }
+        { status: 401 },
       );
     }
 
@@ -30,12 +30,12 @@ export async function POST(req) {
     if (!priceId) {
       return NextResponse.json(
         { error: "Price ID is required" },
-        { status: 400 }
+        { status: 400 },
       );
     } else if (!successUrl || !cancelUrl) {
       return NextResponse.json(
         { error: "Success and cancel URLs are required" },
-        { status: 400 }
+        { status: 400 },
       );
     } else if (!body.mode) {
       return NextResponse.json(
@@ -43,7 +43,7 @@ export async function POST(req) {
           error:
             "Mode is required (either 'payment' for one-time payments or 'subscription' for recurring subscription)",
         },
-        { status: 400 }
+        { status: 400 },
       );
     }
 

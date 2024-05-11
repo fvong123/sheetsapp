@@ -1,4 +1,4 @@
-import config from "@/config";
+import config from "../config";
 const formData = require("form-data");
 const Mailgun = require("mailgun.js");
 const mailgun = new Mailgun(formData);

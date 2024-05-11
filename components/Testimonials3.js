@@ -1,5 +1,5 @@
 import Image from "next/image";
-import config from "@/config";
+import config from "../config";
 
 // The list of your testimonials. It needs 3 items to fill the row.
 const list = [

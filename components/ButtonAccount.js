@@ -4,7 +4,7 @@
 import { useState, useEffect } from "react";
 import { Popover, Transition } from "@headlessui/react";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
-import apiClient from "@/libs/api";
+import apiClient from "../libs/api";
 
 // A button to show user some account actions
 //  1. Billing: open a Stripe Customer Portal to manage their billing (cancel subscription, update payment method, etc.).

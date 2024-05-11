@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
-import { sendEmail } from "@/libs/mailgun";
-import config from "@/config";
+import { sendEmail } from "../../../../libs/mailgun";
+import config from "../../../../config";
 
 // This route is used to receive emails from Mailgun and forward them to our customer support email.
 // See more: https://shipfa.st/docs/features/emails

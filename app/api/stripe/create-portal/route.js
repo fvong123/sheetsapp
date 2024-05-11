@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { createRouteHandlerClient } from "@supabase/auth-helpers-nextjs";
 import { cookies } from "next/headers";
-import { createCustomerPortal } from "@/libs/stripe";
+import { createCustomerPortal } from "../../../../libs/stripe";
 
 export async function POST(req) {
   try {

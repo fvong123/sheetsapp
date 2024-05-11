@@ -2,8 +2,8 @@ import { NextResponse } from "next/server";
 import { headers } from "next/headers";
 import Stripe from "stripe";
 import { SupabaseClient } from "@supabase/supabase-js";
-import configFile from "@/config";
-import { findCheckoutSession } from "@/libs/stripe";
+import configFile from "../../../../config";
+import { findCheckoutSession } from "../../../../libs/stripe";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;

@@ -5,8 +5,8 @@ import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
 import ButtonSignin from "./ButtonSignin";
-import logo from "@/app/icon.png";
-import config from "@/config";
+import logo from "../app/icon.png";
+import config from "../config";
 
 const links = [
   {
