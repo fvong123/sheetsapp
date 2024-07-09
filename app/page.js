@@ -1,45 +1,206 @@
-import Link from "next/link";
-import ButtonSignin from "../components/ButtonSignin";
+"use client";
 
-export default function Page() {
+import { useState, useCallback, useEffect, useMemo } from "react";
+import dynamic from "next/dynamic";
+import {
+  evaluateArithmetic,
+  extractCellReferences,
+  idToCellReference,
+  cellReferenceToId,
+} from "../utils/arithmeticUtils";
+
+const Spreadsheet = dynamic(() => import("../components/Spreadsheet"), {
+  ssr: false,
+});
+const FormulaBar = dynamic(() => import("../components/FormulaBar"), {
+  ssr: false,
+});
+const FormatBar = dynamic(() => import("../components/FormatBar"), {
+  ssr: false,
+});
+
+export default function SpreadsheetApp() {
+  const [selectedCell, setSelectedCell] = useState("0-0");
+  const [cellData, setCellData] = useState({});
+  const [formulaValue, setFormulaValue] = useState("");
+  const [isFormulaMode, setIsFormulaMode] = useState(false);
+  const [dependencies, setDependencies] = useState({});
+
+  const recalculateDependentCells = useCallback(
+    (changedCellId, newData) => {
+      const dependentCells = dependencies[changedCellId] || [];
+      dependentCells.forEach((cellId) => {
+        const cellFormula = newData[cellId]?.value;
+        if (cellFormula && cellFormula.startsWith("=")) {
+          try {
+            const result = evaluateArithmetic(cellFormula.slice(1), newData);
+            newData[cellId] = {
+              ...newData[cellId],
+              displayValue: result.toString(),
+            };
+            recalculateDependentCells(cellId, newData);
+          } catch (error) {
+            newData[cellId] = { ...newData[cellId], displayValue: "#ERROR" };
+          }
+        }
+      });
+      return newData;
+    },
+    [dependencies],
+  );
+
+  const updateCellData = useCallback(
+    (cellId, newValue, isFormula = false) => {
+      setCellData((prev) => {
+        let newData = { ...prev };
+        if (isFormula) {
+          try {
+            const result = evaluateArithmetic(newValue.slice(1), newData);
+            newData[cellId] = {
+              value: newValue,
+              displayValue: result.toString(),
+            };
+          } catch (error) {
+            newData[cellId] = { value: newValue, displayValue: "#ERROR" };
+          }
+          const cellRefs = extractCellReferences(newValue);
+          setDependencies((prevDeps) => {
+            const newDeps = { ...prevDeps };
+            cellRefs.forEach((ref) => {
+              const refId = cellReferenceToId(ref);
+              if (!newDeps[refId]) newDeps[refId] = [];
+              if (!newDeps[refId].includes(cellId)) newDeps[refId].push(cellId);
+            });
+            return newDeps;
+          });
+        } else {
+          // If it's not a formula, store numeric values as numbers
+          const numericValue = parseFloat(newValue);
+          newData[cellId] = {
+            value: isNaN(numericValue) ? newValue : numericValue,
+            displayValue: newValue,
+          };
+        }
+        return recalculateDependentCells(cellId, newData);
+      });
+    },
+    [recalculateDependentCells],
+  );
+
+  const handleCellSelect = useCallback(
+    (cellId) => {
+      if (isFormulaMode) {
+        const cellRef = idToCellReference(cellId);
+        setFormulaValue((prev) => prev + cellRef);
+      } else {
+        setSelectedCell(cellId);
+        setFormulaValue(cellData[cellId]?.value || "");
+      }
+    },
+    [isFormulaMode, cellData],
+  );
+
+  const handleFormulaChange = useCallback(
+    (value) => {
+      setFormulaValue(value);
+      if (value.startsWith("=") && !isFormulaMode) {
+        setIsFormulaMode(true);
+      } else if (!value.startsWith("=") && isFormulaMode) {
+        setIsFormulaMode(false);
+      }
+    },
+    [isFormulaMode],
+  );
+
+  const handleFormulaSubmit = useCallback(() => {
+    const isFormula = formulaValue.startsWith("=");
+    updateCellData(selectedCell, formulaValue, isFormula);
+    setIsFormulaMode(false);
+    setFormulaValue("");
+  }, [selectedCell, formulaValue, updateCellData]);
+
+  const handleFormulaCancel = useCallback(() => {
+    setFormulaValue(cellData[selectedCell]?.value || "");
+    setIsFormulaMode(false);
+  }, [selectedCell, cellData]);
+
+  const handleFormatChange = useCallback(
+    (format) => {
+      if (selectedCell) {
+        setCellData((prev) => ({
+          ...prev,
+          [selectedCell]: { ...prev[selectedCell], ...format },
+        }));
+      }
+    },
+    [selectedCell],
+  );
+
+  const handleKeyDown = useCallback(
+    (e) => {
+      if (e.key === "=" && !isFormulaMode) {
+        e.preventDefault();
+        setIsFormulaMode(true);
+        setFormulaValue("=");
+      } else if (e.key === "Escape" && isFormulaMode) {
+        e.preventDefault();
+        handleFormulaCancel();
+      } else if (e.key === "Enter" && isFormulaMode) {
+        e.preventDefault();
+        handleFormulaSubmit();
+      } else if (isFormulaMode) {
+        if (e.key === "Backspace") {
+          e.preventDefault();
+          setFormulaValue((prev) => prev.slice(0, -1));
+        } else if (e.key === "Delete") {
+          // For Delete key, we don't need to do anything special
+          // as it will be handled by the input element
+        } else if (e.key.length === 1) {
+          // This checks if the key is a printable character
+          e.preventDefault();
+          setFormulaValue((prev) => prev + e.key);
+        }
+      }
+    },
+    [isFormulaMode, handleFormulaCancel, handleFormulaSubmit],
+  );
+
+  useEffect(() => {
+    window.addEventListener("keydown", handleKeyDown);
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [handleKeyDown]);
+
+  const memoizedSpreadsheet = useMemo(
+    () => (
+      <Spreadsheet
+        rows={20}
+        cols={30}
+        cellData={cellData}
+        onCellSelect={handleCellSelect}
+        selectedCell={selectedCell}
+        isFormulaMode={isFormulaMode}
+        updateCellData={updateCellData}
+      />
+    ),
+    [cellData, handleCellSelect, selectedCell, isFormulaMode, updateCellData],
+  );
+
   return (
-    <>
-      <header className="p-4 flex justify-end max-w-7xl mx-auto">
-        <ButtonSignin text="Login" />
-      </header>
-      <main>
-        <section className="flex flex-col items-center justify-center text-center gap-12 px-8 py-24">
-          <h1 className="text-3xl font-extrabold">Ship Fast ⚡️</h1>
-
-          <p className="text-lg opacity-80">
-            The start of your new startup... What are you gonna build?
-          </p>
-
-          <a
-            className="btn btn-primary"
-            href="https://shipfa.st/docs"
-            target="_blank"
-          >
-            Documentation & tutorials{" "}
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 20 20"
-              fill="currentColor"
-              className="w-5 h-5"
-            >
-              <path
-                fillRule="evenodd"
-                d="M5 10a.75.75 0 01.75-.75h6.638L10.23 7.29a.75.75 0 111.04-1.08l3.5 3.25a.75.75 0 010 1.08l-3.5 3.25a.75.75 0 11-1.04-1.08l2.158-1.96H5.75A.75.75 0 015 10z"
-                clipRule="evenodd"
-              />
-            </svg>
-          </a>
-
-          <Link href="/blog" className="link link-hover text-sm">
-            Fancy a blog?
-          </Link>
-        </section>
+    <div className="min-h-screen bg-base-200">
+      <main className="container mx-auto p-4">
+        <h1 className="text-3xl font-bold mb-4">Next.js Spreadsheet</h1>
+        <FormulaBar
+          value={formulaValue}
+          onChange={handleFormulaChange}
+          onSubmit={handleFormulaSubmit}
+          onCancel={handleFormulaCancel}
+          isFormulaMode={isFormulaMode}
+        />
+        <FormatBar onFormatChange={handleFormatChange} />
+        <div className="mt-4">{memoizedSpreadsheet}</div>
       </main>
-    </>
+    </div>
   );
 }

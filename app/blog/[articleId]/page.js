@@ -3,8 +3,8 @@ import Script from "next/script";
 import { articles } from "../_assets/content";
 import BadgeCategory from "../_assets/components/BadgeCategory";
 import Avatar from "../_assets/components/Avatar";
-import { getSEOTags } from "@/libs/seo";
-import config from "@/config";
+import { getSEOTags } from "../../../libs/seo";
+import config from "../../../config";
 
 export async function generateMetadata({ params }) {
   const article = articles.find((article) => article.slug === params.articleId);
@@ -39,8 +39,8 @@ export default async function Article({ params }) {
       (a) =>
         a.slug !== params.articleId &&
         a.categories.some((c) =>
-          article.categories.map((c) => c.slug).includes(c.slug)
-        )
+          article.categories.map((c) => c.slug).includes(c.slug),
+        ),
     )
     .sort((a, b) => new Date(b.publishedAt) - new Date(a.publishedAt))
     .slice(0, 3);

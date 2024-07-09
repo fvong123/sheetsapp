@@ -5,10 +5,10 @@ import { useSearchParams } from "next/navigation";
 import { Popover, Transition } from "@headlessui/react";
 import Link from "next/link";
 import Image from "next/image";
-import logo from "@/app/icon.png";
-import config from "@/config";
+import logo from "../../../../app/icon.png";
+import config from "../../../../config";
 import { categories } from "../content";
-import ButtonSignin from "@/components/ButtonSignin";
+import ButtonSignin from "../../../../components/ButtonSignin";
 
 const links = [
   {

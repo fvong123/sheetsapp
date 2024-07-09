@@ -1,12 +1,12 @@
 import { categories, articles } from "../../_assets/content";
 import CardArticle from "../../_assets/components/CardArticle";
 import CardCategory from "../../_assets/components/CardCategory";
-import { getSEOTags } from "@/libs/seo";
-import config from "@/config";
+import { getSEOTags } from "../../../../libs/seo";
+import config from "../../../../config";
 
 export async function generateMetadata({ params }) {
   const category = categories.find(
-    (category) => category.slug === params.categoryId
+    (category) => category.slug === params.categoryId,
   );
 
   return getSEOTags({
@@ -18,11 +18,11 @@ export async function generateMetadata({ params }) {
 
 export default async function Category({ params }) {
   const category = categories.find(
-    (category) => category.slug === params.categoryId
+    (category) => category.slug === params.categoryId,
   );
   const articlesInCategory = articles
     .filter((article) =>
-      article.categories.map((c) => c.slug).includes(category.slug)
+      article.categories.map((c) => c.slug).includes(category.slug),
     )
     .sort((a, b) => new Date(b.publishedAt) - new Date(a.publishedAt))
     .slice(0, 3);
