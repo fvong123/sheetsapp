@@ -9,22 +9,22 @@ export function evaluateArithmetic(formula, cellData) {
       throw new Error(`Cell ${match} not found`);
     }
     // If the cell value is a number, return it directly
-    if (!isNaN(cellValue)) {
-      return cellValue;
+    if (typeof cellValue === "number") {
+      return cellValue.toString();
     }
     // If the cell value is a formula, evaluate it recursively
-    if (typeof cellValue === 'string' && cellValue.startsWith('=')) {
+    if (typeof cellValue === "string" && cellValue.startsWith("=")) {
       return evaluateArithmetic(cellValue.slice(1), cellData);
     }
-    // If it's not a number or a formula, treat it as 0
-    return '0';
+    // If it's a string, return it wrapped in quotes
+    return `"${cellValue}"`;
   });
 
   // Evaluate the formula
   try {
     return Function(`'use strict'; return (${formulaWithValues})`)();
   } catch (error) {
-    throw new Error('Invalid formula');
+    throw new Error("Invalid formula");
   }
 }
 
@@ -33,8 +33,8 @@ export function extractCellReferences(formula) {
 }
 
 export function idToCellReference(id) {
-  const [row, col] = id.split('-').map(Number);
-  let columnName = '';
+  const [row, col] = id.split("-").map(Number);
+  let columnName = "";
   let columnNumber = col + 1;
   while (columnNumber > 0) {
     columnNumber--;
@@ -47,7 +47,7 @@ export function idToCellReference(id) {
 export function cellReferenceToId(ref) {
   const match = ref.match(/([A-Z]+)([0-9]+)/);
   if (!match) {
-    throw new Error('Invalid cell reference');
+    throw new Error("Invalid cell reference");
   }
   const [, col, row] = match;
   let columnNumber = 0;

@@ -74,12 +74,20 @@ export default function SpreadsheetApp() {
             return newDeps;
           });
         } else {
-          // If it's not a formula, store numeric values as numbers
+          // If it's not a formula, check if it's a number
           const numericValue = parseFloat(newValue);
-          newData[cellId] = {
-            value: isNaN(numericValue) ? newValue : numericValue,
-            displayValue: newValue,
-          };
+          if (!isNaN(numericValue) && newValue.trim() !== "") {
+            newData[cellId] = {
+              value: numericValue,
+              displayValue: numericValue.toString(),
+            };
+          } else {
+            // It's a string
+            newData[cellId] = {
+              value: newValue,
+              displayValue: newValue,
+            };
+          }
         }
         return recalculateDependentCells(cellId, newData);
       });
