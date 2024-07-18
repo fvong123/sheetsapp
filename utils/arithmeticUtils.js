@@ -29,7 +29,10 @@ export function evaluateArithmetic(formula, cellData) {
 }
 
 export function extractCellReferences(formula) {
-  return formula.match(/[A-Z]+[0-9]+/g) || [];
+  const regex = /[A-Z]+[0-9]+/g;
+  return (formula.match(regex) || []).filter(
+    (ref, index, self) => self.indexOf(ref) === index,
+  );
 }
 
 export function idToCellReference(id) {

@@ -25,6 +25,7 @@ export default function SpreadsheetApp() {
   const [formulaValue, setFormulaValue] = useState("");
   const [isFormulaMode, setIsFormulaMode] = useState(false);
   const [dependencies, setDependencies] = useState({});
+  const [formulaReferences, setFormulaReferences] = useState([]);
 
   const recalculateDependentCells = useCallback(
     (changedCellId, newData) => {
@@ -116,6 +117,10 @@ export default function SpreadsheetApp() {
       } else if (!value.startsWith("=") && isFormulaMode) {
         setIsFormulaMode(false);
       }
+
+      // Extract and set cell references
+      const refs = extractCellReferences(value);
+      setFormulaReferences(refs.map(cellReferenceToId));
     },
     [isFormulaMode],
   );
@@ -190,6 +195,7 @@ export default function SpreadsheetApp() {
         selectedCell={selectedCell}
         isFormulaMode={isFormulaMode}
         updateCellData={updateCellData}
+        formulaReferences={formulaReferences}
       />
     ),
     [cellData, handleCellSelect, selectedCell, isFormulaMode, updateCellData],
