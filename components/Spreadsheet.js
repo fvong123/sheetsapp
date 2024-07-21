@@ -36,7 +36,7 @@ const Spreadsheet = memo(
         Array.from({ length: cols }).map((_, colIndex) => (
           <th
             key={colIndex}
-            className="sticky top-0 z-10 bg-gray-100 border border-gray-200 p-2 h-8 min-w-[100px] text-center font-bold"
+            className="sticky top-0 z-10 bg-gray-100 border border-gray-200 p-1 h-6 w-24 min-w-[100px] text-center font-bold text-xs"
           >
             {getColumnLabel(colIndex)}
           </th>
@@ -48,7 +48,7 @@ const Spreadsheet = memo(
       () =>
         Array.from({ length: rows }).map((_, rowIndex) => (
           <tr key={rowIndex}>
-            <td className="sticky left-0 z-10 bg-gray-100 border border-gray-200 p-2 h-8 w-12 text-center font-bold">
+            <td className="sticky left-0 z-10 bg-gray-100 border border-gray-200 p-1 h-6 w-8 text-center font-bold text-xs">
               {rowIndex + 1}
             </td>
             {Array.from({ length: cols }).map((_, colIndex) => {
@@ -81,12 +81,12 @@ const Spreadsheet = memo(
     );
 
     return (
-      <div className="border border-gray-200 p-4">
+      <div className="border border-gray-200 p-2">
         <div className="overflow-auto border border-gray-200 max-h-[400px] max-w-full">
           <table className="border-collapse w-full">
             <thead>
               <tr>
-                <th className="sticky top-0 left-0 z-20 bg-gray-100 border border-gray-200 p-2 h-8 w-12 text-center font-bold">
+                <th className="sticky top-0 left-0 z-20 bg-gray-100 border border-gray-200 p-1 h-6 w-8 text-center font-bold text-xs">
                   {/* Corner cell */}
                 </th>
                 {headerCells}

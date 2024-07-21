@@ -1,52 +1,46 @@
 // components/FormulaBar.js
 "use client";
 
-import { useCallback, useRef, useEffect } from "react";
+// components/FormulaBar.js
+import React, { useCallback, useEffect, forwardRef } from "react";
 
-const FormulaBar = ({ value, onChange, onSubmit, onCancel, isFormulaMode }) => {
-  const inputRef = useRef(null);
-
-  useEffect(() => {
-    if (isFormulaMode) {
-      inputRef.current?.focus();
-    }
-  }, [isFormulaMode]);
-
-  const handleChange = useCallback(
-    (e) => {
-      onChange(e.target.value);
-    },
-    [onChange],
-  );
-
-  const handleKeyDown = useCallback(
-    (e) => {
-      if (e.key === "Enter") {
-        e.preventDefault();
-        onSubmit();
-      } else if (e.key === "Escape") {
-        e.preventDefault();
-        onCancel();
+const FormulaBar = forwardRef(
+  ({ value, onChange, onSubmit, onCancel, isFormulaMode }, ref) => {
+    useEffect(() => {
+      if (isFormulaMode && ref && ref.current) {
+        ref.current.focus();
       }
-      // We're not preventing default for other keys,
-      // allowing normal behavior for Backspace and Delete
-    },
-    [onSubmit, onCancel],
-  );
+    }, [isFormulaMode, ref]);
 
-  return (
-    <div className="mb-2">
-      <input
-        ref={inputRef}
-        type="text"
-        value={value}
-        onChange={handleChange}
-        onKeyDown={handleKeyDown}
-        className="input input-bordered w-full"
-        placeholder="Enter formula or value"
-      />
-    </div>
-  );
-};
+    const handleKeyDown = useCallback(
+      (e) => {
+        if (e.key === "Enter") {
+          e.preventDefault();
+          onSubmit();
+        } else if (e.key === "Escape") {
+          e.preventDefault();
+          onCancel();
+        }
+      },
+      [onSubmit, onCancel],
+    );
+
+    return (
+      <div className="mb-2">
+        <input
+          ref={ref}
+          type="text"
+          value={value}
+          onChange={(e) => onChange(e.target.value)}
+          onKeyDown={handleKeyDown}
+          className="input input-bordered w-full"
+          placeholder="Enter formula or value"
+        />
+      </div>
+    );
+  },
+);
+
+FormulaBar.displayName = "FormulaBar";
 
 export default FormulaBar;

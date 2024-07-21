@@ -35,6 +35,12 @@ export function extractCellReferences(formula) {
   );
 }
 
+export function extractPartialCellReferences(formula) {
+  const regex = /[A-Z]+[0-9]*$/;
+  const match = formula.match(regex);
+  return match ? [match[0]] : [];
+}
+
 export function idToCellReference(id) {
   const [row, col] = id.split("-").map(Number);
   let columnName = "";

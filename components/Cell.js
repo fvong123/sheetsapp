@@ -28,11 +28,11 @@ const Cell = memo(
     }, [data?.value]);
 
     const cellClasses = `
-    border border-gray-200 p-2 h-8 min-w-[100px] bg-white
-    ${isSelected && isFormulaMode ? "outline outline-2 outline-blue-500" : ""}
-    ${isFormulaReference ? "outline outline-2 outline-red-500" : ""}
-    ${isSelected && !isFormulaMode ? "outline outline-2 outline-blue-500" : ""}
-  `;
+      border border-gray-200 p-1 h-6 w-24 bg-white text-xs
+      ${isSelected && isFormulaMode ? "outline outline-2 outline-blue-500" : ""}
+      // ${isFormulaReference && isFormulaMode ? "outline outline-2 outline-red-500" : ""}
+      ${isSelected && !isFormulaMode ? "outline outline-2 outline-blue-500" : ""}
+    `;
 
     const handleClick = useCallback(() => {
       onClick(id);
@@ -65,6 +65,7 @@ const Cell = memo(
           setIsEditing(false);
           setEditValue(data?.value || "");
         }
+        // Remove any handling of arrow keys here
       },
       [handleBlur, data],
     );
@@ -83,11 +84,11 @@ const Cell = memo(
             onChange={handleChange}
             onBlur={handleBlur}
             onKeyDown={handleKeyDown}
-            className="w-full h-full outline-none bg-transparent"
+            className="w-full h-full outline-none bg-transparent text-xs"
           />
         ) : (
-          <div className="w-full h-full overflow-hidden">
-            {data?.displayValue || ""}
+          <div className="w-full h-full overflow-hidden text-xs">
+            {data?.displayValue || data?.value || ""}
           </div>
         )}
       </td>
