@@ -1,5 +1,3 @@
-"use client";
-
 import SpreadsheetApp from "../components/SpreadsheetMain";
 
 export default function MainApp() {

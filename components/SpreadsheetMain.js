@@ -24,7 +24,7 @@ export default function SpreadsheetApp() {
   const [selectedCell, setSelectedCell] = useState("0-0");
   const [cellData, setCellData] = useState({});
   const [formulaValue, setFormulaValue] = useState("");
-  const [isFormulaMode, setIsFormulaMode] = useState(false);
+  const [isEditMode, setIsEditMode] = useState(false);
   const [dependencies, setDependencies] = useState({});
   const [formulaReferences, setFormulaReferences] = useState([]);
   const [focusFormulaBar, setFocusFormulaBar] = useState(false);
@@ -55,10 +55,11 @@ export default function SpreadsheetApp() {
   );
 
   const updateCellData = useCallback(
-    (cellId, newValue, isFormula = false) => {
+    (cellId, newValue) => {
       setCellData((prev) => {
         let newData = { ...prev };
-        if (isFormula) {
+        if (newValue.startsWith("=")) {
+          // Handle formula
           try {
             const result = evaluateArithmetic(newValue.slice(1), newData);
             newData[cellId] = {
@@ -79,10 +80,8 @@ export default function SpreadsheetApp() {
             return newDeps;
           });
         } else if (newValue === "") {
-          // If the new value is empty, remove the cell data entirely
           delete newData[cellId];
         } else {
-          // If it's not a formula, check if it's a number
           const numericValue = parseFloat(newValue);
           if (!isNaN(numericValue) && newValue.trim() !== "") {
             newData[cellId] = {
@@ -90,7 +89,6 @@ export default function SpreadsheetApp() {
               displayValue: numericValue.toString(),
             };
           } else {
-            // It's a string
             newData[cellId] = {
               value: newValue,
               displayValue: newValue,
@@ -118,9 +116,9 @@ export default function SpreadsheetApp() {
     setFormulaReferences(validRefs.map(cellReferenceToId));
   }, []);
 
-  const enterFormulaMode = useCallback(
+  const enterEditMode = useCallback(
     (initialValue = "") => {
-      setIsFormulaMode(true);
+      setIsEditMode(true);
       setFormulaValue(initialValue);
       updateFormulaReferences(initialValue);
     },
@@ -137,7 +135,7 @@ export default function SpreadsheetApp() {
 
   const handleCellSelect = useCallback(
     (cellId) => {
-      if (isFormulaMode) {
+      if (isEditMode) {
         const cellRef = idToCellReference(cellId);
         setFormulaValue((prevValue) => {
           if (prevValue === "=" || /[+\-*/]$/.test(prevValue)) {
@@ -153,17 +151,14 @@ export default function SpreadsheetApp() {
         setFormulaReferences([]);
       }
     },
-    [isFormulaMode, cellData, updateFormulaReferences, formulaValue],
+    [isEditMode, cellData, updateFormulaReferences, formulaValue],
   );
 
-  const handleFormulaSubmit = useCallback(() => {
-    const isFormula = formulaValue.startsWith("=");
-    updateCellData(selectedCell, formulaValue, isFormula);
-    console.log("handling page submit");
-    console.log(formulaValue);
-    setIsFormulaMode(false);
+  const handleEditSubmit = useCallback(() => {
+    updateCellData(selectedCell, formulaValue);
+    setIsEditMode(false);
     setFormulaValue("");
-    setFormulaReferences([]); // Clear formula references after submitting
+    setFormulaReferences([]);
     setTimeout(() => {
       document.getElementById("spreadsheet-container").focus();
     }, 0);
@@ -171,7 +166,7 @@ export default function SpreadsheetApp() {
 
   const handleFormulaCancel = useCallback(() => {
     setFormulaValue(cellData[selectedCell]?.value || "");
-    setIsFormulaMode(false);
+    setIsEditMode(false);
     setFormulaReferences([]); // Clear formula references after canceling
     setTimeout(() => {
       document.getElementById("spreadsheet-container").focus();
@@ -193,15 +188,21 @@ export default function SpreadsheetApp() {
   const handleKeyDown = useCallback(
     (e) => {
       e.stopPropagation();
-      if (isFormulaMode) {
+      if (isEditMode) {
         if (e.key === "Enter") {
           e.preventDefault();
-          handleFormulaSubmit();
+          handleEditSubmit();
         } else if (e.key === "Escape") {
           e.preventDefault();
           handleFormulaCancel();
-        } else if (["+", "-", "*", "/"].includes(e.key)) {
+        } else if (e.key === "Backspace") {
           e.preventDefault();
+          setFormulaValue((prev) => prev.slice(0, -1));
+        } else if (["+", "-", "*", "/", "a"].includes(e.key)) {
+          e.preventDefault();
+          setFormulaValue((prev) => prev + e.key);
+        } else if (e.key.length === 1) {
+          // This condition allows all printable characters
           setFormulaValue((prev) => prev + e.key);
         }
         // else if (e.key === "Enter") {
@@ -236,26 +237,12 @@ export default function SpreadsheetApp() {
             break;
           case "=":
             e.preventDefault();
-            enterFormulaMode("=");
+            enterEditMode("=");
             return;
           case "Enter":
             e.preventDefault();
-            console.log("page enter not formula");
-            const currentCellValue = cellData[selectedCell]?.value ?? "";
-            if (
-              typeof currentCellValue === "string" &&
-              currentCellValue.startsWith("=")
-            ) {
-              enterFormulaMode(currentCellValue);
-              setFocusFormulaBar(true);
-            } else if (currentCellValue !== "") {
-              enterFormulaMode("=" + currentCellValue);
-              setFocusFormulaBar(true);
-            } else {
-              // If the cell is empty, just enter edit mode without starting a formula
-              enterFormulaMode("");
-              setFocusFormulaBar(true);
-            }
+            enterEditMode(cellData[selectedCell]?.value || "");
+            setFocusFormulaBar(true);
             return;
           case "Delete":
             e.preventDefault();
@@ -275,13 +262,12 @@ export default function SpreadsheetApp() {
       }
     },
     [
-      isFormulaMode,
+      isEditMode,
       selectedCell,
-      handleFormulaCancel,
-      handleFormulaSubmit,
       cellData,
-      updateCellData,
-      enterFormulaMode,
+      enterEditMode,
+      handleEditSubmit,
+      handleFormulaCancel,
     ],
   );
 
@@ -300,12 +286,12 @@ export default function SpreadsheetApp() {
         cellData={cellData}
         onCellSelect={handleCellSelect}
         selectedCell={selectedCell}
-        isFormulaMode={isFormulaMode}
+        isEditMode={isEditMode}
         updateCellData={updateCellData}
         formulaReferences={formulaReferences}
       />
     ),
-    [cellData, handleCellSelect, selectedCell, isFormulaMode, updateCellData],
+    [cellData, handleCellSelect, selectedCell, isEditMode, updateCellData],
   );
 
   return (
@@ -321,14 +307,25 @@ export default function SpreadsheetApp() {
           ref={formulaBarRef}
           value={formulaValue}
           onChange={handleFormulaChange}
-          onSubmit={handleFormulaSubmit}
+          onSubmit={handleEditSubmit}
           onCancel={handleFormulaCancel}
-          isFormulaMode={isFormulaMode}
+          isEditMode={isEditMode}
           focusFormulaBar={focusFormulaBar}
           setFocusFormulaBar={setFocusFormulaBar}
         />
         <FormatBar onFormatChange={handleFormatChange} />
-        <div className="mt-4">{memoizedSpreadsheet}</div>
+        <div className="mt-4">
+          <Spreadsheet
+            rows={15}
+            cols={13}
+            cellData={cellData}
+            onCellSelect={handleCellSelect}
+            selectedCell={selectedCell}
+            isEditMode={isEditMode}
+            updateCellData={updateCellData}
+            formulaReferences={formulaReferences}
+          />
+        </div>
       </main>
     </div>
   );

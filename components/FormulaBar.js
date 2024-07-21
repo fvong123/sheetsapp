@@ -9,7 +9,7 @@ const FormulaBar = forwardRef(
       onChange,
       onSubmit,
       onCancel,
-      isFormulaMode,
+      isEditMode,
       focusFormulaBar,
       setFocusFormulaBar,
     },
@@ -44,7 +44,7 @@ const FormulaBar = forwardRef(
           onChange={(e) => onChange(e.target.value)}
           onKeyDown={handleKeyDown}
           className="input input-bordered w-full"
-          placeholder="Enter formula or value"
+          placeholder={isEditMode ? "Enter value or formula" : ""}
         />
       </div>
     );
