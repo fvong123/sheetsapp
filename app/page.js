@@ -27,6 +27,7 @@ export default function SpreadsheetApp() {
   const [isFormulaMode, setIsFormulaMode] = useState(false);
   const [dependencies, setDependencies] = useState({});
   const [formulaReferences, setFormulaReferences] = useState([]);
+  const [focusFormulaBar, setFocusFormulaBar] = useState(false);
 
   const formulaBarRef = useRef(null);
 
@@ -139,22 +140,13 @@ export default function SpreadsheetApp() {
       if (isFormulaMode) {
         const cellRef = idToCellReference(cellId);
         setFormulaValue((prevValue) => {
-          // If the formula is empty or ends with an operator, just add the cell reference
           if (prevValue === "=" || /[+\-*/]$/.test(prevValue)) {
             return prevValue + cellRef;
           }
-          // Otherwise, add a '+' before the cell reference
           return prevValue + "+" + cellRef;
         });
         updateFormulaReferences(formulaValue + cellRef);
-        console.log(formulaValue);
-
-        // Focus the formula bar after updating
-        setTimeout(() => {
-          if (formulaBarRef.current) {
-            formulaBarRef.current.focus();
-          }
-        }, 0);
+        setFocusFormulaBar(true); // Trigger focus on formula bar
       } else {
         setSelectedCell(cellId);
         setFormulaValue(cellData[cellId]?.value || "");
@@ -167,6 +159,8 @@ export default function SpreadsheetApp() {
   const handleFormulaSubmit = useCallback(() => {
     const isFormula = formulaValue.startsWith("=");
     updateCellData(selectedCell, formulaValue, isFormula);
+    console.log("handling page submit");
+    console.log(formulaValue);
     setIsFormulaMode(false);
     setFormulaValue("");
     setFormulaReferences([]); // Clear formula references after submitting
@@ -200,17 +194,21 @@ export default function SpreadsheetApp() {
     (e) => {
       e.stopPropagation();
       if (isFormulaMode) {
-        if (e.key === "Escape") {
+        if (e.key === "Enter") {
+          e.preventDefault();
+          handleFormulaSubmit();
+        } else if (e.key === "Escape") {
           e.preventDefault();
           handleFormulaCancel();
-          document.getElementById("spreadsheet-container").focus();
         } else if (["+", "-", "*", "/"].includes(e.key)) {
           e.preventDefault();
           setFormulaValue((prev) => prev + e.key);
-        } else if (e.key === "Enter") {
-          e.preventDefault();
-          handleFormulaSubmit();
         }
+        // else if (e.key === "Enter") {
+        //   e.preventDefault();
+        //   handleFormulaSubmit();
+        //   console.log("pagejs enter");
+        // }
         return;
       } else {
         const [row, col] = selectedCell.split("-").map(Number);
@@ -276,6 +274,7 @@ export default function SpreadsheetApp() {
       isFormulaMode,
       selectedCell,
       handleFormulaCancel,
+      handleFormulaSubmit,
       cellData,
       updateCellData,
       enterFormulaMode,
@@ -321,6 +320,8 @@ export default function SpreadsheetApp() {
           onSubmit={handleFormulaSubmit}
           onCancel={handleFormulaCancel}
           isFormulaMode={isFormulaMode}
+          focusFormulaBar={focusFormulaBar}
+          setFocusFormulaBar={setFocusFormulaBar}
         />
         <FormatBar onFormatChange={handleFormatChange} />
         <div className="mt-4">{memoizedSpreadsheet}</div>

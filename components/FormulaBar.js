@@ -1,16 +1,26 @@
-// components/FormulaBar.js
 "use client";
 
-// components/FormulaBar.js
 import React, { useCallback, useEffect, forwardRef } from "react";
 
 const FormulaBar = forwardRef(
-  ({ value, onChange, onSubmit, onCancel, isFormulaMode }, ref) => {
+  (
+    {
+      value,
+      onChange,
+      onSubmit,
+      onCancel,
+      isFormulaMode,
+      focusFormulaBar,
+      setFocusFormulaBar,
+    },
+    ref,
+  ) => {
     useEffect(() => {
-      if (isFormulaMode && ref && ref.current) {
+      if (focusFormulaBar && ref && ref.current) {
         ref.current.focus();
+        setFocusFormulaBar(false);
       }
-    }, [isFormulaMode, ref]);
+    }, [focusFormulaBar, ref, setFocusFormulaBar]);
 
     const handleKeyDown = useCallback(
       (e) => {

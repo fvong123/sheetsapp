@@ -61,6 +61,7 @@ const Cell = memo(
         if (e.key === "Enter") {
           e.preventDefault();
           handleBlur();
+          console.log("cell enter");
         } else if (e.key === "Escape") {
           setIsEditing(false);
           setEditValue(data?.value || "");
