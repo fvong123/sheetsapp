@@ -302,7 +302,7 @@ export default function SpreadsheetApp() {
       onKeyDown={handleKeyDown}
     >
       <main className="container mx-auto p-4">
-        <h1 className="text-3xl font-bold mb-4">Next.js Spreadsheet</h1>
+        <h3>Formula Bar</h3>
         <FormulaBar
           ref={formulaBarRef}
           value={formulaValue}
@@ -313,7 +313,7 @@ export default function SpreadsheetApp() {
           focusFormulaBar={focusFormulaBar}
           setFocusFormulaBar={setFocusFormulaBar}
         />
-        <FormatBar onFormatChange={handleFormatChange} />
+        {/* <FormatBar onFormatChange={handleFormatChange} /> */}
         <div className="mt-4">
           <Spreadsheet
             rows={15}

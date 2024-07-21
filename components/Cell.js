@@ -9,7 +9,7 @@ const Cell = memo(
     data,
     isSelected,
     onClick,
-    isFormulaMode,
+    isEditMode,
     isFormulaReference,
     updateCellData,
   }) => {
@@ -28,10 +28,10 @@ const Cell = memo(
     }, [data?.value]);
 
     const cellClasses = `
-      border border-gray-200 p-1 h-6 w-24 bg-white text-xs
-      ${isSelected && isFormulaMode ? "outline outline-2 outline-blue-500" : ""}
-      // ${isFormulaReference && isFormulaMode ? "outline outline-2 outline-red-500" : ""}
-      ${isSelected && !isFormulaMode ? "outline outline-2 outline-blue-500" : ""}
+      border border-gray-200 p-0.5 h-5 w-16 bg-white text-[10px]
+      ${isSelected && isEditMode ? "outline outline-2 outline-blue-500" : ""}
+      ${isFormulaReference && isEditMode ? "outline outline-2 outline-red-500" : ""}
+      ${isSelected && !isEditMode ? "outline outline-2 outline-blue-500" : ""}
     `;
 
     const handleClick = useCallback(() => {
@@ -39,10 +39,10 @@ const Cell = memo(
     }, [onClick, id]);
 
     const handleDoubleClick = useCallback(() => {
-      if (!isFormulaMode) {
+      if (!isEditMode) {
         setIsEditing(true);
       }
-    }, [isFormulaMode]);
+    }, [isEditMode]);
 
     const handleChange = useCallback((e) => {
       setEditValue(e.target.value);
@@ -61,12 +61,10 @@ const Cell = memo(
         if (e.key === "Enter") {
           e.preventDefault();
           handleBlur();
-          console.log("cell enter");
         } else if (e.key === "Escape") {
           setIsEditing(false);
           setEditValue(data?.value || "");
         }
-        // Remove any handling of arrow keys here
       },
       [handleBlur, data],
     );
@@ -85,10 +83,10 @@ const Cell = memo(
             onChange={handleChange}
             onBlur={handleBlur}
             onKeyDown={handleKeyDown}
-            className="w-full h-full outline-none bg-transparent text-xs"
+            className="w-full h-full outline-none bg-transparent text-[10px]"
           />
         ) : (
-          <div className="w-full h-full overflow-hidden text-xs">
+          <div className="w-full h-full overflow-hidden text-[10px]">
             {data?.displayValue || data?.value || ""}
           </div>
         )}
