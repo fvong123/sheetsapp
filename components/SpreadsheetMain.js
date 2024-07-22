@@ -16,11 +16,12 @@ const Spreadsheet = dynamic(() => import("./Spreadsheet"), {
 const FormulaBar = dynamic(() => import("./FormulaBar"), {
   ssr: false,
 });
-const FormatBar = dynamic(() => import("./FormatBar"), {
-  ssr: false,
-});
+// const FormatBar = dynamic(() => import("./FormatBar"), {
+//   ssr: false,
+// });
 
 export default function SpreadsheetApp() {
+  // spreadsheet states
   const [selectedCell, setSelectedCell] = useState("0-0");
   const [cellData, setCellData] = useState({});
   const [formulaValue, setFormulaValue] = useState("");
@@ -28,6 +29,83 @@ export default function SpreadsheetApp() {
   const [dependencies, setDependencies] = useState({});
   const [formulaReferences, setFormulaReferences] = useState([]);
   const [focusFormulaBar, setFocusFormulaBar] = useState(false);
+
+  // states for save and load modals
+  const [isSaveModalOpen, setIsSaveModalOpen] = useState(false);
+  const [isLoadModalOpen, setIsLoadModalOpen] = useState(false);
+  const [saveName, setSaveName] = useState("");
+  const [savedSpreadsheets, setSavedSpreadsheets] = useState([]);
+  const [error, setError] = useState(null);
+
+  // save and load functions
+
+  const handleSave = async () => {
+    try {
+      setError(null);
+      const response = await fetch("/api/save-spreadsheet", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name: saveName, data: cellData }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || "Failed to save spreadsheet");
+      }
+
+      const result = await response.json();
+      console.log(result.message);
+      setIsSaveModalOpen(false);
+      setSaveName("");
+      // Optionally, show a success message
+    } catch (error) {
+      console.error("Save error:", error);
+      setError(
+        error.message || "Failed to save spreadsheet. Please try again.",
+      );
+    }
+  };
+
+  const handleLoad = async (id) => {
+    try {
+      const response = await fetch("/api/load-spreadsheet", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id }),
+      });
+      if (response.ok) {
+        const { data } = await response.json();
+        setCellData(data);
+        setIsLoadModalOpen(false);
+      } else {
+        const error = await response.json();
+        console.error("Load failed:", error);
+        // Handle error (e.g., show error message to user)
+      }
+    } catch (error) {
+      console.error("Load error:", error);
+      // Handle error (e.g., show error message to user)
+    }
+  };
+
+  const fetchSavedSpreadsheets = async () => {
+    try {
+      const response = await fetch("/api/load-spreadsheet");
+      if (response.ok) {
+        const data = await response.json();
+        setSavedSpreadsheets(data);
+      } else {
+        const error = await response.json();
+        console.error("Fetch saved spreadsheets failed:", error);
+        // Handle error (e.g., show error message to user)
+      }
+    } catch (error) {
+      console.error("Fetch saved spreadsheets error:", error);
+      // Handle error (e.g., show error message to user)
+    }
+  };
+
+  // spreadsheet functions
 
   const formulaBarRef = useRef(null);
 
@@ -210,6 +288,7 @@ export default function SpreadsheetApp() {
         //   handleFormulaSubmit();
         //   console.log("pagejs enter");
         // }
+
         return;
       } else {
         const [row, col] = selectedCell.split("-").map(Number);
@@ -278,6 +357,12 @@ export default function SpreadsheetApp() {
     };
   }, [handleKeyDown]);
 
+  useEffect(() => {
+    if (isLoadModalOpen) {
+      fetchSavedSpreadsheets();
+    }
+  }, [isLoadModalOpen]);
+
   const memoizedSpreadsheet = useMemo(
     () => (
       <Spreadsheet
@@ -302,7 +387,23 @@ export default function SpreadsheetApp() {
       onKeyDown={handleKeyDown}
     >
       <main className="container mx-auto p-4">
-        <h3>Formula Bar</h3>
+        <div className="flex justify-between items-center mb-4">
+          <h3 className="text-lg font-semibold">Formula Bar</h3>
+          <div>
+            <button
+              className="btn btn-primary btn-sm px-2 py-1 text-xs mr-2"
+              onClick={() => setIsSaveModalOpen(true)}
+            >
+              Save
+            </button>
+            <button
+              className="btn btn-secondary btn-sm px-2 py-1 text-xs"
+              onClick={() => setIsLoadModalOpen(true)}
+            >
+              Load
+            </button>
+          </div>
+        </div>
         <FormulaBar
           ref={formulaBarRef}
           value={formulaValue}
@@ -313,7 +414,6 @@ export default function SpreadsheetApp() {
           focusFormulaBar={focusFormulaBar}
           setFocusFormulaBar={setFocusFormulaBar}
         />
-        {/* <FormatBar onFormatChange={handleFormatChange} /> */}
         <div className="mt-4">
           <Spreadsheet
             rows={15}
@@ -327,6 +427,74 @@ export default function SpreadsheetApp() {
           />
         </div>
       </main>
+
+      {error && (
+        <div className="alert alert-error shadow-lg">
+          <div>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="stroke-current flex-shrink-0 h-6 w-6"
+              fill="none"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"
+              />
+            </svg>
+            <span>{error}</span>
+          </div>
+        </div>
+      )}
+
+      {/* Save Modal */}
+      {isSaveModalOpen && (
+        <div className="modal modal-open">
+          <div className="modal-box">
+            <h3 className="font-bold text-lg">Save Spreadsheet</h3>
+            <input
+              type="text"
+              placeholder="Enter save name"
+              className="input input-bordered w-full mt-2"
+              value={saveName}
+              onChange={(e) => setSaveName(e.target.value)}
+            />
+            <div className="modal-action">
+              <button className="btn" onClick={() => setIsSaveModalOpen(false)}>
+                Cancel
+              </button>
+              <button className="btn btn-primary" onClick={handleSave}>
+                Save
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Load Modal */}
+      {isLoadModalOpen && (
+        <div className="modal modal-open">
+          <div className="modal-box">
+            <h3 className="font-bold text-lg">Load Spreadsheet</h3>
+            <ul className="menu bg-base-100 w-full mt-2">
+              {savedSpreadsheets.map((sheet) => (
+                <li key={sheet.id}>
+                  <a onClick={() => handleLoad(sheet.id)}>
+                    {sheet.name} - {new Date(sheet.created_at).toLocaleString()}
+                  </a>
+                </li>
+              ))}
+            </ul>
+            <div className="modal-action">
+              <button className="btn" onClick={() => setIsLoadModalOpen(false)}>
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

@@ -12,7 +12,7 @@
   "dependencies": {
     "@headlessui/react": "^1.7.18",
     "@supabase/auth-helpers-nextjs": "^0.8.7",
-    "@supabase/supabase-js": "^2.41.1",
+    "@supabase/supabase-js": "^2.44.4",
     "axios": "^1.6.8",
     "crisp-sdk-web": "^1.0.22",
     "eslint": "8.47.0",
@@ -29,6 +29,8 @@
     "react-hot-toast": "^2.4.1",
     "react-syntax-highlighter": "^15.5.0",
     "react-tooltip": "^5.26.3",
+    "sqlite": "^5.1.1",
+    "sqlite3": "^5.1.7",
     "stripe": "^13.11.0"
   },
   "devDependencies": {
