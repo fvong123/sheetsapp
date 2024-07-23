@@ -50,7 +50,9 @@ export default function SpreadsheetApp() {
 
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.error || "Failed to save spreadsheet");
+        throw new Error(
+          errorData.error || `HTTP error! status: ${response.status}`,
+        );
       }
 
       const result = await response.json();
@@ -73,35 +75,44 @@ export default function SpreadsheetApp() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ id }),
       });
-      if (response.ok) {
-        const { data } = await response.json();
-        setCellData(data);
-        setIsLoadModalOpen(false);
-      } else {
-        const error = await response.json();
-        console.error("Load failed:", error);
-        // Handle error (e.g., show error message to user)
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(
+          errorData.error || `HTTP error! status: ${response.status}`,
+        );
       }
+
+      const { data } = await response.json();
+      setCellData(data);
+      setIsLoadModalOpen(false);
     } catch (error) {
       console.error("Load error:", error);
-      // Handle error (e.g., show error message to user)
+      setError(
+        error.message || "Failed to load spreadsheet. Please try again.",
+      );
     }
   };
 
   const fetchSavedSpreadsheets = async () => {
     try {
       const response = await fetch("/api/load-spreadsheet");
-      if (response.ok) {
-        const data = await response.json();
-        setSavedSpreadsheets(data);
-      } else {
-        const error = await response.json();
-        console.error("Fetch saved spreadsheets failed:", error);
-        // Handle error (e.g., show error message to user)
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(
+          errorData.error || `HTTP error! status: ${response.status}`,
+        );
       }
+
+      const data = await response.json();
+      setSavedSpreadsheets(data);
     } catch (error) {
       console.error("Fetch saved spreadsheets error:", error);
-      // Handle error (e.g., show error message to user)
+      setError(
+        error.message ||
+          "Failed to fetch saved spreadsheets. Please try again.",
+      );
     }
   };
 
@@ -386,6 +397,26 @@ export default function SpreadsheetApp() {
       tabIndex={0}
       onKeyDown={handleKeyDown}
     >
+      {error && (
+        <div className="alert alert-error shadow-lg">
+          <div>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="stroke-current flex-shrink-0 h-6 w-6"
+              fill="none"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"
+              />
+            </svg>
+            <span>{error}</span>
+          </div>
+        </div>
+      )}
       <main className="container mx-auto p-4">
         <div className="flex justify-between items-center mb-4">
           <h3 className="text-lg font-semibold">Formula Bar</h3>
@@ -427,27 +458,6 @@ export default function SpreadsheetApp() {
           />
         </div>
       </main>
-
-      {error && (
-        <div className="alert alert-error shadow-lg">
-          <div>
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="stroke-current flex-shrink-0 h-6 w-6"
-              fill="none"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"
-              />
-            </svg>
-            <span>{error}</span>
-          </div>
-        </div>
-      )}
 
       {/* Save Modal */}
       {isSaveModalOpen && (

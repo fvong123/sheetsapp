@@ -1,15 +1,15 @@
 import { NextResponse } from "next/server";
-import { supabase } from "../../../lib/supabase";
+import { supabase } from "../../../libs/supabase";
 
 export async function POST(request) {
   try {
     const { name, data } = await request.json();
+    console.log("api save");
 
     const { data: insertData, error } = await supabase
       .from("spreadsheets")
-      .insert({ name, data: JSON.stringify(data) })
-      .select()
-      .single();
+      .insert([{ name, data: JSON.stringify(data) }])
+      .select();
 
     if (error) throw error;
 
