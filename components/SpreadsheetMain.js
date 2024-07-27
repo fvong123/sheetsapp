@@ -393,7 +393,7 @@ export default function SpreadsheetApp() {
   return (
     <div
       id="spreadsheet-container"
-      className="min-h-screen bg-base-200 border"
+      className="h-full overflow-auto bg-base-200 border"
       tabIndex={0}
       onKeyDown={handleKeyDown}
     >
