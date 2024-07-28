@@ -12,6 +12,8 @@ const Cell = memo(
     isEditMode,
     isFormulaReference,
     updateCellData,
+    rowData,
+    columnIndex,
   }) => {
     const [isEditing, setIsEditing] = useState(false);
     const [editValue, setEditValue] = useState(data?.value || "");
@@ -27,11 +29,15 @@ const Cell = memo(
       setEditValue(data?.value || "");
     }, [data?.value]);
 
+    const shouldWrap =
+      columnIndex < rowData.length - 1 && !rowData[columnIndex + 1]?.value;
+
     const cellClasses = `
       border border-gray-200 p-0.5 h-5 w-16 bg-white text-[10px]
       ${isSelected && isEditMode ? "outline outline-2 outline-blue-500" : ""}
       ${isFormulaReference && isEditMode ? "outline outline-2 outline-red-500" : ""}
       ${isSelected && !isEditMode ? "outline outline-2 outline-blue-500" : ""}
+      ${shouldWrap ? "whitespace-normal overflow-hidden" : "whitespace-nowrap overflow-hidden text-ellipsis"}
     `;
 
     const handleClick = useCallback(() => {
@@ -86,7 +92,9 @@ const Cell = memo(
             className="w-full h-full outline-none bg-transparent text-[10px]"
           />
         ) : (
-          <div className="w-full h-full overflow-hidden text-[10px]">
+          <div
+            className={`w-full h-full ${shouldWrap ? "break-words" : "truncate"} text-[10px]`}
+          >
             {data?.displayValue || data?.value || ""}
           </div>
         )}

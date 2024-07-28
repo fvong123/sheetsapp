@@ -63,6 +63,10 @@ const Spreadsheet = memo(
                   isFormulaReference={formulaReferences.includes(cellId)}
                   onClick={handleCellClick}
                   updateCellData={updateCellData}
+                  rowData={Array.from({ length: cols }).map(
+                    (_, colIdx) => cellData[`${rowIndex}-${colIdx}`],
+                  )}
+                  columnIndex={colIndex}
                 />
               );
             })}

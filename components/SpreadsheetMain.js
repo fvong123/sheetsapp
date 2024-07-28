@@ -20,7 +20,7 @@ const FormulaBar = dynamic(() => import("./FormulaBar"), {
 //   ssr: false,
 // });
 
-export default function SpreadsheetApp() {
+export default function SpreadsheetApp({ creator, initialData }) {
   // spreadsheet states
   const [selectedCell, setSelectedCell] = useState("0-0");
   const [cellData, setCellData] = useState({});
@@ -36,6 +36,8 @@ export default function SpreadsheetApp() {
   const [saveName, setSaveName] = useState("");
   const [savedSpreadsheets, setSavedSpreadsheets] = useState([]);
   const [error, setError] = useState(null);
+
+  // Other variables
 
   // save and load functions
 
@@ -374,6 +376,12 @@ export default function SpreadsheetApp() {
     }
   }, [isLoadModalOpen]);
 
+  useEffect(() => {
+    if (initialData !== null) {
+      handleLoad(initialData);
+    }
+  }, []); // Empty dependency array means this effect runs once on mount
+
   const memoizedSpreadsheet = useMemo(
     () => (
       <Spreadsheet
@@ -420,20 +428,22 @@ export default function SpreadsheetApp() {
       <main className="container mx-auto p-4">
         <div className="flex justify-between items-center mb-4">
           <h3 className="text-lg font-semibold">Formula Bar</h3>
-          <div>
-            <button
-              className="btn btn-primary btn-sm px-2 py-1 text-xs mr-2"
-              onClick={() => setIsSaveModalOpen(true)}
-            >
-              Save
-            </button>
-            <button
-              className="btn btn-secondary btn-sm px-2 py-1 text-xs"
-              onClick={() => setIsLoadModalOpen(true)}
-            >
-              Load
-            </button>
-          </div>
+          {creator && (
+            <div>
+              <button
+                className="btn btn-primary btn-sm px-2 py-1 text-xs mr-2"
+                onClick={() => setIsSaveModalOpen(true)}
+              >
+                Save
+              </button>
+              <button
+                className="btn btn-secondary btn-sm px-2 py-1 text-xs"
+                onClick={() => setIsLoadModalOpen(true)}
+              >
+                Load
+              </button>
+            </div>
+          )}
         </div>
         <FormulaBar
           ref={formulaBarRef}
