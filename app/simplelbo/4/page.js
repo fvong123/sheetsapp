@@ -10,25 +10,29 @@ export default function MainApp() {
       <main className="flex-1 overflow-auto p-8 bg-base-200">
         <div className="max-w-4xl mx-auto">
           <h1 className="text-4xl font-bold mb-6 text-primary">
-            Key Concept - Enterprise Value ("EV")
+            Transaction Case Study
           </h1>
           <div className="space-y-6 text-base-content">
             <p className="leading-relaxed">
-              Enterprise Value is the theoretical value of a company. It's also
-              the amount an acquirer would need to pay to take control of said
-              company, assuming they would discharge all of its debts and keep
-              all of its cash.
+              Assume that we are a private equity firm purchasing "Company A" at
+              the end of 2024
               <br />
               <br />
-              The formula for Enterprise Value is: Equity (Market Capitlization)
-              + Debt + Minority Interest - Cash and cash equivalents
+              Purchase multiple is 10x LTM EBITDA
               <br />
               <br />
-              <b>Why not Market Capitalization?</b> EV provides a more
-              comprehensive view of a company's value by valuing its equity and
-              debt, compared to market capitalization which only values the
-              equity. It's particularly useful when comparing companies with
-              different capital structures (i.e use more debt or less debt).
+              The Company has the following: <br />
+              $200mm of Revenue in 2024 and expected to grow at $25mm annually
+              through the forecast period. <br />
+              EBITDA margins are 50% which remain flat. <br />
+              D&A and Capex are both 10% of revenues and flat throughout the
+              forecast period. <br />
+              There is no change in net working capital year to year. <br />
+              The tax rate is 50% <br />
+              The initial leverage is 5x LTM EBITDA <br />
+              The interest rate on debt is 10% p.a. <br />
+              We expect to exit this investment in 3 years at a 10x LTM EBITDA
+              multiple.
               <br />
               <br />
               <b>Comparison with market capitalization: </b>While market

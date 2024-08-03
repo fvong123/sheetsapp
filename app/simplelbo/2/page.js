@@ -57,12 +57,8 @@ export default function MainApp() {
               staff redundant.
               <br />
               <br />
-              In the Spreadsheet above, work out the Enterprise Values of each
-              of the companies below: <br />
-              <b>Company A:</b> Equity $50M, Debt $20M, Cash $30M <br />
-              <b>Company B:</b> Equity $100M, Debt $20M, Minority Interest $10M,
-              Cash $10M <br />
-              <b>Company C:</b> Equity $300M
+              In the Spreadsheet above, place YES next to all answers that
+              describe how investors make money in an LBO.
               <br />
               <br />
               Once you have completed the excercise, you can click the button
