@@ -1,58 +1,78 @@
 import SpreadsheetApp from "../../../components/SpreadsheetMain";
+import Link from "next/link";
 
 export default function MainApp() {
   return (
     <div className="flex flex-col h-screen bg-base-100">
       <div className="h-1/2 border-b border-base-300 shadow-md mb-2">
-        <SpreadsheetApp creator={false} initialData={6} />
+        <SpreadsheetApp creator={false} initialData={7} />
       </div>
       <main className="flex-1 overflow-auto p-8 bg-base-200">
         <div className="max-w-4xl mx-auto">
           <h1 className="text-4xl font-bold mb-6 text-primary">
-            Key Concept - Enterprise Value
+            Key Concept - Leveraged Buyout ("LBO")
           </h1>
           <div className="space-y-6 text-base-content">
             <p className="leading-relaxed">
-              Definition: Enterprise Value is the theoretical takeover price of
-              a company. It's the amount an acquirer would need to pay to take
-              control of a company, assuming they would take on all of its debts
-              and keep all of its cash.
+              A leveraged buyout (LBO) is the acquisition of one company by
+              another using a significant amount of borrowed money to meet the
+              cost of acquisition. The borrowed money can be in the form of
+              bonds or loans. The assets of the company being acquired are often
+              used as collateral for the loans along with the assets of the
+              acquiring company.
               <br />
               <br />
-              Importance: EV provides a more comprehensive view of a company's
-              value compared to market capitalization alone. It's especially
-              useful when comparing companies with different capital structures
-              or when evaluating potential acquisition targets. Comparison with
-              market capitalization: While market capitalization only represents
-              the value of a company's equity, EV includes both equity and debt,
-              providing a more holistic view of the company's value. <br />
-              <br />
-              Real-world example: Imagine two companies, A and B, both with a
-              market cap of $100 million. Company A has no debt and $10 million
-              in cash, while Company B has $50 million in debt and $5 million in
-              cash. Their EVs would be: <br />
-              <br />
-              Company A: EV = $100M - $10M = $90M
+              In an LBO, the ratio of debt to equity used for the takeover will
+              be as high as possible. The exact amount of debt that will be used
+              depends on the market lending conditions, investor appetite, and
+              the amount of cash flow that the company is expected to generate
+              after takeover. The bonds issued in the buyout usually aren't
+              investment grade and are referred to as junk bonds because of this
+              high debt/equity ratio.
               <br />
               <br />
-              Company B: EV = $100M + $50M - $5M = $145M <br />
+              Returns are generated in an LBO through:
               <br />
-              Despite having the same market cap, Company B has a higher EV due
-              to its debt load.
             </p>
+            <ul>
+              <li>
+                The company pays down its debt and this deleveraging increases
+                the amount of equity in the company.
+              </li>
+              <li>
+                Investors are able to improve profit margins by reducing or
+                eliminating unnecessary expenditures and improving sales.
+              </li>
+              <li>
+                The company will be sold at the end of the investment period at
+                a higher multiple than the investment company paid, a process
+                called margin expansion.
+              </li>
+            </ul>
             <p className="leading-relaxed">
-              The model is also widely used in modelling tests and investment
-              banking / private equity interviews, particularly for analysts and
-              associates as it covers off the key mechanics of an LBO and tests
-              your intuition about the model.
-            </p>
-            <p className="leading-relaxed">
-              In this short series, we'll cover off on a few main topics, which
-              are outlined in the spreadsheet above.
+              Private equity investment groups that carry out LBOs have garnered
+              a reputation for being ruthless and predatory because of their
+              need to rapidly increase margins. To do this, many investors
+              embark on strict cost-cutting measures that can include making
+              staff redundant.
+              <br />
+              <br />
+              In the Spreadsheet above, work out the Enterprise Values of each
+              of the companies below: <br />
+              <b>Company A:</b> Equity $50M, Debt $20M, Cash $30M <br />
+              <b>Company B:</b> Equity $100M, Debt $20M, Minority Interest $10M,
+              Cash $10M <br />
+              <b>Company C:</b> Equity $300M
+              <br />
+              <br />
+              Once you have completed the excercise, you can click the button
+              below to continue.
             </p>
           </div>
           <div className="mt-8">
-            <button className="btn btn-primary">Contact Support</button>
+            <Link href="/simplelbo/3">
+              <button className="btn btn-primary">Go to Next</button>
+            </Link>
           </div>
         </div>
       </main>

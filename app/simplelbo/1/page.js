@@ -1,4 +1,5 @@
 import SpreadsheetApp from "../../../components/SpreadsheetMain";
+import Link from "next/link";
 
 export default function MainApp() {
   return (
@@ -33,7 +34,9 @@ export default function MainApp() {
             </p>
           </div>
           <div className="mt-8">
-            <button className="btn btn-primary">Contact Support</button>
+            <Link href="/simplelbo/2">
+              <button className="btn btn-primary">Go to Next</button>
+            </Link>
           </div>
         </div>
       </main>
