@@ -3,16 +3,14 @@ import Link from "next/link";
 
 export default function MainApp() {
   return (
-    <div className="flex flex-col h-screen bg-base-100">
-      <div className="h-1/2 border-b border-base-300 shadow-md mb-2">
-        <SpreadsheetApp creator={false} initialData={6} />
-      </div>
-      <main className="flex-1 overflow-auto p-8 bg-base-200">
-        <div className="max-w-4xl mx-auto">
-          <h1 className="text-4xl font-bold mb-6 text-primary">
+    <div className="flex h-screen bg-base-100">
+      {/* Text content (1/4 width) */}
+      <div className="w-1/4 overflow-auto p-4 bg-base-200 border-r border-base-300">
+        <div className="max-w-xl mx-auto">
+          <h1 className="text-2xl font-bold mb-4 text-primary">
             Overview of the lesson
           </h1>
-          <div className="space-y-6 text-base-content">
+          <div className="space-y-4 text-sm text-base-content">
             <p className="leading-relaxed">
               This LBO model is a simplified version of the full LBO model that
               most investment banks, private equity firms and other investment
@@ -29,17 +27,27 @@ export default function MainApp() {
               your intuition about the model.
             </p>
             <p className="leading-relaxed">
-              In this short series, we'll cover off on a few main topics, which
-              are outlined in the spreadsheet above.
+              In this short series, we'll cover off on a few main topics. By the
+              end of the lesson, you should be able to identify the main inputs
+              of an LBO model, run a simple LBO, and arrive at the main outputs
+              of Internal Rate of Return (IRR) and Multiple of Invested Capital
+              (MOIC).
             </p>
           </div>
-          <div className="mt-8">
+          <div className="mt-6">
             <Link href="/simplelbo/2">
-              <button className="btn btn-primary">Go to Next</button>
+              <button className="btn btn-primary btn-sm">Go to Next</button>
             </Link>
           </div>
         </div>
-      </main>
+      </div>
+
+      {/* SpreadsheetApp (3/4 width) */}
+      <div className="w-3/4 flex flex-col">
+        <div className="flex-grow overflow-auto">
+          <SpreadsheetApp creator={false} initialData={6} />
+        </div>
+      </div>
     </div>
   );
 }

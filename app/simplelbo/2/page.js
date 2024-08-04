@@ -3,16 +3,14 @@ import Link from "next/link";
 
 export default function MainApp() {
   return (
-    <div className="flex flex-col h-screen bg-base-100">
-      <div className="h-1/2 border-b border-base-300 shadow-md mb-2">
-        <SpreadsheetApp creator={false} initialData={7} />
-      </div>
-      <main className="flex-1 overflow-auto p-8 bg-base-200">
-        <div className="max-w-4xl mx-auto">
-          <h1 className="text-4xl font-bold mb-6 text-primary">
+    <div className="flex h-screen bg-base-100">
+      {/* Text content (1/4 width) */}
+      <div className="w-1/4 overflow-auto p-4 bg-base-200 border-r border-base-300">
+        <div className="max-w-xl mx-auto">
+          <h1 className="text-2xl font-bold mb-4 text-primary">
             Key Concept - Leveraged Buyout ("LBO")
           </h1>
-          <div className="space-y-6 text-base-content">
+          <div className="space-y-4 text-sm text-base-content">
             <p className="leading-relaxed">
               A leveraged buyout (LBO) is the acquisition of one company by
               another using a significant amount of borrowed money to meet the
@@ -65,13 +63,20 @@ export default function MainApp() {
               below to continue.
             </p>
           </div>
-          <div className="mt-8">
+          <div className="mt-6">
             <Link href="/simplelbo/3">
-              <button className="btn btn-primary">Go to Next</button>
+              <button className="btn btn-primary btn-sm">Go to Next</button>
             </Link>
           </div>
         </div>
-      </main>
+      </div>
+
+      {/* SpreadsheetApp (3/4 width) */}
+      <div className="w-3/4 flex flex-col">
+        <div className="flex-grow overflow-auto">
+          <SpreadsheetApp creator={false} initialData={7} />
+        </div>
+      </div>
     </div>
   );
 }
