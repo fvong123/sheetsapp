@@ -1,15 +1,27 @@
-import SpreadsheetApp from "../components/SpreadsheetMain";
-import SpreadsheetText from "../components/SpreadsheetText";
+import { Suspense } from "react";
+import Header from "../components/Header";
+import Hero from "../components/Hero";
+import Problem from "../components/Problem";
+import FeaturesAccordion from "../components/FeaturesAccordion";
+// import Pricing from "../components/Pricing";
+import FAQ from "../components/FAQ";
+// import CTA from "../components/CTA";
+import Footer from "../components/Footer";
 
-export default function MainApp() {
+export default function Home() {
   return (
-    <div className="flex flex-col h-screen bg-base-100">
-      <div className="h-1/2 border-b border-base-300 shadow-md mb-2">
-        <SpreadsheetApp creator={false} initialData={4} />
-      </div>
-      <main className="flex-1 overflow-auto p-8 bg-base-200">
-        <SpreadsheetText />
+    <>
+      <Suspense>
+        <Header />
+      </Suspense>
+      <main>
+        <Hero />
+        <Problem />
+        <FeaturesAccordion />
+        {/* <Pricing /> */}
+        <FAQ />
       </main>
-    </div>
+      <Footer />
+    </>
   );
 }
