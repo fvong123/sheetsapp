@@ -1,26 +1,21 @@
 // utils/arithmeticUtils.js
 
 export function evaluateArithmetic(formula, cellData) {
-  // Replace cell references with their values
   const formulaWithValues = formula.replace(/[A-Z]+[0-9]+/g, (match) => {
     const cellId = cellReferenceToId(match);
     const cellValue = cellData[cellId]?.value;
     if (cellValue === undefined) {
       throw new Error(`Cell ${match} not found`);
     }
-    // If the cell value is a number, return it directly
     if (typeof cellValue === "number") {
       return cellValue.toString();
     }
-    // If the cell value is a formula, evaluate it recursively
     if (typeof cellValue === "string" && cellValue.startsWith("=")) {
       return evaluateArithmetic(cellValue.slice(1), cellData);
     }
-    // If it's a string, return it wrapped in quotes
     return `"${cellValue}"`;
   });
 
-  // Evaluate the formula
   try {
     return Function(`'use strict'; return (${formulaWithValues})`)();
   } catch (error) {
@@ -64,4 +59,24 @@ export function cellReferenceToId(ref) {
     columnNumber = columnNumber * 26 + col.charCodeAt(i) - 64;
   }
   return `${parseInt(row) - 1}-${columnNumber - 1}`;
+}
+
+export function isValidCellReference(ref) {
+  return /^[A-Z]+[0-9]+$/.test(ref);
+}
+
+export function getAdjacentCellReference(ref, direction) {
+  const [col, row] = cellReferenceToId(ref).split("-").map(Number);
+  switch (direction) {
+    case "up":
+      return idToCellReference(`${Math.max(0, row - 1)}-${col}`);
+    case "down":
+      return idToCellReference(`${row + 1}-${col}`);
+    case "left":
+      return idToCellReference(`${row}-${Math.max(0, col - 1)}`);
+    case "right":
+      return idToCellReference(`${row}-${col + 1}`);
+    default:
+      throw new Error("Invalid direction");
+  }
 }

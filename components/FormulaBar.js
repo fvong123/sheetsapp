@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useCallback, useEffect, forwardRef } from "react";
+import React, { forwardRef, useEffect, useRef } from "react";
 
 const FormulaBar = forwardRef(
   (
@@ -15,36 +15,44 @@ const FormulaBar = forwardRef(
     },
     ref,
   ) => {
+    const inputRef = useRef(null);
+
     useEffect(() => {
-      if (focusFormulaBar && ref && ref.current) {
-        ref.current.focus();
+      if (focusFormulaBar && inputRef.current) {
+        inputRef.current.focus();
+        inputRef.current.setSelectionRange(value.length, value.length);
         setFocusFormulaBar(false);
       }
-    }, [focusFormulaBar, ref, setFocusFormulaBar]);
+    }, [focusFormulaBar, setFocusFormulaBar, value]);
 
-    const handleKeyDown = useCallback(
-      (e) => {
-        if (e.key === "Enter") {
-          e.preventDefault();
-          onSubmit();
-        } else if (e.key === "Escape") {
-          e.preventDefault();
-          onCancel();
-        }
-      },
-      [onSubmit, onCancel],
-    );
+    const handleKeyDown = (e) => {
+      if (e.key === "Enter") {
+        e.preventDefault();
+        onSubmit();
+      } else if (e.key === "Escape") {
+        e.preventDefault();
+        onCancel();
+      }
+    };
 
     return (
-      <div className="mb-2">
+      <div className="flex items-center bg-white border border-gray-300 p-1">
+        <span className="mr-2 font-bold">=</span>
         <input
-          ref={ref}
+          ref={(node) => {
+            inputRef.current = node;
+            if (typeof ref === "function") {
+              ref(node);
+            } else if (ref) {
+              ref.current = node;
+            }
+          }}
           type="text"
+          className="flex-grow outline-none"
           value={value}
           onChange={(e) => onChange(e.target.value)}
           onKeyDown={handleKeyDown}
-          className="input input-bordered w-full h-8 rounded-none"
-          placeholder={"Enter value or formula"}
+          readOnly={!isEditMode}
         />
       </div>
     );

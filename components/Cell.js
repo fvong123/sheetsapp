@@ -11,6 +11,7 @@ const Cell = memo(
     onClick,
     isEditMode,
     isFormulaReference,
+    isCurrentFormulaCell, // Add this line
     updateCellData,
     rowData,
     columnIndex,
@@ -37,6 +38,7 @@ const Cell = memo(
       ${isSelected && isEditMode ? "outline outline-2 outline-blue-500" : ""}
       ${isFormulaReference && isEditMode ? "outline outline-2 outline-red-500" : ""}
       ${isSelected && !isEditMode ? "outline outline-2 outline-blue-500" : ""}
+      ${isCurrentFormulaCell ? "outline outline-2 outline-orange-500" : ""}  // Add this line
       ${shouldWrap ? "whitespace-normal overflow-hidden" : "whitespace-nowrap overflow-hidden text-ellipsis"}
     `;
 

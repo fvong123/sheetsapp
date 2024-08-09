@@ -11,15 +11,15 @@ import config from "../config";
 const links = [
   {
     href: "/#pricing",
-    label: "Pricing",
+    label: "Syllabus",
   },
   {
     href: "/#testimonials",
-    label: "Reviews",
+    label: "Catalog",
   },
   {
     href: "/#faq",
-    label: "FAQ",
+    label: "My Account",
   },
 ];
 

@@ -14,6 +14,7 @@ const Spreadsheet = memo(
     isFormulaMode,
     updateCellData,
     formulaReferences,
+    currentFormulaCell,
   }) => {
     const handleCellClick = useCallback(
       (cellId) => {
@@ -60,6 +61,7 @@ const Spreadsheet = memo(
                   data={cellData[cellId]}
                   isSelected={cellId === selectedCell}
                   isFormulaMode={isFormulaMode}
+                  isCurrentFormulaCell={cellId === currentFormulaCell}
                   isFormulaReference={formulaReferences.includes(cellId)}
                   onClick={handleCellClick}
                   updateCellData={updateCellData}
@@ -79,6 +81,7 @@ const Spreadsheet = memo(
         selectedCell,
         isFormulaMode,
         formulaReferences,
+        currentFormulaCell,
         handleCellClick,
         updateCellData,
       ],
