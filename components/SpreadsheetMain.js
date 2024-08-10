@@ -485,7 +485,7 @@ export default function SpreadsheetApp({ creator, initialData }) {
           </div>
         </div>
       )}
-      <main className="container mx-auto p-4">
+      <main className="flex flex-col flex-grow overflow-hidden h-full p-3">
         <div className="flex justify-between items-center mb-4">
           <h3 className="text-lg font-semibold">Formula Bar</h3>
           {creator && (
@@ -515,9 +515,9 @@ export default function SpreadsheetApp({ creator, initialData }) {
           focusFormulaBar={focusFormulaBar}
           setFocusFormulaBar={setFocusFormulaBar}
         />
-        <div className="mt-4">
+        <div className="h-full mt-4">
           <Spreadsheet
-            rows={15}
+            rows={30}
             cols={13}
             cellData={cellData}
             onCellSelect={handleCellSelect}

@@ -37,7 +37,7 @@ const FormulaBar = forwardRef(
 
     return (
       <div className="flex items-center bg-white border border-gray-300 p-1">
-        <span className="mr-2 font-bold">=</span>
+        <span className="mr-2 font-bold">Formula:</span>
         <input
           ref={(node) => {
             inputRef.current = node;

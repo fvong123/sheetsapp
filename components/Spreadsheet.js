@@ -88,9 +88,9 @@ const Spreadsheet = memo(
     );
 
     return (
-      <div className="border border-gray-200 p-1">
-        <div className="overflow-auto border border-gray-200 max-h-[calc(50vh-2rem)] max-w-full">
-          <table className="border-collapse w-full">
+      <div className="h-full overflow-hidden border border-gray-200 p-1">
+        <div className="h-full overflow-auto border border-gray-200 max-w-full">
+          <table className="border-collapse w-full h-full table-fixed">
             <thead>
               <tr>
                 <th className="sticky top-0 left-0 z-20 bg-gray-100 border border-gray-200 p-1 h-5 w-6 text-center font-bold text-[10px]">
