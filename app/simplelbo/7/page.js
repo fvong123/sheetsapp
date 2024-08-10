@@ -63,7 +63,7 @@ export default function MainApp() {
       {/* SpreadsheetApp (3/4 width) */}
       <div className="w-3/4 flex flex-col">
         <div className="flex-grow overflow-auto">
-          <SpreadsheetApp creator={false} initialData={7} />
+          <SpreadsheetApp creator={false} initialData={11} />
         </div>
       </div>
     </div>

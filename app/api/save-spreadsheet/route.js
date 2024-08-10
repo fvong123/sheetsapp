@@ -3,19 +3,43 @@ import { supabase } from "../../../libs/supabase";
 
 export async function POST(request) {
   try {
-    const { name, data } = await request.json();
+    const { id, name, data, formatting } = await request.json();
     console.log("api save");
 
-    const { data: insertData, error } = await supabase
-      .from("spreadsheets")
-      .insert([{ name, data: JSON.stringify(data) }])
-      .select();
+    let result;
 
-    if (error) throw error;
+    const saveData = {
+      name,
+      data: JSON.stringify(data),
+      formatting: JSON.stringify(formatting),
+    };
+
+    if (id) {
+      // Overwrite existing save
+      const { data: updateData, error } = await supabase
+        .from("spreadsheets")
+        .update(saveData)
+        .eq("id", id)
+        .select();
+
+      if (error) throw error;
+      result = updateData;
+    } else {
+      // Create new save
+      const { data: insertData, error } = await supabase
+        .from("spreadsheets")
+        .insert([saveData])
+        .select();
+
+      if (error) throw error;
+      result = insertData;
+    }
 
     return NextResponse.json({
-      message: "Spreadsheet saved successfully",
-      id: insertData.id,
+      message: id
+        ? "Spreadsheet updated successfully"
+        : "Spreadsheet saved successfully",
+      id: result[0].id,
     });
   } catch (error) {
     console.error("Error in save-spreadsheet route:", error);

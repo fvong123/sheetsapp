@@ -1,17 +1,15 @@
-// components/Cell.js
-"use client";
-
 import { memo, useCallback, useState, useRef, useEffect } from "react";
 
 const Cell = memo(
   ({
     id,
     data,
+    formatting,
     isSelected,
     onClick,
     isEditMode,
     isFormulaReference,
-    isCurrentFormulaCell, // Add this line
+    isCurrentFormulaCell,
     updateCellData,
     rowData,
     columnIndex,
@@ -33,12 +31,31 @@ const Cell = memo(
     const shouldWrap =
       columnIndex < rowData.length - 1 && !rowData[columnIndex + 1]?.value;
 
+    const cellStyle = {
+      backgroundColor:
+        formatting?.backgroundColor !== "default"
+          ? formatting?.backgroundColor
+          : undefined,
+      color: formatting?.color !== "default" ? formatting?.color : undefined,
+      fontWeight: formatting?.fontWeight || undefined,
+      fontStyle: formatting?.fontStyle || undefined,
+      textDecoration: formatting?.textDecoration || undefined,
+      borderLeft:
+        formatting?.leftBorder === "black" ? "1px solid black" : undefined,
+      borderRight:
+        formatting?.rightBorder === "black" ? "1px solid black" : undefined,
+      borderTop:
+        formatting?.topBorder === "black" ? "1px solid black" : undefined,
+      borderBottom:
+        formatting?.bottomBorder === "black" ? "1px solid black" : undefined,
+    };
+
     const cellClasses = `
       border border-gray-200 p-0.5 h-5 w-16 bg-white text-[10px]
       ${isSelected && isEditMode ? "outline outline-2 outline-blue-500" : ""}
       ${isFormulaReference && isEditMode ? "outline outline-2 outline-red-500" : ""}
       ${isSelected && !isEditMode ? "outline outline-2 outline-blue-500" : ""}
-      ${isCurrentFormulaCell ? "outline outline-2 outline-orange-500" : ""}  // Add this line
+      ${isCurrentFormulaCell ? "outline outline-2 outline-orange-500" : ""}
       ${shouldWrap ? "whitespace-normal overflow-hidden" : "whitespace-nowrap overflow-hidden text-ellipsis"}
     `;
 
@@ -82,6 +99,7 @@ const Cell = memo(
         className={cellClasses}
         onClick={handleClick}
         onDoubleClick={handleDoubleClick}
+        style={cellStyle}
       >
         {isEditing ? (
           <input
@@ -92,6 +110,7 @@ const Cell = memo(
             onBlur={handleBlur}
             onKeyDown={handleKeyDown}
             className="w-full h-full outline-none bg-transparent text-[10px]"
+            style={cellStyle}
           />
         ) : (
           <div

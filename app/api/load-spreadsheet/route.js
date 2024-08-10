@@ -26,14 +26,17 @@ export async function POST(request) {
 
     const { data, error } = await supabase
       .from("spreadsheets")
-      .select("data")
+      .select("data, formatting")
       .eq("id", id)
       .single();
 
     if (error) throw error;
 
     if (data) {
-      return NextResponse.json({ data: JSON.parse(data.data) });
+      return NextResponse.json({
+        data: JSON.parse(data.data),
+        formatting: JSON.parse(data.formatting || '{}')
+      });
     } else {
       return NextResponse.json(
         { error: "Spreadsheet not found" },

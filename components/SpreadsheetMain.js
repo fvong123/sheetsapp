@@ -16,9 +16,9 @@ const Spreadsheet = dynamic(() => import("./Spreadsheet"), {
 const FormulaBar = dynamic(() => import("./FormulaBar"), {
   ssr: false,
 });
-// const FormatBar = dynamic(() => import("./FormatBar"), {
-//   ssr: false,
-// });
+const FormatBar = dynamic(() => import("./FormatBar"), {
+  ssr: false,
+});
 
 export default function SpreadsheetApp({ creator, initialData }) {
   // spreadsheet states
@@ -30,6 +30,10 @@ export default function SpreadsheetApp({ creator, initialData }) {
   const [formulaReferences, setFormulaReferences] = useState([]);
   const [focusFormulaBar, setFocusFormulaBar] = useState(false);
   const [currentFormulaCell, setCurrentFormulaCell] = useState(null);
+  const [saveMode, setSaveMode] = useState("new");
+  const [selectedSaveId, setSelectedSaveId] = useState(null);
+  const [cellFormatting, setCellFormatting] = useState({});
+  const [currentFormat, setCurrentFormat] = useState({});
 
   // states for save and load modals
   const [isSaveModalOpen, setIsSaveModalOpen] = useState(false);
@@ -45,10 +49,28 @@ export default function SpreadsheetApp({ creator, initialData }) {
   const handleSave = async () => {
     try {
       setError(null);
+      if (saveMode === "new" && !saveName.trim()) {
+        setError("Please enter a name for the new save.");
+        return;
+      }
+
+      const saveData = {
+        name:
+          saveMode === "new"
+            ? saveName
+            : savedSpreadsheets.find((s) => s.id === selectedSaveId).name,
+        data: cellData,
+        formatting: cellFormatting,
+      };
+
+      if (saveMode === "overwrite") {
+        saveData.id = selectedSaveId;
+      }
+
       const response = await fetch("/api/save-spreadsheet", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name: saveName, data: cellData }),
+        body: JSON.stringify(saveData),
       });
 
       if (!response.ok) {
@@ -62,6 +84,8 @@ export default function SpreadsheetApp({ creator, initialData }) {
       console.log(result.message);
       setIsSaveModalOpen(false);
       setSaveName("");
+      setSaveMode("new");
+      setSelectedSaveId(null);
       // Optionally, show a success message
     } catch (error) {
       console.error("Save error:", error);
@@ -86,9 +110,14 @@ export default function SpreadsheetApp({ creator, initialData }) {
         );
       }
 
-      const { data } = await response.json();
+      const { data, formatting } = await response.json();
       setCellData(data);
+      setCellFormatting(formatting || {});
       setIsLoadModalOpen(false);
+
+      // Log loaded data for debugging
+      console.log("Loaded cell data:", data);
+      console.log("Loaded formatting:", formatting);
     } catch (error) {
       console.error("Load error:", error);
       setError(
@@ -189,8 +218,13 @@ export default function SpreadsheetApp({ creator, initialData }) {
         }
         return recalculateDependentCells(cellId, newData);
       });
+      // Preserve formatting when updating cell data
+      setCellFormatting((prev) => ({
+        ...prev,
+        [cellId]: { ...(prev[cellId] || {}), ...currentFormat },
+      }));
     },
-    [recalculateDependentCells],
+    [recalculateDependentCells, currentFormat],
   );
 
   const updateFormulaReferences = useCallback((value) => {
@@ -246,10 +280,12 @@ export default function SpreadsheetApp({ creator, initialData }) {
         setCurrentFormulaCell(cellId);
         updateFormulaReferences(formulaValue);
         setFocusFormulaBar(true);
+        setCurrentFormat(cellFormatting[cellId] || {});
       } else {
         setSelectedCell(cellId);
         setFormulaValue(cellData[cellId]?.value || "");
         setFormulaReferences([]);
+        setCurrentFormat(cellFormatting[cellId] || {});
       }
     },
     [
@@ -258,6 +294,7 @@ export default function SpreadsheetApp({ creator, initialData }) {
       updateFormulaReferences,
       formulaValue,
       currentFormulaCell,
+      cellFormatting,
     ],
   );
 
@@ -284,12 +321,11 @@ export default function SpreadsheetApp({ creator, initialData }) {
 
   const handleFormatChange = useCallback(
     (format) => {
-      if (selectedCell) {
-        setCellData((prev) => ({
-          ...prev,
-          [selectedCell]: { ...prev[selectedCell], ...format },
-        }));
-      }
+      setCurrentFormat((prev) => ({ ...prev, ...format }));
+      setCellFormatting((prev) => ({
+        ...prev,
+        [selectedCell]: { ...(prev[selectedCell] || {}), ...format },
+      }));
     },
     [selectedCell],
   );
@@ -312,7 +348,7 @@ export default function SpreadsheetApp({ creator, initialData }) {
             newRow = Math.max(
               0,
               Math.min(
-                14,
+                29,
                 row +
                   (e.key === "ArrowDown" ? 1 : e.key === "ArrowUp" ? -1 : 0),
               ),
@@ -370,7 +406,7 @@ export default function SpreadsheetApp({ creator, initialData }) {
               row = Math.max(
                 0,
                 Math.min(
-                  14,
+                  29,
                   row +
                     (e.key === "ArrowDown" ? 1 : e.key === "ArrowUp" ? -1 : 0),
                 ),
@@ -431,10 +467,10 @@ export default function SpreadsheetApp({ creator, initialData }) {
   }, [handleKeyDown]);
 
   useEffect(() => {
-    if (isLoadModalOpen) {
+    if (isSaveModalOpen || isLoadModalOpen) {
       fetchSavedSpreadsheets();
     }
-  }, [isLoadModalOpen]);
+  }, [isSaveModalOpen, isLoadModalOpen]);
 
   useEffect(() => {
     if (initialData !== null) {
@@ -445,17 +481,28 @@ export default function SpreadsheetApp({ creator, initialData }) {
   const memoizedSpreadsheet = useMemo(
     () => (
       <Spreadsheet
-        rows={15}
+        rows={30}
         cols={13}
         cellData={cellData}
+        cellFormatting={cellFormatting}
         onCellSelect={handleCellSelect}
         selectedCell={selectedCell}
         isEditMode={isEditMode}
         updateCellData={updateCellData}
         formulaReferences={formulaReferences}
+        currentFormulaCell={currentFormulaCell}
       />
     ),
-    [cellData, handleCellSelect, selectedCell, isEditMode, updateCellData],
+    [
+      cellData,
+      cellFormatting,
+      handleCellSelect,
+      selectedCell,
+      isEditMode,
+      updateCellData,
+      formulaReferences,
+      currentFormulaCell,
+    ],
   );
 
   return (
@@ -515,11 +562,16 @@ export default function SpreadsheetApp({ creator, initialData }) {
           focusFormulaBar={focusFormulaBar}
           setFocusFormulaBar={setFocusFormulaBar}
         />
+        <FormatBar
+          onFormatChange={handleFormatChange}
+          currentFormat={currentFormat}
+        />
         <div className="h-full mt-4">
           <Spreadsheet
             rows={30}
             cols={13}
             cellData={cellData}
+            cellFormatting={cellFormatting}
             onCellSelect={handleCellSelect}
             selectedCell={selectedCell}
             isEditMode={isEditMode}
@@ -535,18 +587,69 @@ export default function SpreadsheetApp({ creator, initialData }) {
         <div className="modal modal-open">
           <div className="modal-box">
             <h3 className="font-bold text-lg">Save Spreadsheet</h3>
-            <input
-              type="text"
-              placeholder="Enter save name"
-              className="input input-bordered w-full mt-2"
-              value={saveName}
-              onChange={(e) => setSaveName(e.target.value)}
-            />
+            <div className="form-control">
+              <label className="label cursor-pointer">
+                <span className="label-text">Create new save</span>
+                <input
+                  type="radio"
+                  name="save-mode"
+                  className="radio"
+                  checked={saveMode === "new"}
+                  onChange={() => setSaveMode("new")}
+                />
+              </label>
+            </div>
+            {saveMode === "new" && (
+              <input
+                type="text"
+                placeholder="Enter save name"
+                className="input input-bordered w-full mt-2"
+                value={saveName}
+                onChange={(e) => setSaveName(e.target.value)}
+              />
+            )}
+            <div className="form-control mt-2">
+              <label className="label cursor-pointer">
+                <span className="label-text">Overwrite existing save</span>
+                <input
+                  type="radio"
+                  name="save-mode"
+                  className="radio"
+                  checked={saveMode === "overwrite"}
+                  onChange={() => setSaveMode("overwrite")}
+                />
+              </label>
+            </div>
+            {saveMode === "overwrite" && (
+              <ul className="menu bg-base-100 w-full mt-2">
+                {savedSpreadsheets.map((sheet) => (
+                  <li key={sheet.id}>
+                    <label className="label cursor-pointer">
+                      <span className="label-text">
+                        {sheet.name} -{" "}
+                        {new Date(sheet.created_at).toLocaleString()}
+                      </span>
+                      <input
+                        type="radio"
+                        name="save-select"
+                        className="radio"
+                        checked={selectedSaveId === sheet.id}
+                        onChange={() => setSelectedSaveId(sheet.id)}
+                      />
+                    </label>
+                  </li>
+                ))}
+              </ul>
+            )}
             <div className="modal-action">
               <button className="btn" onClick={() => setIsSaveModalOpen(false)}>
                 Cancel
               </button>
-              <button className="btn btn-primary" onClick={handleSave}>
+              <button
+                className="btn btn-primary"
+                onClick={handleSave}
+                disabled={saveMode === "overwrite" && !selectedSaveId}
+              >
                 Save
               </button>
             </div>

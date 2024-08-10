@@ -9,9 +9,10 @@ const Spreadsheet = memo(
     rows,
     cols,
     cellData,
+    cellFormatting,
     onCellSelect,
     selectedCell,
-    isFormulaMode,
+    isEditMode,
     updateCellData,
     formulaReferences,
     currentFormulaCell,
@@ -59,10 +60,11 @@ const Spreadsheet = memo(
                   key={cellId}
                   id={cellId}
                   data={cellData[cellId]}
+                  formatting={cellFormatting[cellId]}
                   isSelected={cellId === selectedCell}
-                  isFormulaMode={isFormulaMode}
-                  isCurrentFormulaCell={cellId === currentFormulaCell}
+                  isEditMode={isEditMode}
                   isFormulaReference={formulaReferences.includes(cellId)}
+                  isCurrentFormulaCell={cellId === currentFormulaCell}
                   onClick={handleCellClick}
                   updateCellData={updateCellData}
                   rowData={Array.from({ length: cols }).map(
@@ -78,8 +80,9 @@ const Spreadsheet = memo(
         rows,
         cols,
         cellData,
+        cellFormatting,
         selectedCell,
-        isFormulaMode,
+        isEditMode,
         formulaReferences,
         currentFormulaCell,
         handleCellClick,
