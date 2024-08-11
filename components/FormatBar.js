@@ -9,7 +9,6 @@ const FormatBar = ({ onFormatChange, currentFormat }) => {
     { name: 'Green', value: 'green' },
     { name: 'Black', value: 'black' },
   ];
-
   const backgroundColors = [
     { name: 'Default', value: 'default' },
     { name: 'Dark Blue', value: '#00008B' },
@@ -17,8 +16,12 @@ const FormatBar = ({ onFormatChange, currentFormat }) => {
     { name: 'Grey', value: '#808080' },
     { name: 'Highlighter Yellow', value: '#FFFF00' },
   ];
-
-  const borders = ['left', 'right', 'top', 'bottom'];
+  const borders = [
+    { name: 'left', symbol: '▏', className: 'border-left-button' },
+    { name: 'right', symbol: '▕' },
+    { name: 'top', symbol: '▔' },
+    { name: 'bottom', symbol: '▁' },
+  ];
 
   return (
     <div className="flex items-center space-x-2 p-2 bg-gray-100">
@@ -32,7 +35,6 @@ const FormatBar = ({ onFormatChange, currentFormat }) => {
           <option key={color.value} value={color.value}>{color.name}</option>
         ))}
       </select>
-
       <select 
         onChange={(e) => onFormatChange({ color: e.target.value })}
         value={currentFormat.color || 'default'}
@@ -43,38 +45,34 @@ const FormatBar = ({ onFormatChange, currentFormat }) => {
           <option key={color.value} value={color.value}>{color.name}</option>
         ))}
       </select>
-
       <div className="flex space-x-1">
         {borders.map(border => (
           <button
-            key={border}
-            onClick={() => onFormatChange({ [border + 'Border']: currentFormat[border + 'Border'] === 'black' ? 'default' : 'black' })}
-            className={`btn btn-sm ${currentFormat[border + 'Border'] === 'black' ? 'btn-active' : ''}`}
+            key={border.name}
+            onClick={() => onFormatChange({ [border.name + 'Border']: currentFormat[border.name + 'Border'] === 'black' ? 'default' : 'black' })}
+            className={`btn btn-sm w-8 h-8 flex items-center justify-center relative ${border.className || ''} ${currentFormat[border.name + 'Border'] === 'black' ? 'btn-active' : ''}`}
           >
-            {border[0].toUpperCase()}
+            <span className="absolute left-2">{border.symbol}</span>
           </button>
         ))}
       </div>
-
       <button
         onClick={() => onFormatChange({ fontWeight: currentFormat.fontWeight === 'bold' ? 'normal' : 'bold' })}
-        className={`btn btn-sm ${currentFormat.fontWeight === 'bold' ? 'btn-active' : ''}`}
+        className={`btn btn-sm w-8 h-8 flex items-center justify-center ${currentFormat.fontWeight === 'bold' ? 'btn-active' : ''}`}
       >
-        B
+        𝐁
       </button>
-
       <button
         onClick={() => onFormatChange({ fontStyle: currentFormat.fontStyle === 'italic' ? 'normal' : 'italic' })}
-        className={`btn btn-sm ${currentFormat.fontStyle === 'italic' ? 'btn-active' : ''}`}
+        className={`btn btn-sm w-8 h-8 flex items-center justify-center ${currentFormat.fontStyle === 'italic' ? 'btn-active' : ''}`}
       >
-        I
+        𝐼
       </button>
-
       <button
         onClick={() => onFormatChange({ textDecoration: currentFormat.textDecoration === 'underline' ? 'none' : 'underline' })}
-        className={`btn btn-sm ${currentFormat.textDecoration === 'underline' ? 'btn-active' : ''}`}
+        className={`btn btn-sm w-8 h-8 flex items-center justify-center ${currentFormat.textDecoration === 'underline' ? 'btn-active' : ''}`}
       >
-        U
+        U̲
       </button>
     </div>
   );

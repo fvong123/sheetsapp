@@ -262,39 +262,49 @@ export default function SpreadsheetApp({ creator, initialData }) {
 
   const handleCellSelect = useCallback(
     (cellId) => {
+      console.log("Cell selected:", cellId);
+
       if (isEditMode && formulaValue.startsWith("=")) {
         const cellRef = idToCellReference(cellId);
-        if (currentFormulaCell) {
-          setFormulaValue((prevValue) => {
+        console.log("Adding cell reference:", cellRef);
+
+        setFormulaValue((prevValue) => {
+          let newValue;
+          if (currentFormulaCell) {
             const lastRef = idToCellReference(currentFormulaCell);
-            return prevValue.replace(new RegExp(lastRef + "$"), cellRef);
-          });
-        } else {
-          setFormulaValue((prevValue) => {
-            if (prevValue === "=" || /[+\-*/]$/.test(prevValue)) {
-              return prevValue + cellRef;
-            }
-            return prevValue + "+" + cellRef;
-          });
-        }
+            newValue = prevValue.replace(new RegExp(lastRef + "$"), cellRef);
+          } else {
+            newValue =
+              prevValue === "=" || /[+\-*/]$/.test(prevValue)
+                ? prevValue + cellRef
+                : prevValue + "+" + cellRef;
+          }
+          console.log("New formula value:", newValue);
+          updateFormulaReferences(newValue);
+          return newValue;
+        });
+
         setCurrentFormulaCell(cellId);
-        updateFormulaReferences(formulaValue);
         setFocusFormulaBar(true);
-        setCurrentFormat(cellFormatting[cellId] || {});
       } else {
         setSelectedCell(cellId);
-        setFormulaValue(cellData[cellId]?.value || "");
+        const newValue = cellData[cellId]?.value || "";
+        setFormulaValue(newValue);
         setFormulaReferences([]);
-        setCurrentFormat(cellFormatting[cellId] || {});
+        console.log("Selected cell value:", newValue);
       }
+
+      setCurrentFormat(cellFormatting[cellId] || {});
+      console.log("Current format set:", cellFormatting[cellId] || {});
     },
     [
       isEditMode,
-      cellData,
-      updateFormulaReferences,
       formulaValue,
       currentFormulaCell,
+      cellData,
       cellFormatting,
+      updateFormulaReferences,
+      idToCellReference,
     ],
   );
 
