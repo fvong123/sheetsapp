@@ -52,7 +52,7 @@ export default function MainApp() {
             </p>
           </div>
           <div className="mt-6">
-            <Link href="/simplelbo/11">
+            <Link href="/simplelbo/12">
               <button className="btn btn-primary btn-sm">Go to Next</button>
             </Link>
           </div>
