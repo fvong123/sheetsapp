@@ -24,6 +24,7 @@ export default function SpreadsheetApp({ creator, initialData }) {
   // spreadsheet states
   const [selectedCell, setSelectedCell] = useState("0-0");
   const [cellData, setCellData] = useState({});
+  const [checkData, setCheckData] = useState({});
   const [formulaValue, setFormulaValue] = useState("");
   const [isEditMode, setIsEditMode] = useState(false);
   const [dependencies, setDependencies] = useState({});
@@ -60,6 +61,7 @@ export default function SpreadsheetApp({ creator, initialData }) {
             ? saveName
             : savedSpreadsheets.find((s) => s.id === selectedSaveId).name,
         data: cellData,
+        check_data: checkData,
         formatting: cellFormatting,
       };
 
@@ -110,8 +112,9 @@ export default function SpreadsheetApp({ creator, initialData }) {
         );
       }
 
-      const { data, formatting } = await response.json();
+      const { data, formatting, check_data } = await response.json();
       setCellData(data);
+      setCheckData(check_data || {})
       setCellFormatting(formatting || {});
       setIsLoadModalOpen(false);
 
