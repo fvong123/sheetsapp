@@ -8,7 +8,10 @@ import {
   idToCellReference,
   cellReferenceToId,
   extractPartialCellReferences,
+  processInput,
+  formatResult,
 } from "../utils/arithmeticUtils";
+import ChecksModal from './ChecksModal';
 
 const Spreadsheet = dynamic(() => import("./Spreadsheet"), {
   ssr: false,
@@ -35,6 +38,8 @@ export default function SpreadsheetApp({ creator, initialData }) {
   const [selectedSaveId, setSelectedSaveId] = useState(null);
   const [cellFormatting, setCellFormatting] = useState({});
   const [currentFormat, setCurrentFormat] = useState({});
+  const [isChecksModalOpen, setIsChecksModalOpen] = useState(false);
+  const [cellErrors, setCellErrors] = useState({});
 
   // states for save and load modals
   const [isSaveModalOpen, setIsSaveModalOpen] = useState(false);
@@ -165,7 +170,7 @@ export default function SpreadsheetApp({ creator, initialData }) {
             const result = evaluateArithmetic(cellFormula.slice(1), newData);
             newData[cellId] = {
               ...newData[cellId],
-              displayValue: result.toString(),
+              displayValue: formatResult(result),
             };
             recalculateDependentCells(cellId, newData);
           } catch (error) {
@@ -180,18 +185,25 @@ export default function SpreadsheetApp({ creator, initialData }) {
 
   const updateCellData = useCallback(
     (cellId, newValue) => {
+      console.log(`Updating cell ${cellId} with value:`, newValue); // Debug log
       setCellData((prev) => {
         let newData = { ...prev };
+        let newErrors = { ...cellErrors };
         if (newValue.startsWith("=")) {
-          // Handle formula
+          console.log("Handling formula"); // Debug log
           try {
-            const result = evaluateArithmetic(newValue.slice(1), newData);
+            const formulaWithoutEquals = newValue.slice(1);
+            const result = evaluateArithmetic(formulaWithoutEquals, newData);
+            console.log("Formula result:", result); // Debug log
             newData[cellId] = {
-              value: newValue,
-              displayValue: result.toString(),
+              value: result, // Store the numeric result
+              displayValue: formatResult(result),
             };
+            delete newErrors[cellId];
           } catch (error) {
+            console.error("Formula evaluation error:", error);
             newData[cellId] = { value: newValue, displayValue: "#ERROR" };
+            newErrors[cellId] = error.message;
           }
           const cellRefs = extractCellReferences(newValue);
           setDependencies((prevDeps) => {
@@ -204,21 +216,19 @@ export default function SpreadsheetApp({ creator, initialData }) {
             return newDeps;
           });
         } else if (newValue === "") {
+          console.log("Handling empty cell"); // Debug log
           delete newData[cellId];
+          delete newErrors[cellId];
         } else {
-          const numericValue = parseFloat(newValue);
-          if (!isNaN(numericValue) && newValue.trim() !== "") {
-            newData[cellId] = {
-              value: numericValue,
-              displayValue: numericValue.toString(),
-            };
-          } else {
-            newData[cellId] = {
-              value: newValue,
-              displayValue: newValue,
-            };
-          }
+          console.log("Handling non-formula input"); // Debug log
+          const processedValue = processInput(newValue);
+          newData[cellId] = {
+            value: processedValue.value,
+            displayValue: processedValue.displayValue,
+          };
+          delete newErrors[cellId];
         }
+        setCellErrors(newErrors);
         return recalculateDependentCells(cellId, newData);
       });
       // Preserve formatting when updating cell data
@@ -227,21 +237,31 @@ export default function SpreadsheetApp({ creator, initialData }) {
         [cellId]: { ...(prev[cellId] || {}), ...currentFormat },
       }));
     },
-    [recalculateDependentCells, currentFormat],
+    [recalculateDependentCells, currentFormat, cellErrors],
   );
 
   const updateFormulaReferences = useCallback((value) => {
+    // Extract complete cell references from the formula
     const completeRefs = extractCellReferences(value);
+    
+    // Extract partial cell references (e.g., incomplete references being typed)
     const partialRef = extractPartialCellReferences(value);
+    
+    // Combine complete and partial references
     const allRefs = [...completeRefs, ...partialRef];
+    
+    // Filter out invalid references
     const validRefs = allRefs.filter((ref) => {
       try {
+        // Attempt to convert the reference to a cell ID
         cellReferenceToId(ref);
-        return true;
+        return true; // If successful, keep the reference
       } catch {
-        return false;
+        return false; // If conversion fails, discard the reference
       }
     });
+    
+    // Update the formula references state with valid cell IDs
     setFormulaReferences(validRefs.map(cellReferenceToId));
   }, []);
 
@@ -343,9 +363,26 @@ export default function SpreadsheetApp({ creator, initialData }) {
     [selectedCell],
   );
 
+  const handleCreateChecks = useCallback(() => {
+    setIsChecksModalOpen(true);
+  }, []);
+
+  const handleSaveChecks = useCallback((newChecks) => {
+    const newCheckData = {};
+    newChecks.forEach(check => {
+      newCheckData[check.cellReference] = {
+        name: check.name,
+        hint: check.hint,
+        value: cellData[check.cellReference]?.value || ''
+      };
+    });
+    setCheckData(newCheckData);
+  }, [cellData]);
+
   const handleKeyDown = useCallback(
     (e) => {
       e.stopPropagation();
+      console.log('keydown', e.key)
 
       if (!isEditMode) {
         const [row, col] = selectedCell.split("-").map(Number);
@@ -504,6 +541,8 @@ export default function SpreadsheetApp({ creator, initialData }) {
         updateCellData={updateCellData}
         formulaReferences={formulaReferences}
         currentFormulaCell={currentFormulaCell}
+        checkData={checkData}
+        cellErrors={cellErrors}
       />
     ),
     [
@@ -515,6 +554,8 @@ export default function SpreadsheetApp({ creator, initialData }) {
       updateCellData,
       formulaReferences,
       currentFormulaCell,
+      checkData,
+      cellErrors,
     ],
   );
 
@@ -578,6 +619,8 @@ export default function SpreadsheetApp({ creator, initialData }) {
         <FormatBar
           onFormatChange={handleFormatChange}
           currentFormat={currentFormat}
+          onCreateChecks={handleCreateChecks}
+          creator={creator}
         />
         <div className="h-full mt-4">
           <Spreadsheet
@@ -591,6 +634,8 @@ export default function SpreadsheetApp({ creator, initialData }) {
             updateCellData={updateCellData}
             formulaReferences={formulaReferences}
             currentFormulaCell={currentFormulaCell}
+            checkData={checkData}
+            cellErrors={cellErrors}
           />
         </div>
       </main>
@@ -692,6 +737,12 @@ export default function SpreadsheetApp({ creator, initialData }) {
           </div>
         </div>
       )}
+
+      <ChecksModal
+        isOpen={isChecksModalOpen}
+        onClose={() => setIsChecksModalOpen(false)}
+        onSave={handleSaveChecks}
+      />
     </div>
   );
 }

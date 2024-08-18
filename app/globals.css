@@ -20,3 +20,21 @@ progress::-webkit-progress-value {
     @apply !capitalize;
   }
 }
+
+.error-cell {
+  position: relative;
+  cursor: pointer;
+}
+
+.error-cell:hover::after {
+  content: attr(title);
+  position: absolute;
+  left: 0;
+  top: 100%;
+  background-color: #ff6b6b;
+  color: white;
+  padding: 5px;
+  border-radius: 3px;
+  z-index: 1000;
+  white-space: nowrap;
+}

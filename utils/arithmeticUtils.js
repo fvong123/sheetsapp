@@ -1,26 +1,83 @@
 // utils/arithmeticUtils.js
 
 export function evaluateArithmetic(formula, cellData) {
-  const formulaWithValues = formula.replace(/[A-Z]+[0-9]+/g, (match) => {
+  console.log("Original formula:", formula); // Debug log
+
+  const cellRefRegex = /[A-Z]+[0-9]+/g;
+  let processedFormula = formula.replace(cellRefRegex, (match) => {
     const cellId = cellReferenceToId(match);
     const cellValue = cellData[cellId]?.value;
     if (cellValue === undefined) {
       throw new Error(`Cell ${match} not found`);
     }
-    if (typeof cellValue === "number") {
-      return cellValue.toString();
-    }
-    if (typeof cellValue === "string" && cellValue.startsWith("=")) {
-      return evaluateArithmetic(cellValue.slice(1), cellData);
-    }
-    return `"${cellValue}"`;
+    return typeof cellValue === 'number' ? cellValue : `"${cellValue}"`;
   });
 
-  try {
-    return Function(`'use strict'; return (${formulaWithValues})`)();
-  } catch (error) {
-    throw new Error("Invalid formula");
+  console.log("After cell reference replacement:", processedFormula); // Debug log
+
+  // Handle standalone percentage
+  if (/^\s*\d+(\.\d+)?%\s*$/.test(processedFormula)) {
+    console.log("Handling standalone percentage"); // Debug log
+    return parseFloat(processedFormula) / 100;
   }
+
+  // Handle percentages in the formula
+  processedFormula = processedFormula.replace(/(\d+(\.\d+)?)%/g, (match, p1) => `(${p1}/100)`);
+
+  console.log("After percentage handling:", processedFormula); // Debug log
+
+  try {
+    // For simple numeric expressions, use a basic evaluation
+    if (/^[\d\s\+\-\*\/\(\)\.]+$/.test(processedFormula)) {
+      console.log("Using basic evaluation"); // Debug log
+      return eval(processedFormula);
+    }
+
+    console.log("Using Function evaluation"); // Debug log
+    const result = Function(`"use strict"; return (${processedFormula});`)();
+    console.log("Evaluation result:", result); // Debug log
+    return result;
+  } catch (error) {
+    console.error("Formula evaluation error:", error);
+    throw new Error(`Invalid formula: ${error.message}`);
+  }
+}
+
+export function processInput(input) {
+  console.log("Processing input:", input); // Debug log
+  // Handle percentages
+  if (typeof input === 'string' && input.endsWith('%')) {
+    const numValue = parseFloat(input) / 100;
+    console.log("Processed percentage:", { value: numValue, displayValue: input }); // Debug log
+    return { value: numValue, displayValue: input };
+  }
+  // Handle numbers and decimals
+  const numValue = parseFloat(input);
+  if (!isNaN(numValue) && input.trim() === numValue.toString()) {
+    console.log("Processed number:", { value: numValue, displayValue: input }); // Debug log
+    return { value: numValue, displayValue: input };
+  }
+  // Handle other inputs (text, symbols, etc.)
+  console.log("Processed as text:", { value: input, displayValue: input }); // Debug log
+  return { value: input, displayValue: input };
+}
+
+export function formatResult(result) {
+  console.log("Formatting result:", result); // Debug log
+  if (typeof result === 'number') {
+    // Check if the result is a percentage (between 0 and 1)
+    if (result >= 0 && result <= 1) {
+      const formattedResult = (result * 100).toFixed(2) + '%';
+      console.log("Formatted as percentage:", formattedResult); // Debug log
+      return formattedResult;
+    }
+    // Format number with up to 4 decimal places
+    const formattedResult = result.toLocaleString(undefined, { maximumFractionDigits: 4 });
+    console.log("Formatted as number:", formattedResult); // Debug log
+    return formattedResult;
+  }
+  console.log("Formatted as string:", result.toString()); // Debug log
+  return result.toString();
 }
 
 export function extractCellReferences(formula) {

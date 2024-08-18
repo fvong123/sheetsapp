@@ -16,6 +16,8 @@ const Spreadsheet = memo(
     updateCellData,
     formulaReferences,
     currentFormulaCell,
+    checkData,
+    cellErrors,
   }) => {
     const handleCellClick = useCallback(
       (cellId) => {
@@ -55,15 +57,20 @@ const Spreadsheet = memo(
             </td>
             {Array.from({ length: cols }).map((_, colIndex) => {
               const cellId = `${rowIndex}-${colIndex}`;
+              const isSelected = cellId === selectedCell;
+              const isFormulaReference = formulaReferences.includes(cellId);
+              const isCheckCell = cellId in checkData;
+              const cellError = cellErrors[cellId];
+
               return (
                 <Cell
                   key={cellId}
                   id={cellId}
                   data={cellData[cellId]}
                   formatting={cellFormatting[cellId]}
-                  isSelected={cellId === selectedCell}
+                  isSelected={isSelected}
                   isEditMode={isEditMode}
-                  isFormulaReference={formulaReferences.includes(cellId)}
+                  isFormulaReference={isFormulaReference}
                   isCurrentFormulaCell={cellId === currentFormulaCell}
                   onClick={handleCellClick}
                   updateCellData={updateCellData}
@@ -71,6 +78,8 @@ const Spreadsheet = memo(
                     (_, colIdx) => cellData[`${rowIndex}-${colIdx}`],
                   )}
                   columnIndex={colIndex}
+                  isCheckCell={isCheckCell}
+                  cellError={cellError}
                 />
               );
             })}
@@ -87,6 +96,8 @@ const Spreadsheet = memo(
         currentFormulaCell,
         handleCellClick,
         updateCellData,
+        checkData,
+        cellErrors,
       ],
     );
 
