@@ -1,6 +1,6 @@
 import React from 'react';
 
-const FormatBar = ({ onFormatChange, currentFormat, onCreateChecks, creator }) => {
+const FormatBar = ({ onFormatChange, currentFormat, onCreateChecks, onCheckAnswers, creator }) => {
   const fontColors = [
     { name: 'Default', value: 'default' },
     { name: 'White', value: 'white' },
@@ -77,14 +77,24 @@ const FormatBar = ({ onFormatChange, currentFormat, onCreateChecks, creator }) =
         </button>
       </div>
 
-      {creator && (
-        <button
-          className="btn btn-sm btn-primary"
-          onClick={onCreateChecks}
-        >
-          Create Checks
-        </button>
-      )}
+      <div className="flex items-center space-x-2">
+        {creator && (
+          <button
+            className="btn btn-sm btn-primary"
+            onClick={onCreateChecks}
+          >
+            Create Checks
+          </button>
+        )}
+        {!creator && (
+          <button
+            className="btn btn-sm btn-secondary"
+            onClick={onCheckAnswers}
+          >
+            Check Answers
+          </button>
+        )}
+      </div>
     </div>
   );
 };

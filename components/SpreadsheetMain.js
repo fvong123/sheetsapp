@@ -12,6 +12,7 @@ import {
   formatResult,
 } from "../utils/arithmeticUtils";
 import ChecksModal from './ChecksModal';
+import UserChecksModal from './UserChecksModal';
 
 const Spreadsheet = dynamic(() => import("./Spreadsheet"), {
   ssr: false,
@@ -40,6 +41,8 @@ export default function SpreadsheetApp({ creator, initialData }) {
   const [currentFormat, setCurrentFormat] = useState({});
   const [isChecksModalOpen, setIsChecksModalOpen] = useState(false);
   const [cellErrors, setCellErrors] = useState({});
+  const [isUserChecksModalOpen, setIsUserChecksModalOpen] = useState(false);
+  const [checkResults, setCheckResults] = useState([]);
 
   // states for save and load modals
   const [isSaveModalOpen, setIsSaveModalOpen] = useState(false);
@@ -379,6 +382,20 @@ export default function SpreadsheetApp({ creator, initialData }) {
     setCheckData(newCheckData);
   }, [cellData]);
 
+  const handleCheckAnswers = useCallback(() => {
+    const results = Object.entries(checkData).map(([cellRef, check]) => {
+      const cellValue = cellData[cellRef]?.value;
+      const isCorrect = cellValue === check.value;
+      return {
+        name: check.name,
+        correct: isCorrect,
+        hint: check.hint
+      };
+    });
+    setCheckResults(results);
+    setIsUserChecksModalOpen(true);
+  }, [checkData, cellData]);
+
   const handleKeyDown = useCallback(
     (e) => {
       e.stopPropagation();
@@ -620,6 +637,7 @@ export default function SpreadsheetApp({ creator, initialData }) {
           onFormatChange={handleFormatChange}
           currentFormat={currentFormat}
           onCreateChecks={handleCreateChecks}
+          onCheckAnswers={handleCheckAnswers}
           creator={creator}
         />
         <div className="h-full mt-4">
@@ -742,6 +760,12 @@ export default function SpreadsheetApp({ creator, initialData }) {
         isOpen={isChecksModalOpen}
         onClose={() => setIsChecksModalOpen(false)}
         onSave={handleSaveChecks}
+      />
+
+      <UserChecksModal
+        isOpen={isUserChecksModalOpen}
+        onClose={() => setIsUserChecksModalOpen(false)}
+        checkResults={checkResults}
       />
     </div>
   );
