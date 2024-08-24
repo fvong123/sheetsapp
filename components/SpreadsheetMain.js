@@ -55,55 +55,41 @@ export default function SpreadsheetApp({ creator, initialData }) {
 
   // save and load functions
 
-  const handleSave = async () => {
+  const handleSave = useCallback(async () => {
     try {
-      setError(null);
-      if (saveMode === "new" && !saveName.trim()) {
-        setError("Please enter a name for the new save.");
-        return;
-      }
-
-      const saveData = {
-        name:
-          saveMode === "new"
-            ? saveName
-            : savedSpreadsheets.find((s) => s.id === selectedSaveId).name,
-        data: cellData,
-        check_data: checkData,
-        formatting: cellFormatting,
-      };
-
-      if (saveMode === "overwrite") {
-        saveData.id = selectedSaveId;
-      }
-
+      console.log("save");
       const response = await fetch("/api/save-spreadsheet", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(saveData),
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          id: selectedSaveId,
+          name: saveName,
+          data: cellData,
+          formatting: cellFormatting,
+          check_data: checkData
+        }),
       });
 
       if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(
-          errorData.error || `HTTP error! status: ${response.status}`,
-        );
+        throw new Error("Failed to save spreadsheet");
       }
 
       const result = await response.json();
-      console.log(result.message);
+      console.log(result);
+
       setIsSaveModalOpen(false);
-      setSaveName("");
-      setSaveMode("new");
-      setSelectedSaveId(null);
-      // Optionally, show a success message
+      setSavedSpreadsheets((prev) => [
+        ...prev.filter((s) => s.id !== selectedSaveId),
+        { id: result.id, name: saveName },
+      ]);
+      setSelectedSaveId(result.id);
     } catch (error) {
       console.error("Save error:", error);
-      setError(
-        error.message || "Failed to save spreadsheet. Please try again.",
-      );
+      setError("Failed to save spreadsheet. Please try again.");
     }
-  };
+  }, [selectedSaveId, saveName, cellData, cellFormatting, checkData]);
 
   const handleLoad = async (id) => {
     try {
@@ -376,11 +362,13 @@ export default function SpreadsheetApp({ creator, initialData }) {
       newCheckData[check.cellReference] = {
         name: check.name,
         hint: check.hint,
-        value: cellData[check.cellReference]?.value || ''
+        checkValue: check.checkValue // Use the value from the check object
       };
+
+      console.log(newCheckData);
     });
     setCheckData(newCheckData);
-  }, [cellData]);
+  }, []);
 
   const handleCheckAnswers = useCallback(() => {
     const results = Object.entries(checkData).map(([cellRef, check]) => {
@@ -760,6 +748,7 @@ export default function SpreadsheetApp({ creator, initialData }) {
         isOpen={isChecksModalOpen}
         onClose={() => setIsChecksModalOpen(false)}
         onSave={handleSaveChecks}
+        cellData={cellData}
       />
 
       <UserChecksModal

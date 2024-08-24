@@ -3,7 +3,7 @@ import { supabase } from "../../../libs/supabase";
 
 export async function POST(request) {
   try {
-    const { id, name, data, formatting } = await request.json();
+    const { id, name, data, formatting, check_data } = await request.json();
     console.log("api save");
 
     let result;
@@ -12,6 +12,7 @@ export async function POST(request) {
       name,
       data: JSON.stringify(data),
       formatting: JSON.stringify(formatting),
+      check_data: JSON.stringify(check_data),
     };
 
     if (id) {

@@ -1,7 +1,7 @@
 import { useState } from 'react';
 
 export default function ChecksModal({ isOpen, onClose, onSave }) {
-  const [checks, setChecks] = useState([{ name: '', cellReference: '', hint: '' }]);
+  const [checks, setChecks] = useState([{ name: '', cellReference: '', checkValue: '', hint: '' }]);
 
   const handleInputChange = (index, field, value) => {
     const newChecks = [...checks];
@@ -10,7 +10,7 @@ export default function ChecksModal({ isOpen, onClose, onSave }) {
   };
 
   const addNewRow = () => {
-    setChecks([...checks, { name: '', cellReference: '', hint: '' }]);
+    setChecks([...checks, { name: '', cellReference: '', checkValue: '', hint: '' }]);
   };
 
   const handleSave = () => {
@@ -29,6 +29,7 @@ export default function ChecksModal({ isOpen, onClose, onSave }) {
             <tr>
               <th className="text-left bg-white">Name</th>
               <th className="text-left bg-white">Cell Reference</th>
+              <th className="text-left bg-white">Value</th>
               <th className="text-left bg-white">Hint</th>
             </tr>
           </thead>
@@ -48,6 +49,14 @@ export default function ChecksModal({ isOpen, onClose, onSave }) {
                     type="text"
                     value={check.cellReference}
                     onChange={(e) => handleInputChange(index, 'cellReference', e.target.value)}
+                    className="border rounded px-2 py-1 w-full"
+                  />
+                </td>
+                <td className="bg-white">
+                  <input
+                    type="text"
+                    value={check.checkValue}
+                    onChange={(e) => handleInputChange(index, 'checkValue', e.target.value)}
                     className="border rounded px-2 py-1 w-full"
                   />
                 </td>
