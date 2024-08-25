@@ -17,10 +17,10 @@ const FormatBar = ({ onFormatChange, currentFormat, onCreateChecks, onCheckAnswe
     { name: 'Highlighter Yellow', value: '#FFFF00' },
   ];
   const borders = [
-    { name: 'left', symbol: '▏', className: 'border-left-button' },
-    { name: 'right', symbol: '▕' },
-    { name: 'top', symbol: '▔' },
-    { name: 'bottom', symbol: '▁' },
+    { name: 'left', label: 'L' },
+    { name: 'right', label: 'R' },
+    { name: 'top', label: 'T' },
+    { name: 'bottom', label: 'B' },
   ];
 
   return (
@@ -46,16 +46,19 @@ const FormatBar = ({ onFormatChange, currentFormat, onCreateChecks, onCheckAnswe
             <option key={color.value} value={color.value}>{color.name}</option>
           ))}
         </select>
-        <div className="flex space-x-1">
-          {borders.map(border => (
-            <button
-              key={border.name}
-              onClick={() => onFormatChange({ [border.name + 'Border']: currentFormat[border.name + 'Border'] === 'black' ? 'default' : 'black' })}
-              className={`btn btn-sm w-8 h-8 flex items-center justify-center relative ${border.className || ''} ${currentFormat[border.name + 'Border'] === 'black' ? 'btn-active' : ''}`}
-            >
-              <span className="absolute left-2">{border.symbol}</span>
-            </button>
-          ))}
+        <div className="border rounded p-1 flex items-center">
+          <span className="text-xs mr-2">Borders</span>
+          <div className="flex space-x-1">
+            {borders.map(border => (
+              <button
+                key={border.name}
+                onClick={() => onFormatChange({ [border.name + 'Border']: currentFormat[border.name + 'Border'] === 'black' ? 'default' : 'black' })}
+                className={`btn btn-xs w-6 h-6 flex items-center justify-center ${currentFormat[border.name + 'Border'] === 'black' ? 'btn-active' : ''}`}
+              >
+                {border.label}
+              </button>
+            ))}
+          </div>
         </div>
         <button
           onClick={() => onFormatChange({ fontWeight: currentFormat.fontWeight === 'bold' ? 'normal' : 'bold' })}

@@ -1,10 +1,15 @@
 import { useState } from 'react';
+import { cellReferenceToId, idToCellReference, isValidCellReference } from '../utils/arithmeticUtils';
 
 export default function ChecksModal({ isOpen, onClose, onSave }) {
   const [checks, setChecks] = useState([{ name: '', cellReference: '', checkValue: '', hint: '' }]);
+  const [error, setError] = useState('');
 
   const handleInputChange = (index, field, value) => {
     const newChecks = [...checks];
+    if (field === 'cellReference') {
+      value = value.toUpperCase();
+    }
     newChecks[index][field] = value;
     setChecks(newChecks);
   };
@@ -14,7 +19,27 @@ export default function ChecksModal({ isOpen, onClose, onSave }) {
   };
 
   const handleSave = () => {
-    onSave(checks);
+    setError('');
+    const validatedChecks = checks.map(check => {
+      const { cellReference, ...rest } = check;
+      if (cellReference) {
+        if (!isValidCellReference(cellReference)) {
+          setError('Invalid cell reference format. Please use format like A1, B2, etc.');
+          return null;
+        }
+        const convertedReference = cellReferenceToId(cellReference);
+        console.log(`Converting ${cellReference} to ${convertedReference}`);
+        return { ...rest, cellReference: convertedReference };
+      }
+      return check;
+    });
+
+    if (validatedChecks.some(check => check === null)) {
+      return; // Don't save if there are invalid cell references
+    }
+
+    console.log('Saving checks:', validatedChecks);
+    onSave(validatedChecks);
     onClose();
   };
 
@@ -24,6 +49,7 @@ export default function ChecksModal({ isOpen, onClose, onSave }) {
     <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full flex items-center justify-center z-50">
       <div className="bg-white p-5 rounded-lg shadow-xl w-3/4 max-w-2xl relative">
         <h2 className="text-xl font-bold mb-4">Create Checks</h2>
+        {error && <p className="text-red-500 mb-4">{error}</p>}
         <table className="w-full mb-4 bg-white">
           <thead>
             <tr>

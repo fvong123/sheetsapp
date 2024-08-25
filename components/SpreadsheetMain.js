@@ -99,6 +99,8 @@ export default function SpreadsheetApp({ creator, initialData }) {
         body: JSON.stringify({ id }),
       });
 
+      console.log(response)
+
       if (!response.ok) {
         const errorData = await response.json();
         throw new Error(
@@ -115,6 +117,7 @@ export default function SpreadsheetApp({ creator, initialData }) {
       // Log loaded data for debugging
       console.log("Loaded cell data:", data);
       console.log("Loaded formatting:", formatting);
+      console.log("Loaded check data:", check_data);
     } catch (error) {
       console.error("Load error:", error);
       setError(
@@ -359,21 +362,22 @@ export default function SpreadsheetApp({ creator, initialData }) {
   const handleSaveChecks = useCallback((newChecks) => {
     const newCheckData = {};
     newChecks.forEach(check => {
+      // The cellReference is already in numeric format (e.g., "0-0")
+      // We don't need to convert it again
       newCheckData[check.cellReference] = {
         name: check.name,
         hint: check.hint,
-        checkValue: check.checkValue // Use the value from the check object
+        checkValue: check.checkValue
       };
-
-      console.log(newCheckData);
     });
+    console.log('Saving check data:', newCheckData); // Debug log
     setCheckData(newCheckData);
   }, []);
 
   const handleCheckAnswers = useCallback(() => {
     const results = Object.entries(checkData).map(([cellRef, check]) => {
-      const cellValue = cellData[cellRef]?.value;
-      const isCorrect = cellValue === check.value;
+      const cellValue = cellData[cellRef]?.displayValue;
+      const isCorrect = cellValue === check.checkValue;
       return {
         name: check.name,
         correct: isCorrect,

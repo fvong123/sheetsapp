@@ -26,16 +26,18 @@ export async function POST(request) {
 
     const { data, error } = await supabase
       .from("spreadsheets")
-      .select("data, formatting")
+      .select("data, formatting, check_data")
       .eq("id", id)
       .single();
 
     if (error) throw error;
 
     if (data) {
+
       return NextResponse.json({
         data: JSON.parse(data.data),
-        formatting: JSON.parse(data.formatting || '{}')
+        formatting: JSON.parse(data.formatting || '{}'),
+        check_data: JSON.parse(data.check_data || '{}'),
       });
     } else {
       return NextResponse.json(
