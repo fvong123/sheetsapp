@@ -14,7 +14,7 @@ export default function MainApp() {
           <li>Exit strategies and returns analysis</li>
           <li>Simple case study walkthrough</li>
         </ul>
-        <p>By the end of this course, you'll have a solid understanding of LBO basics and be able to create a simple LBO model.</p>
+        <p>By the end of this course, you&apos;ll have a solid understanding of LBO basics and be able to create a simple LBO model.</p>
         <Link href="/simplelbo/1" className="mt-6">
         <button className="btn btn-primary">Start Course</button>
       </Link>

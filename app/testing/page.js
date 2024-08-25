@@ -16,7 +16,7 @@ export default function MainApp() {
               most investment banks, private equity firms and other investment
               teams use. The reason it is popular is that you can get 80% of the
               accuracy in a very short amount of time. For example, if you were
-              an analyst you could run this while listening to a company's pitch
+              an analyst you could run this while listening to a company&apos;s pitch
               and very quickly get a sense of whether it is a good investment,
               given your transaction assumptions.
             </p>
@@ -27,7 +27,7 @@ export default function MainApp() {
               your intuition about the model.
             </p>
             <p className="leading-relaxed">
-              In this short series, we'll cover off on a few main topics. By the
+              In this short series, we&apos;ll cover off on a few main topics. By the
               end of the lesson, you should be able to identify the main inputs
               of an LBO model, run a simple LBO, and arrive at the main outputs
               of Internal Rate of Return (IRR) and Multiple of Invested Capital

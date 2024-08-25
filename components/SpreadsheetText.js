@@ -20,11 +20,11 @@ export default function SpreadsheetText() {
           Feel free to explore the spreadsheet above. You can start by clicking
           on any cell and entering data. To enter a formula, begin with an
           equals sign (=) followed by your formula. Use arrow keys to navigate
-          between cells, and press Enter to edit a cell's contents.
+          between cells, and press Enter to edit a cell&apos;s contents.
         </p>
         <p className="leading-relaxed">
           We hope you find this tool useful for your financial management needs.
-          If you have any questions or feedback, please don't hesitate to reach
+          If you have any questions or feedback, please don&apos;t hesitate to reach
           out to our support team.
         </p>
       </div>

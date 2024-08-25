@@ -10,7 +10,7 @@ export default function MainApp() {
           {/* Title Section */}
           <div>
             <h2 className="text-xs font-semibold text-base-content/70 uppercase">Key Concept</h2>
-            <h1 className="text-2xl font-bold mt-1">Enterprise Value ("EV")</h1>
+            <h1 className="text-2xl font-bold mt-1">Enterprise Value (&quot;EV&quot;)</h1>
             <p className="text-sm text-base-content/70 mt-1">5 min</p>
           </div>
 
