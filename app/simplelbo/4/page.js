@@ -1,17 +1,23 @@
+import React from 'react';
 import SpreadsheetApp from "../../../components/SpreadsheetMain";
 
 export default function MainApp() {
   return (
     <div className="flex h-screen bg-base-100">
-      {/* Text content (1/4 width) */}
-      <div className="w-1/4 overflow-auto p-4 bg-base-200 border-r border-base-300">
-        <div className="max-w-xl mx-auto">
-          <h1 className="text-2xl font-bold mb-4 text-primary">
-            Transaction Case Study
-          </h1>
-          <div className="space-y-4 text-sm text-base-content">
+      {/* Left Information Pane */}
+      <div className="w-1/4 p-6 overflow-y-auto bg-base-200 border-r border-base-300">
+        <div className="space-y-6">
+          {/* Title Section */}
+          <div>
+            <h2 className="text-xs font-semibold text-base-content/70 uppercase">Case Study</h2>
+            <h1 className="text-2xl font-bold mt-1">Transaction Case Study</h1>
+            <p className="text-sm text-base-content/70 mt-1">5 min</p>
+          </div>
+
+          {/* Main Content */}
+          <div className="prose">
             <p className="leading-relaxed">
-              Assume that we are a private equity firm purchasing "Company A" at
+              Assume that we are a private equity firm purchasing &quot;Company A&quot; at
               the end of 2024
               <br />
               <br />
@@ -31,7 +37,7 @@ export default function MainApp() {
               multiple.
               <br />
               <br />
-              We'll have this scenario at the bottom of each lesson on
+              We&apos;ll have this scenario at the bottom of each lesson on
               subsequent pages.
             </p>
           </div>
@@ -39,7 +45,7 @@ export default function MainApp() {
       </div>
 
       {/* SpreadsheetApp (3/4 width) */}
-      <div className="w-3/4 flex flex-col">
+      <div className="w-3/4 flex bg-gray-900 flex-col">
         <div className="flex-grow overflow-auto">
           <SpreadsheetApp
             creator={false}

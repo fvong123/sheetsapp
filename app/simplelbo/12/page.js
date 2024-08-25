@@ -37,7 +37,7 @@ export default function MainApp() {
               of Money (MOM).
               <br />
               <br />
-              We're putting together more advanced modelling courses to stay
+              We&apos;re putting together more advanced modelling courses to stay
               tuned!
             </p>
             <h2 className="text-lg font-bold mb-4 text-primary">Hint</h2>

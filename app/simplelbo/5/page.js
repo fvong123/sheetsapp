@@ -16,7 +16,7 @@ export default function MainApp() {
               is to use a LTM EBITDA multiple.
               <br />
               <br />
-              In this example, we aren't given the EBITDA directly, but we are
+              In this example, we aren&apos;t given the EBITDA directly, but we are
               given two components that can be used to determine EBITDA.
               <br />
               <br />

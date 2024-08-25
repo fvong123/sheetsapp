@@ -24,15 +24,15 @@ export default function MainApp() {
               and potential ratings implications.
               <br />
               <br />
-              On the company side, a 'utility like' acquisition such as data
+              On the company side, a &apos;utility like&apos; acquisition such as data
               centre with long dated contracts with high quality customers where
               EBITDA is highly predictable over the long term will allow a
-              higher leverage multiple as compared to a 'Direct to Customer'
+              higher leverage multiple as compared to a &apos;Direct to Customer&apos;
               consumer product company where EBITDA from year to year is
               unpredicatable.
               <br />
               <br />
-              In our model, use the 'Leverage' section to complete find out the
+              In our model, use the &apos;Leverage&apos; section to complete find out the
               amount of debt we will use to fund the transaction.
             </p>
             <h2 className="text-lg font-bold mb-4 text-primary">Hint</h2>

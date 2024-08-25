@@ -1,17 +1,23 @@
+import React from 'react';
 import SpreadsheetApp from "../../../components/SpreadsheetMain";
 
 export default function MainApp() {
   return (
     <div className="flex h-screen bg-base-100">
-      {/* Text content (1/4 width) */}
-      <div className="w-1/4 overflow-auto p-4 bg-base-200 border-r border-base-300">
-        <div className="max-w-xl mx-auto">
-          <h1 className="text-2xl font-bold mb-4 text-primary">
-            Key Concept - Enterprise Value ("EV")
-          </h1>
-          <div className="space-y-4 text-sm text-base-content">
+      {/* Left Information Pane */}
+      <div className="w-1/4 p-6 overflow-y-auto bg-base-200 border-r border-base-300">
+        <div className="space-y-6">
+          {/* Title Section */}
+          <div>
+            <h2 className="text-xs font-semibold text-base-content/70 uppercase">Key Concept</h2>
+            <h1 className="text-2xl font-bold mt-1">Enterprise Value ("EV")</h1>
+            <p className="text-sm text-base-content/70 mt-1">5 min</p>
+          </div>
+
+          {/* Main Content */}
+          <div className="prose">
             <p className="leading-relaxed">
-              Enterprise Value is the theoretical value of a company. It's also
+              Enterprise Value is the theoretical value of a company. It&apos;s also
               the amount an acquirer would need to pay to take control of said
               company, assuming they would discharge all of its debts and keep
               all of its cash.
@@ -22,18 +28,18 @@ export default function MainApp() {
               <br />
               <br />
               <b>Why not Market Capitalization?</b> EV provides a more
-              comprehensive view of a company's value by valuing its equity and
+              comprehensive view of a company&apos;s value by valuing its equity and
               debt, compared to market capitalization which only values the
-              equity. It's particularly useful when comparing companies with
+              equity. It&apos;s particularly useful when comparing companies with
               different capital structures (i.e use more debt or less debt).
               <br />
               <br />
               Imagine you have a company worth $100M, it is family run and as
-              such has never taken debt. It is entirely equity financed. We'll
-              call this 'Family Run Company'. Now imagine then that a Private
+              such has never taken debt. It is entirely equity financed. We&apos;ll
+              call this &apos;Family Run Company&apos;. Now imagine then that a Private
               Equity firm comes along and acquires this company for $100M, but
-              finances that purchase by borrowing 50% of the value. We'll call
-              this 'Private Equity Company'.
+              finances that purchase by borrowing 50% of the value. We&apos;ll call
+              this &apos;Private Equity Company&apos;.
               <br />
               <br />
               Family Run Company: Equity: $100M + Debt $0M = EV: $100m
@@ -50,7 +56,7 @@ export default function MainApp() {
             </p>
             <p className="leading-relaxed">
               In the Spreadsheet above, work out the Enterprise Values of each
-              of the companies below. We've added the inputs of the first, but
+              of the companies below. We&apos;ve added the inputs of the first, but
               have left you to do the second and third. <br />
               <b>Company A:</b> Equity $50M, Debt $20M, Cash $30M <br />
               <b>Company B:</b> Equity $100M, Debt $20M, Minority Interest $10M,
@@ -66,12 +72,12 @@ export default function MainApp() {
       </div>
 
       {/* SpreadsheetApp (3/4 width) */}
-      <div className="w-3/4 flex flex-col">
+      <div className="w-3/4 flex bg-gray-900 flex-col">
         <div className="flex-grow overflow-auto">
           <SpreadsheetApp
             creator={false}
             initialData={7}
-            nextPageLink="/simplelbo/5"
+            nextPageLink="/simplelbo/4"
           />
         </div>
       </div>

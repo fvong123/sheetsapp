@@ -13,15 +13,15 @@ export default function MainApp() {
               we can calculate our debt paydown.
               <br />
               <br />
-              In this example we've used a simple assumption that debt is only
+              In this example we&apos;ve used a simple assumption that debt is only
               repaid at the end of the investment period. In reality, debt
               structures are often more complex and may require paydowns each
               year.
               <br />
               <br />
-              In our excel, we've added a new section called 'Debt Paydown'.
-              We'll need to take our Initial debt, and then deduct our Final
-              Cash Balance. This gives us the Ending Net Debt balance that we'll
+              In our excel, we&apos;ve added a new section called &apos;Debt Paydown&apos;.
+              We&apos;ll need to take our Initial debt, and then deduct our Final
+              Cash Balance. This gives us the Ending Net Debt balance that we&apos;ll
               need to calculate returns.
               <br />
               <br />

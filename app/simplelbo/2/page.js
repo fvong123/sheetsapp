@@ -5,10 +5,12 @@ export default function MainApp() {
     <div className="flex h-screen bg-base-100">
       {/* Text content (1/4 width) */}
       <div className="w-1/4 overflow-auto p-4 bg-base-200 border-r border-base-300">
-        <div className="max-w-xl mx-auto">
-          <h1 className="text-2xl font-bold mb-4 text-primary">
-            Key Concept - Leveraged Buyout ("LBO")
-          </h1>
+        <div className="space-y-6">
+          <div>
+            <h2 className="text-xs font-semibold text-base-content/70 uppercase">Overview of the lesson</h2>
+            <h1 className="text-2xl font-bold mt-1">Welcome</h1>
+            <p className="text-sm text-base-content/70 mt-1">3 min</p>
+          </div>
           <div className="space-y-4 text-sm text-base-content">
             <p className="leading-relaxed">
               A leveraged buyout (LBO) is the acquisition of one company by
@@ -23,7 +25,7 @@ export default function MainApp() {
               be as high as possible. The exact amount of debt that will be used
               depends on the market lending conditions, investor appetite, and
               the amount of cash flow that the company is expected to generate
-              after takeover. The bonds issued in the buyout usually aren't
+              after takeover. The bonds issued in the buyout usually aren&apos;t
               investment grade and are referred to as junk bonds because of this
               high debt/equity ratio.
               <br />

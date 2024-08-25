@@ -11,8 +11,8 @@ export default function MainApp() {
           </h1>
           <div className="space-y-4 text-sm text-base-content">
             <p className="leading-relaxed">
-              Wow, you're almost there! The final (and most important) thing we
-              want to know from our investment is how much we've made and
+              Wow, you&apos;re almost there! The final (and most important) thing we
+              want to know from our investment is how much we&apos;ve made and
               typical private equity firms use two main metrics to measure
               returns.
               <br />
@@ -26,11 +26,11 @@ export default function MainApp() {
               The second is Internal Rate of Return (IRR) which is the return of
               the investment per year. This is slightly complicated to work out
               as it requires us to backsolve the IRR through trial and error, or
-              through goal-seek in excel. We'll show you two ways to work it
+              through goal-seek in excel. We&apos;ll show you two ways to work it
               out.
               <br />
               <br />
-              The rule of thumb is that for "double your money" scenarios, you
+              The rule of thumb is that for &quot;double your money&quot; scenarios, you
               take 100%, divide by the # of years, and then estimate the IRR as
               about 75-80% of that value. For example, if you double your money
               in 3 years, 100% / 3 = 33%. 75% of 33% is about 25%, which is the

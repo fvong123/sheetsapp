@@ -11,12 +11,12 @@ export default function MainApp() {
           </h1>
           <div className="space-y-4 text-sm text-base-content">
             <p className="leading-relaxed">
-              So we've got our actuals, the next step is to create the forecast
+              So we&apos;ve got our actuals, the next step is to create the forecast
               cashflows for the next 3 years.
               <br />
               <br />
               We start at the Revenue assumption, which says that Revenue is
-              expected to grow $25mm each year in the forecast period, so let's
+              expected to grow $25mm each year in the forecast period, so let&apos;s
               increment Revenue by $25mm each year.
               <br />
               <br />

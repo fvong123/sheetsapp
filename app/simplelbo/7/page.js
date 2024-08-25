@@ -22,7 +22,7 @@ export default function MainApp() {
               statement, or 3 statement model to forecast this.
               <br />
               <br />
-              Let's take a look at what we've been given from our transaction
+              Let&apos;s take a look at what we&apos;ve been given from our transaction
               assumptions. Fill in column 2024A (Actual numbers from 2024). The
               first thing we need to do is build out earnings deducting D&A and
               interest until we get to Earnings Before Tax, this allows us to
@@ -31,7 +31,7 @@ export default function MainApp() {
               then deduct Capex, as it is a cash outflow.
               <br />
               <br />
-              We'll create another line which helps us keep track of cash
+              We&apos;ll create another line which helps us keep track of cash
               throughout the years.
               <br />
               <br />

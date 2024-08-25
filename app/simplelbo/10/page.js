@@ -23,21 +23,21 @@ export default function MainApp() {
               in.
               <br />
               <br />
-              Once again, the assumption we've taken here is fairly simplistic
-              and doesn't take into account any fees, dividends or other
+              Once again, the assumption we&apos;ve taken here is fairly simplistic
+              and doesn&apos;t take into account any fees, dividends or other
               transaction mechanics you might see in an actual deal. At the end,
               we arrive at the final Enterprise Value of the sale. Since we also
               have the final Net Debt number from the previous page, we can also
               find the final Equity Value of our investment.
               <br />
               <br />
-              In the Spreadsheet, we've created a new section call 'Exit Value'.
-              To work out the Enterprise Value, we'll need to take our final
+              In the Spreadsheet, we&apos;ve created a new section call &apos;Exit Value&apos;.
+              To work out the Enterprise Value, we&apos;ll need to take our final
               EBITDA number (LTM EBITDA) and multiple it by our Exit Multiple
               assumption.
               <br />
               <br />
-              Then to work out the final Equity Value, we'll need to deduct
+              Then to work out the final Equity Value, we&apos;ll need to deduct
               Final Net Debt from our Enterprise Value.
             </p>
             <h2 className="text-lg font-bold mb-4 text-primary">Hint</h2>

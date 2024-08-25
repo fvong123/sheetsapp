@@ -1,50 +1,30 @@
-import React from 'react';
+
+"use client"
+import React, { useState, useEffect } from 'react';
 import SpreadsheetApp from "../../../components/SpreadsheetMain";
+import { instruction_text } from "../data";
+
 
 const LessonPage = () => {
+  const [instructionText, setInstructionText] = useState(null);
+
+  useEffect(() => {
+    setInstructionText(instruction_text.pg1);
+  }, []);
+
   return (
     <div className="flex h-screen bg-base-100">
       {/* Left Information Pane */}
       <div className="w-1/4 p-6 overflow-y-auto bg-base-200 border-r border-base-300">
         <div className="space-y-6">
-          {/* HELLO WORLD Section */}
-          <div>
-            <h2 className="text-xs font-semibold text-base-content/70 uppercase">Overview of the lesson</h2>
-            <h1 className="text-2xl font-bold mt-1">Welcome</h1>
-            <p className="text-sm text-base-content/70 mt-1">3 min</p>
-          </div>
-
-          {/* Main Content */}
-          <div className="prose">
-            <p>This LBO model is a simplified version of the full LBO model that
-              most investment banks, private equity firms and other investment
-              teams use. The reason it is popular is that you can get 80% of the
-              accuracy in a very short amount of time. For example, if you were
-              an analyst you could run this while listening to a company's pitch
-              and very quickly get a sense of whether it is a good investment,
-              given your transaction assumptions.</p> <br/><br/>
-              <p className="prose">
-              The model is also widely used in modelling tests and investment
-              banking / private equity interviews, particularly for analysts and
-              associates as it covers off the key mechanics of an LBO and tests
-              your intuition about the model.
-            </p> <br/><br/>
-            <p className="prose">
-              In this short series, we'll cover off on a few main topics. By the
-              end of the lesson, you should be able to identify the main inputs
-              of an LBO model, run a simple LBO, and arrive at the main outputs
-              of Internal Rate of Return (IRR) and Multiple of Invested Capital
-              (MOIC).
-            </p>
-          </div>
-
-          {/* Instructions */}
-          <div>
-            <h3 className="font-semibold">Instructions</h3>
-            <p className="mt-2">Change <code className="bg-base-300 px-1 rounded">codecademy</code> to your name in the script to the right. Run the code to see what it does!</p>
-            <p className="mt-2">As soon as you're ready, move on to the next exercise to begin learning to write your own Python programs!</p>
-          </div>
-
+          {instructionText ? (
+            <>
+              {instructionText.header}
+              {instructionText.content}
+            </>
+          ) : (
+            <p>Loading instruction text...</p>
+          )}
           {/* Video Walkthrough */}
           {/* <div>
             <h3 className="font-semibold flex items-center">
@@ -91,7 +71,7 @@ const LessonPage = () => {
           <SpreadsheetApp
             creator={false}
             initialData={7}
-            nextPageLink="/simplelbo/3"
+            nextPageLink="/simplelbo/2"
           />
         </div>
       </div>
