@@ -1,6 +1,6 @@
 import Image from "next/image";
 import marcImg from "../../../app/blog/_assets/images/authors/marc.png";
-import introducingSupabaseImg from "../../../public/blog/introducing-supabase/header.png";
+// import introducingSupabaseImg from "../../../public/blog/introducing-supabase/header.png";
 
 // ==================================================================================================================================================================
 // BLOG CATEGORIES 🏷️
@@ -170,7 +170,7 @@ export const articles = [
     publishedAt: "2023-11-20",
     image: {
       // The image to display in <CardArticle /> components.
-      src: introducingSupabaseImg,
+      // src: introducingSupabaseImg,
       // The relative URL of the same image to use in the Open Graph meta tags & the Schema Markup JSON-LD.
       urlRelative: "/blog/introducing-supabase/header.jpg",
       alt: "Supabase and ShipFast logo combined",
@@ -178,7 +178,7 @@ export const articles = [
     // The actual content of the article that will be shown under the <h1> title in the article page.
     content: (
       <>
-        <Image
+        {/* <Image
           src={introducingSupabaseImg}
           alt="Supabase and ShipFast logo combined"
           width={700}
@@ -186,7 +186,7 @@ export const articles = [
           priority={true}
           className="rounded-box"
           placeholder="blur"
-        />
+        /> */}
         <section>
           <h2 className={styles.h2}>Introduction</h2>
           <p className={styles.p}>
