@@ -645,7 +645,7 @@ export default function SpreadsheetApp({ creator, initialData, nextPageLink }) {
           creator={creator}
         />
         
-        <div className="flex justify-between items-center mt-2 mb-4">
+        <div className="flex justify-between items-center">
           <div className="flex items-center space-x-2">
             <button
               className="btn btn-secondary btn-sm"
