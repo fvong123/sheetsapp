@@ -1,5 +1,4 @@
 import SpreadsheetApp from "../../../components/SpreadsheetMain";
-import Link from "next/link";
 
 export default function MainApp() {
   return (
@@ -48,18 +47,17 @@ export default function MainApp() {
               Equity Value = Enterprise Value - Final Net Debt
             </p>
           </div>
-          <div className="mt-6">
-            <Link href="/simplelbo/11">
-              <button className="btn btn-primary btn-sm">Go to Next</button>
-            </Link>
-          </div>
         </div>
       </div>
 
       {/* SpreadsheetApp (3/4 width) */}
       <div className="w-3/4 flex flex-col">
         <div className="flex-grow overflow-auto">
-          <SpreadsheetApp creator={false} initialData={16} />
+          <SpreadsheetApp
+            creator={false}
+            initialData={16}
+            nextPageLink="/simplelbo"
+          />
         </div>
       </div>
     </div>

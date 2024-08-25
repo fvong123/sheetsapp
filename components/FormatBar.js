@@ -89,14 +89,6 @@ const FormatBar = ({ onFormatChange, currentFormat, onCreateChecks, onCheckAnswe
             Create Checks
           </button>
         )}
-        {!creator && (
-          <button
-            className="btn btn-sm btn-secondary"
-            onClick={onCheckAnswers}
-          >
-            Check Answers
-          </button>
-        )}
       </div>
     </div>
   );

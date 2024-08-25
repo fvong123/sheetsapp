@@ -1,5 +1,4 @@
 import SpreadsheetApp from "../../../components/SpreadsheetMain";
-import Link from "next/link";
 
 export default function MainApp() {
   return (
@@ -31,7 +30,7 @@ export default function MainApp() {
               out.
               <br />
               <br />
-              The rule of thumb is that for "double your money” scenarios, you
+              The rule of thumb is that for "double your money" scenarios, you
               take 100%, divide by the # of years, and then estimate the IRR as
               about 75-80% of that value. For example, if you double your money
               in 3 years, 100% / 3 = 33%. 75% of 33% is about 25%, which is the
@@ -51,18 +50,17 @@ export default function MainApp() {
               Equity Value = Enterprise Value - Final Net Debt
             </p>
           </div>
-          <div className="mt-6">
-            <Link href="/simplelbo/12">
-              <button className="btn btn-primary btn-sm">Go to Next</button>
-            </Link>
-          </div>
         </div>
       </div>
 
       {/* SpreadsheetApp (3/4 width) */}
       <div className="w-3/4 flex flex-col">
         <div className="flex-grow overflow-auto">
-          <SpreadsheetApp creator={false} initialData={15} />
+          <SpreadsheetApp
+            creator={false}
+            initialData={15}
+            nextPageLink="/simplelbo/12"
+          />
         </div>
       </div>
     </div>

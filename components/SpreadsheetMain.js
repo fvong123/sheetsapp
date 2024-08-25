@@ -13,6 +13,8 @@ import {
 } from "../utils/arithmeticUtils";
 import ChecksModal from './ChecksModal';
 import UserChecksModal from './UserChecksModal';
+import ProgressIndicator from './ProgressIndicator';
+import Link from "next/link";
 
 const Spreadsheet = dynamic(() => import("./Spreadsheet"), {
   ssr: false,
@@ -24,7 +26,7 @@ const FormatBar = dynamic(() => import("./FormatBar"), {
   ssr: false,
 });
 
-export default function SpreadsheetApp({ creator, initialData }) {
+export default function SpreadsheetApp({ creator, initialData, nextPageLink }) {
   // spreadsheet states
   const [selectedCell, setSelectedCell] = useState("0-0");
   const [cellData, setCellData] = useState({});
@@ -43,6 +45,7 @@ export default function SpreadsheetApp({ creator, initialData }) {
   const [cellErrors, setCellErrors] = useState({});
   const [isUserChecksModalOpen, setIsUserChecksModalOpen] = useState(false);
   const [checkResults, setCheckResults] = useState([]);
+  const [isNextButtonEnabled, setIsNextButtonEnabled] = useState(false);
 
   // states for save and load modals
   const [isSaveModalOpen, setIsSaveModalOpen] = useState(false);
@@ -386,6 +389,10 @@ export default function SpreadsheetApp({ creator, initialData }) {
     });
     setCheckResults(results);
     setIsUserChecksModalOpen(true);
+
+    // Check if all answers are correct
+    const allCorrect = results.every(result => result.correct);
+    setIsNextButtonEnabled(allCorrect);
   }, [checkData, cellData]);
 
   const handleKeyDown = useCallback(
@@ -537,6 +544,12 @@ export default function SpreadsheetApp({ creator, initialData }) {
     }
   }, []); // Empty dependency array means this effect runs once on mount
 
+  // Reset isNextButtonEnabled when the component mounts or when checkData changes
+  useEffect(() => {
+    setIsNextButtonEnabled(false);
+    setCheckResults([]);
+  }, [checkData]);
+
   const memoizedSpreadsheet = useMemo(
     () => (
       <Spreadsheet
@@ -629,9 +642,31 @@ export default function SpreadsheetApp({ creator, initialData }) {
           onFormatChange={handleFormatChange}
           currentFormat={currentFormat}
           onCreateChecks={handleCreateChecks}
-          onCheckAnswers={handleCheckAnswers}
           creator={creator}
         />
+        
+        <div className="flex justify-between items-center mt-2 mb-4">
+          <div className="flex items-center space-x-2">
+            <button
+              className="btn btn-secondary btn-sm"
+              onClick={handleCheckAnswers}
+            >
+              Check Answers
+            </button>
+            {nextPageLink && (
+              <Link href={nextPageLink}>
+                <button
+                  className="btn btn-primary btn-sm"
+                  disabled={!isNextButtonEnabled}
+                >
+                  Go to Next
+                </button>
+              </Link>
+            )}
+          </div>
+          <ProgressIndicator checkResults={checkResults} />
+        </div>
+        
         <div className="h-full mt-4">
           <Spreadsheet
             rows={30}
