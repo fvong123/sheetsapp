@@ -1,6 +1,8 @@
 const nextConfig = {
   reactStrictMode: true,
-  missingSuspenseWithCSRBailout: false,
+  experimental: {
+    missingSuspenseWithCSRBailout: false,
+  },
   images: {
     domains: [
       // NextJS <Image> component needs to whitelist domains for src={}
