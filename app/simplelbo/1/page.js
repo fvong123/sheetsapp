@@ -1,6 +1,6 @@
 
 "use client"
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Suspense } from 'react';
 import SpreadsheetApp from "../../../components/SpreadsheetMain";
 import { instruction_text } from "../data";
 
@@ -68,11 +68,13 @@ const LessonPage = () => {
       {/* SpreadsheetApp (3/4 width) */}
       <div className="w-3/4 flex bg-gray-900 flex-col">
         <div className="flex-grow overflow-auto">
+          <Suspense>
           <SpreadsheetApp
             creator={false}
             initialData={7}
             nextPageLink="/simplelbo/2"
           />
+          </Suspense>
         </div>
       </div>
     </div>
