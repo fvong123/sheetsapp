@@ -298,7 +298,7 @@ export default function SpreadsheetApp({ creator, initialData, nextPageLink }) {
                 : prevValue + "+" + cellRef;
           }
           console.log("New formula value:", newValue);
-          updateFormulaReferences(newValue);
+          // updateFormulaReferences(newValue);
           return newValue;
         });
 
@@ -502,7 +502,7 @@ export default function SpreadsheetApp({ creator, initialData, nextPageLink }) {
               }
 
               setCurrentFormulaCell(newCellId);
-              updateFormulaReferences(formulaValue);
+              // updateFormulaReferences(formulaValue);
             }
             break;
           default:
