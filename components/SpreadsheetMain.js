@@ -46,6 +46,9 @@ export default function SpreadsheetApp({ creator, initialData, nextPageLink }) {
   const [isUserChecksModalOpen, setIsUserChecksModalOpen] = useState(false);
   const [checkResults, setCheckResults] = useState([]);
   const [isNextButtonEnabled, setIsNextButtonEnabled] = useState(false);
+  const [selectedCells, setSelectedCells] = useState([]);
+  const [isSelecting, setIsSelecting] = useState(false);
+  const [selectionStart, setSelectionStart] = useState(null);
 
   // states for save and load modals
   const [isSaveModalOpen, setIsSaveModalOpen] = useState(false);
@@ -279,7 +282,7 @@ export default function SpreadsheetApp({ creator, initialData, nextPageLink }) {
   );
 
   const handleCellSelect = useCallback(
-    (cellId) => {
+    (cellId, isShiftKey = false) => {
       console.log("Cell selected:", cellId);
 
       if (isEditMode && formulaValue.startsWith("=")) {
@@ -305,6 +308,19 @@ export default function SpreadsheetApp({ creator, initialData, nextPageLink }) {
         setCurrentFormulaCell(cellId);
         setFocusFormulaBar(true);
       } else {
+        if (isShiftKey && selectedCells.length > 0) {
+          const [startRow, startCol] = selectedCells[0].split("-").map(Number);
+          const [endRow, endCol] = cellId.split("-").map(Number);
+          const newSelection = [];
+          for (let r = Math.min(startRow, endRow); r <= Math.max(startRow, endRow); r++) {
+            for (let c = Math.min(startCol, endCol); c <= Math.max(startCol, endCol); c++) {
+              newSelection.push(`${r}-${c}`);
+            }
+          }
+          setSelectedCells(newSelection);
+        } else {
+          setSelectedCells([cellId]);
+        }
         setSelectedCell(cellId);
         const newValue = cellData[cellId]?.value || "";
         setFormulaValue(newValue);
@@ -323,8 +339,33 @@ export default function SpreadsheetApp({ creator, initialData, nextPageLink }) {
       cellFormatting,
       updateFormulaReferences,
       idToCellReference,
+      selectedCells,
     ],
   );
+
+  const handleSelectionStart = useCallback((cellId) => {
+    setIsSelecting(true);
+    setSelectionStart(cellId);
+    setSelectedCells([cellId]);
+  }, []);
+
+  const handleSelectionMove = useCallback((cellId) => {
+    if (isSelecting && selectionStart) {
+      const [startRow, startCol] = selectionStart.split("-").map(Number);
+      const [endRow, endCol] = cellId.split("-").map(Number);
+      const newSelection = [];
+      for (let r = Math.min(startRow, endRow); r <= Math.max(startRow, endRow); r++) {
+        for (let c = Math.min(startCol, endCol); c <= Math.max(startCol, endCol); c++) {
+          newSelection.push(`${r}-${c}`);
+        }
+      }
+      setSelectedCells(newSelection);
+    }
+  }, [isSelecting, selectionStart]);
+
+  const handleSelectionEnd = useCallback(() => {
+    setIsSelecting(false);
+  }, []);
 
   const handleEditSubmit = useCallback(() => {
     updateCellData(selectedCell, formulaValue);
@@ -350,12 +391,15 @@ export default function SpreadsheetApp({ creator, initialData, nextPageLink }) {
   const handleFormatChange = useCallback(
     (format) => {
       setCurrentFormat((prev) => ({ ...prev, ...format }));
-      setCellFormatting((prev) => ({
-        ...prev,
-        [selectedCell]: { ...(prev[selectedCell] || {}), ...format },
-      }));
+      setCellFormatting((prev) => {
+        const newFormatting = { ...prev };
+        selectedCells.forEach((cellId) => {
+          newFormatting[cellId] = { ...(newFormatting[cellId] || {}), ...format };
+        });
+        return newFormatting;
+      });
     },
-    [selectedCell],
+    [selectedCells],
   );
 
   const handleCreateChecks = useCallback(() => {
@@ -427,8 +471,8 @@ export default function SpreadsheetApp({ creator, initialData, nextPageLink }) {
                   (e.key === "ArrowRight" ? 1 : e.key === "ArrowLeft" ? -1 : 0),
               ),
             );
-            setSelectedCell(`${newRow}-${newCol}`);
-            setFormulaValue(cellData[`${newRow}-${newCol}`]?.value || "");
+            const newCellId = `${newRow}-${newCol}`;
+            handleCellSelect(newCellId, e.shiftKey);
             break;
           case "Enter":
             e.preventDefault();
@@ -522,6 +566,7 @@ export default function SpreadsheetApp({ creator, initialData, nextPageLink }) {
       handleFormulaCancel,
       formulaValue,
       updateFormulaReferences,
+      handleCellSelect,
     ],
   );
 
@@ -558,26 +603,32 @@ export default function SpreadsheetApp({ creator, initialData, nextPageLink }) {
         cellData={cellData}
         cellFormatting={cellFormatting}
         onCellSelect={handleCellSelect}
-        selectedCell={selectedCell}
+        selectedCells={selectedCells}
         isEditMode={isEditMode}
         updateCellData={updateCellData}
         formulaReferences={formulaReferences}
         currentFormulaCell={currentFormulaCell}
         checkData={checkData}
         cellErrors={cellErrors}
+        onSelectionStart={handleSelectionStart}
+        onSelectionMove={handleSelectionMove}
+        onSelectionEnd={handleSelectionEnd}
       />
     ),
     [
       cellData,
       cellFormatting,
       handleCellSelect,
-      selectedCell,
+      selectedCells,
       isEditMode,
       updateCellData,
       formulaReferences,
       currentFormulaCell,
       checkData,
       cellErrors,
+      handleSelectionStart,
+      handleSelectionMove,
+      handleSelectionEnd,
     ],
   );
 
@@ -674,13 +725,16 @@ export default function SpreadsheetApp({ creator, initialData, nextPageLink }) {
             cellData={cellData}
             cellFormatting={cellFormatting}
             onCellSelect={handleCellSelect}
-            selectedCell={selectedCell}
+            selectedCells={selectedCells}
             isEditMode={isEditMode}
             updateCellData={updateCellData}
             formulaReferences={formulaReferences}
             currentFormulaCell={currentFormulaCell}
             checkData={checkData}
             cellErrors={cellErrors}
+            onSelectionStart={handleSelectionStart}
+            onSelectionMove={handleSelectionMove}
+            onSelectionEnd={handleSelectionEnd}
           />
         </div>
       </main>

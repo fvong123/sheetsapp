@@ -11,13 +11,16 @@ const Spreadsheet = memo(
     cellData,
     cellFormatting,
     onCellSelect,
-    selectedCell,
+    selectedCells,
     isEditMode,
     updateCellData,
     formulaReferences,
     currentFormulaCell,
     checkData,
     cellErrors,
+    onSelectionStart,
+    onSelectionMove,
+    onSelectionEnd,
   }) => {
     const handleCellClick = useCallback(
       (cellId) => {
@@ -48,6 +51,18 @@ const Spreadsheet = memo(
       [cols, getColumnLabel],
     );
 
+    const handleMouseDown = useCallback((cellId) => {
+      onSelectionStart(cellId);
+    }, [onSelectionStart]);
+
+    const handleMouseEnter = useCallback((cellId) => {
+      onSelectionMove(cellId);
+    }, [onSelectionMove]);
+
+    const handleMouseUp = useCallback(() => {
+      onSelectionEnd();
+    }, [onSelectionEnd]);
+
     const rowCells = useMemo(
       () =>
         Array.from({ length: rows }).map((_, rowIndex) => (
@@ -57,7 +72,7 @@ const Spreadsheet = memo(
             </td>
             {Array.from({ length: cols }).map((_, colIndex) => {
               const cellId = `${rowIndex}-${colIndex}`;
-              const isSelected = cellId === selectedCell;
+              const isSelected = selectedCells.includes(cellId);
               const isFormulaReference = formulaReferences.includes(cellId);
               const isCheckCell = cellId in checkData;
               const cellError = cellErrors[cellId];
@@ -72,7 +87,7 @@ const Spreadsheet = memo(
                   isEditMode={isEditMode}
                   isFormulaReference={isFormulaReference}
                   isCurrentFormulaCell={cellId === currentFormulaCell}
-                  onClick={handleCellClick}
+                  onClick={onCellSelect}
                   updateCellData={updateCellData}
                   rowData={Array.from({ length: cols }).map(
                     (_, colIdx) => cellData[`${rowIndex}-${colIdx}`],
@@ -80,6 +95,9 @@ const Spreadsheet = memo(
                   columnIndex={colIndex}
                   isCheckCell={isCheckCell}
                   cellError={cellError}
+                  onMouseDown={handleMouseDown}
+                  onMouseEnter={handleMouseEnter}
+                  onMouseUp={handleMouseUp}
                 />
               );
             })}
@@ -90,20 +108,26 @@ const Spreadsheet = memo(
         cols,
         cellData,
         cellFormatting,
-        selectedCell,
+        selectedCells,
         isEditMode,
         formulaReferences,
         currentFormulaCell,
-        handleCellClick,
+        onCellSelect,
         updateCellData,
         checkData,
         cellErrors,
+        handleMouseDown,
+        handleMouseEnter,
+        handleMouseUp,
       ],
     );
 
     return (
       <div className="h-full overflow-hidden border border-gray-200 p-1">
-        <div className="h-full overflow-auto border border-gray-200 max-w-full">
+        <div
+          className="h-full overflow-auto border border-gray-200 max-w-full"
+          onMouseUp={handleMouseUp}
+        >
           <table className="border-collapse w-full h-full table-fixed">
             <thead>
               <tr>

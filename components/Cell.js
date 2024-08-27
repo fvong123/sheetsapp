@@ -13,6 +13,9 @@ const Cell = memo(
     updateCellData,
     rowData,
     columnIndex,
+    onMouseDown,
+    onMouseEnter,
+    onMouseUp,
   }) => {
     const [isEditing, setIsEditing] = useState(false);
     const [editValue, setEditValue] = useState(data?.value || "");
@@ -52,9 +55,8 @@ const Cell = memo(
 
     const cellClasses = `
       border border-gray-200 p-0.5 h-5 w-16 bg-white text-[10px]
-      ${isSelected && isEditMode ? "outline outline-2 outline-blue-500" : ""}
+      ${isSelected ? "outline outline-2 outline-blue-500" : ""}
       ${isFormulaReference && isEditMode ? "outline outline-2 outline-red-500" : ""}
-      ${isSelected && !isEditMode ? "outline outline-2 outline-blue-500" : ""}
       ${isCurrentFormulaCell ? "outline outline-2 outline-orange-500" : ""}
       ${shouldWrap ? "whitespace-normal overflow-hidden" : "whitespace-nowrap overflow-hidden text-ellipsis"}
     `;
@@ -62,6 +64,15 @@ const Cell = memo(
     const handleClick = useCallback(() => {
       onClick(id);
     }, [onClick, id]);
+
+    const handleMouseDown = useCallback((e) => {
+      e.preventDefault();
+      onMouseDown(id);
+    }, [onMouseDown, id]);
+
+    const handleMouseEnter = useCallback(() => {
+      onMouseEnter(id);
+    }, [onMouseEnter, id]);
 
     const handleDoubleClick = useCallback(() => {
       if (!isEditMode) {
@@ -99,6 +110,9 @@ const Cell = memo(
         className={cellClasses}
         onClick={handleClick}
         onDoubleClick={handleDoubleClick}
+        onMouseDown={handleMouseDown}
+        onMouseEnter={handleMouseEnter}
+        onMouseUp={onMouseUp}
         style={cellStyle}
       >
         {isEditing ? (
