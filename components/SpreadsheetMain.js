@@ -49,6 +49,7 @@ export default function SpreadsheetApp({ creator, initialData, nextPageLink }) {
   const [selectedCells, setSelectedCells] = useState([]);
   const [isSelecting, setIsSelecting] = useState(false);
   const [selectionStart, setSelectionStart] = useState(null);
+  const [name, setName] = useState("");  // New state for spreadsheet name
 
   // states for save and load modals
   const [isSaveModalOpen, setIsSaveModalOpen] = useState(false);
@@ -56,8 +57,9 @@ export default function SpreadsheetApp({ creator, initialData, nextPageLink }) {
   const [saveName, setSaveName] = useState("");
   const [savedSpreadsheets, setSavedSpreadsheets] = useState([]);
   const [error, setError] = useState(null);
-
+  
   // Other variables
+  const [isEditing, setIsEditing] = useState(false); // New state for spreadsheet name editing
 
   // save and load functions
 
@@ -71,7 +73,7 @@ export default function SpreadsheetApp({ creator, initialData, nextPageLink }) {
         },
         body: JSON.stringify({
           id: selectedSaveId,
-          name: saveName,
+          name: name,  // Use the name state here
           data: cellData,
           formatting: cellFormatting,
           check_data: checkData
@@ -88,14 +90,14 @@ export default function SpreadsheetApp({ creator, initialData, nextPageLink }) {
       setIsSaveModalOpen(false);
       setSavedSpreadsheets((prev) => [
         ...prev.filter((s) => s.id !== selectedSaveId),
-        { id: result.id, name: saveName },
+        { id: result.id, name: name },  // Use the name state here
       ]);
       setSelectedSaveId(result.id);
     } catch (error) {
       console.error("Save error:", error);
       setError("Failed to save spreadsheet. Please try again.");
     }
-  }, [selectedSaveId, saveName, cellData, cellFormatting, checkData]);
+  }, [selectedSaveId, name, cellData, cellFormatting, checkData]);  // Add name to dependencies
 
   const handleLoad = async (id) => {
     try {
@@ -114,16 +116,18 @@ export default function SpreadsheetApp({ creator, initialData, nextPageLink }) {
         );
       }
 
-      const { data, formatting, check_data } = await response.json();
+      const { data, formatting, check_data, name } = await response.json();
       setCellData(data);
       setCheckData(check_data || {})
       setCellFormatting(formatting || {});
+      setName(name);  // Set the name state
       setIsLoadModalOpen(false);
 
       // Log loaded data for debugging
       console.log("Loaded cell data:", data);
       console.log("Loaded formatting:", formatting);
       console.log("Loaded check data:", check_data);
+      console.log("Loaded name:", name);
     } catch (error) {
       console.error("Load error:", error);
       setError(
@@ -308,21 +312,26 @@ export default function SpreadsheetApp({ creator, initialData, nextPageLink }) {
         setCurrentFormulaCell(cellId);
         setFocusFormulaBar(true);
       } else {
+        let newSelectedCells;
         if (isShiftKey && selectedCells.length > 0) {
           const [startRow, startCol] = selectedCells[0].split("-").map(Number);
           const [endRow, endCol] = cellId.split("-").map(Number);
-          const newSelection = [];
+          newSelectedCells = [];
           for (let r = Math.min(startRow, endRow); r <= Math.max(startRow, endRow); r++) {
             for (let c = Math.min(startCol, endCol); c <= Math.max(startCol, endCol); c++) {
-              newSelection.push(`${r}-${c}`);
+              newSelectedCells.push(`${r}-${c}`);
             }
           }
-          setSelectedCells(newSelection);
         } else {
-          setSelectedCells([cellId]);
+          newSelectedCells = [cellId];
         }
-        setSelectedCell(cellId);
-        const newValue = cellData[cellId]?.value || "";
+        setSelectedCells(newSelectedCells);
+        
+        // Set selectedCell as the first cell in the selectedCells range
+        const firstSelectedCell = newSelectedCells[0];
+        setSelectedCell(firstSelectedCell);
+        
+        const newValue = cellData[firstSelectedCell]?.value || "";
         setFormulaValue(newValue);
         setFormulaReferences([]);
         console.log("Selected cell value:", newValue);
@@ -347,6 +356,7 @@ export default function SpreadsheetApp({ creator, initialData, nextPageLink }) {
     setIsSelecting(true);
     setSelectionStart(cellId);
     setSelectedCells([cellId]);
+    setSelectedCell(cellId);  // Set selectedCell when starting a new selection
   }, []);
 
   const handleSelectionMove = useCallback((cellId) => {
@@ -360,6 +370,9 @@ export default function SpreadsheetApp({ creator, initialData, nextPageLink }) {
         }
       }
       setSelectedCells(newSelection);
+      // Keep the selectedCell as the first cell in the range
+      setSelectedCell(newSelection[0]);
+      console.log("Selected cell:", newSelection[0]);
     }
   }, [isSelecting, selectionStart]);
 
@@ -661,7 +674,24 @@ export default function SpreadsheetApp({ creator, initialData, nextPageLink }) {
       )}
       <main className="flex flex-col flex-grow overflow-hidden h-full p-3">
         <div className="flex justify-between items-center mb-4">
-          <h3 className="text-lg font-semibold">Formula Bar</h3>
+          {isEditing ? (
+            <input
+              type="text"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              className="text-lg font-semibold bg-white border border-gray-300 focus:outline-none focus:border-blue-500 w-1/2 px-2 py-1"
+              placeholder="Enter spreadsheet name"
+              onBlur={() => setIsEditing(false)}
+              autoFocus
+            />
+          ) : (
+            <button
+              onClick={() => setIsEditing(true)}
+              className="text-lg font-semibold bg-transparent border-none focus:outline-none w-1/2 text-left"
+            >
+              {name || "Enter spreadsheet name"}
+            </button>
+          )}
           {creator && (
             <div>
               <button

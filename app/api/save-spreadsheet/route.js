@@ -41,6 +41,7 @@ export async function POST(request) {
         ? "Spreadsheet updated successfully"
         : "Spreadsheet saved successfully",
       id: result[0].id,
+      name: result[0].name,  // Include the name in the response
     });
   } catch (error) {
     console.error("Error in save-spreadsheet route:", error);
