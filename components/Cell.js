@@ -96,13 +96,17 @@ const Cell = memo(
       (e) => {
         if (e.key === "Enter") {
           e.preventDefault();
-          handleBlur();
+          const stringValue = editValue.toString();
+          const isFormula = stringValue.startsWith("=");
+          updateCellData(id, stringValue, isFormula);
+          setIsEditing(false);
+          setEditValue(""); // Reset the edit value
         } else if (e.key === "Escape") {
           setIsEditing(false);
-          setEditValue(data?.value || "");
+          setEditValue(data?.value?.toString() || "");
         }
       },
-      [handleBlur, data],
+      [id, editValue, updateCellData, data],
     );
 
     return (

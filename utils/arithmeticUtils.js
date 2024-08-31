@@ -45,18 +45,26 @@ export function evaluateArithmetic(formula, cellData) {
 
 export function processInput(input) {
   console.log("Processing input:", input); // Debug log
+
+  // Handle non-string inputs
+  if (typeof input !== 'string') {
+    return { value: input, displayValue: input.toString() };
+  }
+
   // Handle percentages
-  if (typeof input === 'string' && input.endsWith('%')) {
+  if (input.endsWith('%')) {
     const numValue = parseFloat(input) / 100;
     console.log("Processed percentage:", { value: numValue, displayValue: input }); // Debug log
     return { value: numValue, displayValue: input };
   }
+
   // Handle numbers and decimals
   const numValue = parseFloat(input);
   if (!isNaN(numValue) && input.trim() === numValue.toString()) {
     console.log("Processed number:", { value: numValue, displayValue: input }); // Debug log
     return { value: numValue, displayValue: input };
   }
+
   // Handle other inputs (text, symbols, etc.)
   console.log("Processed as text:", { value: input, displayValue: input }); // Debug log
   return { value: input, displayValue: input };
@@ -81,6 +89,9 @@ export function formatResult(result) {
 }
 
 export function extractCellReferences(formula) {
+  if (typeof formula !== 'string') {
+    return [];
+  }
   const regex = /[A-Z]+[0-9]+/g;
   return (formula.match(regex) || []).filter(
     (ref, index, self) => self.indexOf(ref) === index,
@@ -88,6 +99,9 @@ export function extractCellReferences(formula) {
 }
 
 export function extractPartialCellReferences(formula) {
+  if (typeof formula !== 'string') {
+    return [];
+  }
   const regex = /[A-Z]+[0-9]*$/;
   const match = formula.match(regex);
   return match ? [match[0]] : [];

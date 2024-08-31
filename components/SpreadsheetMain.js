@@ -186,19 +186,19 @@ export default function SpreadsheetApp({ creator, initialData, nextPageLink }) {
   );
 
   const updateCellData = useCallback(
-    (cellId, newValue) => {
-      console.log(`Updating cell ${cellId} with value:`, newValue); // Debug log
+    (cellId, newValue, isFormula) => {
+      console.log(`Updating cell ${cellId} with value:`, newValue, `isFormula:`, isFormula);
       setCellData((prev) => {
         let newData = { ...prev };
         let newErrors = { ...cellErrors };
-        if (newValue.startsWith("=")) {
-          console.log("Handling formula"); // Debug log
+        if (isFormula) {
+          console.log("Handling formula");
           try {
             const formulaWithoutEquals = newValue.slice(1);
             const result = evaluateArithmetic(formulaWithoutEquals, newData);
-            console.log("Formula result:", result); // Debug log
+            console.log("Formula result:", result);
             newData[cellId] = {
-              value: result, // Store the numeric result
+              value: newValue,
               displayValue: formatResult(result),
             };
             delete newErrors[cellId];
@@ -217,17 +217,10 @@ export default function SpreadsheetApp({ creator, initialData, nextPageLink }) {
             });
             return newDeps;
           });
-        } else if (newValue === "") {
-          console.log("Handling empty cell"); // Debug log
-          delete newData[cellId];
-          delete newErrors[cellId];
         } else {
-          console.log("Handling non-formula input"); // Debug log
+          console.log("Handling non-formula input");
           const processedValue = processInput(newValue);
-          newData[cellId] = {
-            value: processedValue.value,
-            displayValue: processedValue.displayValue,
-          };
+          newData[cellId] = processedValue;
           delete newErrors[cellId];
         }
         setCellErrors(newErrors);
@@ -239,10 +232,15 @@ export default function SpreadsheetApp({ creator, initialData, nextPageLink }) {
         [cellId]: { ...(prev[cellId] || {}), ...currentFormat },
       }));
     },
-    [recalculateDependentCells, currentFormat, cellErrors],
+    [recalculateDependentCells, cellErrors, currentFormat],
   );
 
   const updateFormulaReferences = useCallback((value) => {
+    if (typeof value !== 'string') {
+      setFormulaReferences([]);
+      return;
+    }
+    
     // Extract complete cell references from the formula
     const completeRefs = extractCellReferences(value);
     
@@ -279,8 +277,13 @@ export default function SpreadsheetApp({ creator, initialData, nextPageLink }) {
 
   const handleFormulaChange = useCallback(
     (value) => {
-      setFormulaValue(value);
-      updateFormulaReferences(value);
+      const stringValue = value?.toString() ?? "";
+      setFormulaValue(stringValue);
+      if (stringValue.startsWith('=')) {
+        updateFormulaReferences(stringValue);
+      } else {
+        setFormulaReferences([]);
+      }
     },
     [updateFormulaReferences],
   );
@@ -289,7 +292,7 @@ export default function SpreadsheetApp({ creator, initialData, nextPageLink }) {
     (cellId, isShiftKey = false) => {
       console.log("Cell selected:", cellId);
 
-      if (isEditMode && formulaValue.startsWith("=")) {
+      if (isEditMode && typeof formulaValue === 'string' && formulaValue.startsWith("=")) {
         const cellRef = idToCellReference(cellId);
         console.log("Adding cell reference:", cellRef);
 
@@ -305,7 +308,6 @@ export default function SpreadsheetApp({ creator, initialData, nextPageLink }) {
                 : prevValue + "+" + cellRef;
           }
           console.log("New formula value:", newValue);
-          // updateFormulaReferences(newValue);
           return newValue;
         });
 
@@ -331,8 +333,8 @@ export default function SpreadsheetApp({ creator, initialData, nextPageLink }) {
         const firstSelectedCell = newSelectedCells[0];
         setSelectedCell(firstSelectedCell);
         
-        const newValue = cellData[firstSelectedCell]?.value || "";
-        setFormulaValue(newValue);
+        const newValue = cellData[firstSelectedCell]?.value ?? "";
+        setFormulaValue(newValue?.toString() ?? "");
         setFormulaReferences([]);
         console.log("Selected cell value:", newValue);
       }
@@ -381,7 +383,8 @@ export default function SpreadsheetApp({ creator, initialData, nextPageLink }) {
   }, []);
 
   const handleEditSubmit = useCallback(() => {
-    updateCellData(selectedCell, formulaValue);
+    const isFormula = typeof formulaValue === 'string' && formulaValue.startsWith("=");
+    updateCellData(selectedCell, formulaValue, isFormula);
     setIsEditMode(false);
     setFormulaValue("");
     setFormulaReferences([]);
@@ -392,7 +395,7 @@ export default function SpreadsheetApp({ creator, initialData, nextPageLink }) {
   }, [selectedCell, formulaValue, updateCellData]);
 
   const handleFormulaCancel = useCallback(() => {
-    setFormulaValue(cellData[selectedCell]?.value || "");
+    setFormulaValue(cellData[selectedCell]?.value?.toString() || "");
     setIsEditMode(false);
     setFormulaReferences([]);
     setCurrentFormulaCell(null);
@@ -521,7 +524,7 @@ export default function SpreadsheetApp({ creator, initialData, nextPageLink }) {
           case "ArrowDown":
           case "ArrowLeft":
           case "ArrowRight":
-            if (formulaValue.startsWith("=")) {
+            if (typeof formulaValue === 'string' && formulaValue.startsWith("=")) {
               e.preventDefault();
               let [row, col] = (currentFormulaCell || selectedCell)
                 .split("-")
@@ -559,7 +562,6 @@ export default function SpreadsheetApp({ creator, initialData, nextPageLink }) {
               }
 
               setCurrentFormulaCell(newCellId);
-              // updateFormulaReferences(formulaValue);
             }
             break;
           default:
@@ -578,8 +580,10 @@ export default function SpreadsheetApp({ creator, initialData, nextPageLink }) {
       handleEditSubmit,
       handleFormulaCancel,
       formulaValue,
-      updateFormulaReferences,
+      currentFormulaCell,
       handleCellSelect,
+      idToCellReference,
+      updateCellData,
     ],
   );
 
