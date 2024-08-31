@@ -11,6 +11,7 @@ import {
   processInput,
   formatResult,
 } from "../utils/arithmeticUtils";
+import { handleNonEditModeKeyDown, handleEditModeKeyDown } from '../utils/keyboardUtils';
 import ChecksModal from './ChecksModal';
 import UserChecksModal from './UserChecksModal';
 import ProgressIndicator from './ProgressIndicator';
@@ -220,7 +221,10 @@ export default function SpreadsheetApp({ creator, initialData, nextPageLink }) {
         } else {
           console.log("Handling non-formula input");
           const processedValue = processInput(newValue);
-          newData[cellId] = processedValue;
+          newData[cellId] = {
+            ...newData[cellId],  // Preserve existing cell data (including formatting)
+            ...processedValue,   // Update value and displayValue
+          };
           delete newErrors[cellId];
         }
         setCellErrors(newErrors);
@@ -461,129 +465,45 @@ export default function SpreadsheetApp({ creator, initialData, nextPageLink }) {
       console.log('keydown', e.key)
 
       if (!isEditMode) {
-        const [row, col] = selectedCell.split("-").map(Number);
-        let newRow = row;
-        let newCol = col;
-
-        switch (e.key) {
-          case "ArrowUp":
-          case "ArrowDown":
-          case "ArrowLeft":
-          case "ArrowRight":
-            e.preventDefault();
-            newRow = Math.max(
-              0,
-              Math.min(
-                29,
-                row +
-                  (e.key === "ArrowDown" ? 1 : e.key === "ArrowUp" ? -1 : 0),
-              ),
-            );
-            newCol = Math.max(
-              0,
-              Math.min(
-                12,
-                col +
-                  (e.key === "ArrowRight" ? 1 : e.key === "ArrowLeft" ? -1 : 0),
-              ),
-            );
-            const newCellId = `${newRow}-${newCol}`;
-            handleCellSelect(newCellId, e.shiftKey);
-            break;
-          case "Enter":
-            e.preventDefault();
-            enterEditMode(cellData[selectedCell]?.value || "");
-            setFocusFormulaBar(true);
-            return;
-          case "Delete":
-            e.preventDefault();
-            updateCellData(selectedCell, "", false);
-            setFormulaValue("");
-            setFormulaReferences([]);
-            return;
-          default:
-            if (e.key.length === 1 && !e.ctrlKey && !e.altKey && !e.metaKey) {
-              e.preventDefault();
-              enterEditMode(e.key);
-              setFocusFormulaBar(true);
-            }
-            return;
-        }
+        handleNonEditModeKeyDown(e, {
+          selectedCell,
+          selectedCells,
+          cellData,
+          handleCellSelect,
+          enterEditMode,
+          updateCellData,
+          setFormulaValue,
+          setFormulaReferences,
+          setFocusFormulaBar,
+        });
       } else {
-        // Edit mode behavior
-        switch (e.key) {
-          case "Enter":
-            e.preventDefault();
-            handleEditSubmit();
-            break;
-          case "Escape":
-            e.preventDefault();
-            handleFormulaCancel();
-            break;
-          case "ArrowUp":
-          case "ArrowDown":
-          case "ArrowLeft":
-          case "ArrowRight":
-            if (typeof formulaValue === 'string' && formulaValue.startsWith("=")) {
-              e.preventDefault();
-              let [row, col] = (currentFormulaCell || selectedCell)
-                .split("-")
-                .map(Number);
-              row = Math.max(
-                0,
-                Math.min(
-                  29,
-                  row +
-                    (e.key === "ArrowDown" ? 1 : e.key === "ArrowUp" ? -1 : 0),
-                ),
-              );
-              col = Math.max(
-                0,
-                Math.min(
-                  12,
-                  col +
-                    (e.key === "ArrowRight"
-                      ? 1
-                      : e.key === "ArrowLeft"
-                        ? -1
-                        : 0),
-                ),
-              );
-              const newCellId = `${row}-${col}`;
-              const cellRef = idToCellReference(newCellId);
-
-              if (!currentFormulaCell) {
-                setFormulaValue((prev) => prev + cellRef);
-              } else {
-                setFormulaValue((prev) => {
-                  const lastRef = idToCellReference(currentFormulaCell);
-                  return prev.replace(new RegExp(lastRef + "$"), cellRef);
-                });
-              }
-
-              setCurrentFormulaCell(newCellId);
-            }
-            break;
-          default:
-            if (currentFormulaCell) {
-              setCurrentFormulaCell(null);
-            }
-            break;
-        }
+        handleEditModeKeyDown(e, {
+          formulaValue,
+          currentFormulaCell,
+          selectedCell,
+          handleEditSubmit,
+          handleFormulaCancel,
+          setFormulaValue,
+          setCurrentFormulaCell,
+        });
       }
     },
     [
       isEditMode,
       selectedCell,
+      selectedCells,
       cellData,
+      handleCellSelect,
       enterEditMode,
-      handleEditSubmit,
-      handleFormulaCancel,
+      updateCellData,
+      setFormulaValue,
+      setFormulaReferences,
+      setFocusFormulaBar,
       formulaValue,
       currentFormulaCell,
-      handleCellSelect,
-      idToCellReference,
-      updateCellData,
+      handleEditSubmit,
+      handleFormulaCancel,
+      setCurrentFormulaCell,
     ],
   );
 
@@ -753,23 +673,7 @@ export default function SpreadsheetApp({ creator, initialData, nextPageLink }) {
         </div>
         
         <div className="h-full mt-4">
-          <Spreadsheet
-            rows={30}
-            cols={13}
-            cellData={cellData}
-            cellFormatting={cellFormatting}
-            onCellSelect={handleCellSelect}
-            selectedCells={selectedCells}
-            isEditMode={isEditMode}
-            updateCellData={updateCellData}
-            formulaReferences={formulaReferences}
-            currentFormulaCell={currentFormulaCell}
-            checkData={checkData}
-            cellErrors={cellErrors}
-            onSelectionStart={handleSelectionStart}
-            onSelectionMove={handleSelectionMove}
-            onSelectionEnd={handleSelectionEnd}
-          />
+          {memoizedSpreadsheet}
         </div>
       </main>
 
