@@ -528,8 +528,12 @@ export default function SpreadsheetApp({ creator, initialData, nextPageLink }) {
 
   // Reset isNextButtonEnabled when the component mounts or when checkData changes
   useEffect(() => {
-    setIsNextButtonEnabled(false);
-    setCheckResults([]);
+    if (Object.keys(checkData).length === 0) {
+      setIsNextButtonEnabled(true);
+    } else {
+      setIsNextButtonEnabled(false);
+      setCheckResults([]);
+    }
   }, [checkData]);
 
   const memoizedSpreadsheet = useMemo(
@@ -658,12 +662,9 @@ export default function SpreadsheetApp({ creator, initialData, nextPageLink }) {
             >
               Check Answers
             </button>
-            {nextPageLink && (
+            {nextPageLink && isNextButtonEnabled && (
               <Link href={nextPageLink}>
-                <button
-                  className="btn btn-primary btn-sm"
-                  disabled={!isNextButtonEnabled}
-                >
+                <button className="btn btn-primary btn-sm">
                   Go to Next
                 </button>
               </Link>
