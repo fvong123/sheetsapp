@@ -49,7 +49,7 @@ export const instruction_text = {
         header: (
             <div>
                 <h2 className="text-xs font-semibold text-base-content/70 uppercase">Key Concepts</h2>
-                <h1 className="text-2xl font-bold mt-1">Leveraged Buyout Model</h1>
+                <h1 className="text-2xl font-bold mt-1">Leveraged Buyouts</h1>
                 <p className="text-sm text-base-content/70 mt-1">3 min</p>
           </div>
         ), content: (
@@ -90,20 +90,13 @@ export const instruction_text = {
                 called margin expansion.
               </li>
             </ul>
+            <h3 className="font-semibold">Instructions</h3>
             <p className="prose">
-              Private equity investment groups that carry out LBOs have garnered
-              a reputation for being ruthless and predatory because of their
-              need to rapidly increase margins. To do this, many investors
-              embark on strict cost-cutting measures that can include making
-              staff redundant.
+              In the <code className="bg-base-300 px-1 rounded">Spreadsheet</code> , place YES next to all answers that
+              describe how investors generate returns in an LBO.
               <br />
               <br />
-              In the Spreadsheet above, place YES next to all answers that
-              describe how investors make money in an LBO.
-              <br />
-              <br />
-              Once you have completed the excercise, you can click the button
-              below to continue.
+              Once you have completed the excercise, Click 'Check Answers' and then 'Go To Next' to continue.
             </p>
             </>
         )

@@ -51,6 +51,7 @@ export default function SpreadsheetApp({ creator, initialData, nextPageLink }) {
   const [isSelecting, setIsSelecting] = useState(false);
   const [selectionStart, setSelectionStart] = useState(null);
   const [name, setName] = useState("");  // New state for spreadsheet name
+  const [columnWidths, setColumnWidths] = useState(Array(13).fill(200));  // New state for column widths
 
   // states for save and load modals
   const [isSaveModalOpen, setIsSaveModalOpen] = useState(false);
@@ -77,7 +78,8 @@ export default function SpreadsheetApp({ creator, initialData, nextPageLink }) {
           name: name,  // Use the name state here
           data: cellData,
           formatting: cellFormatting,
-          check_data: checkData
+          check_data: checkData,
+          column_widths: columnWidths,
         }),
       });
 
@@ -98,7 +100,7 @@ export default function SpreadsheetApp({ creator, initialData, nextPageLink }) {
       console.error("Save error:", error);
       setError("Failed to save spreadsheet. Please try again.");
     }
-  }, [selectedSaveId, name, cellData, cellFormatting, checkData]);  // Add name to dependencies
+  }, [selectedSaveId, name, cellData, cellFormatting, checkData, columnWidths]);  // Add name to dependencies
 
   const handleLoad = async (id) => {
     try {
@@ -117,11 +119,12 @@ export default function SpreadsheetApp({ creator, initialData, nextPageLink }) {
         );
       }
 
-      const { data, formatting, check_data, name } = await response.json();
+      const { data, formatting, check_data, name, column_widths } = await response.json();
       setCellData(data);
       setCheckData(check_data || {})
       setCellFormatting(formatting || {});
       setName(name);  // Set the name state
+      setColumnWidths(column_widths || Array(13).fill(200));
       setIsLoadModalOpen(false);
 
       // Log loaded data for debugging
@@ -129,6 +132,7 @@ export default function SpreadsheetApp({ creator, initialData, nextPageLink }) {
       console.log("Loaded formatting:", formatting);
       console.log("Loaded check data:", check_data);
       console.log("Loaded name:", name);
+      console.log("Loaded column widths:", column_widths);
     } catch (error) {
       console.error("Load error:", error);
       setError(
@@ -554,6 +558,8 @@ export default function SpreadsheetApp({ creator, initialData, nextPageLink }) {
         onSelectionStart={handleSelectionStart}
         onSelectionMove={handleSelectionMove}
         onSelectionEnd={handleSelectionEnd}
+        onColumnWidthsChange={setColumnWidths}
+        initialColumnWidths={columnWidths}
       />
     ),
     [
@@ -570,6 +576,8 @@ export default function SpreadsheetApp({ creator, initialData, nextPageLink }) {
       handleSelectionStart,
       handleSelectionMove,
       handleSelectionEnd,
+      setColumnWidths,
+      columnWidths,
     ],
   );
 

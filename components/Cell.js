@@ -16,6 +16,7 @@ const Cell = memo(
     onMouseDown,
     onMouseEnter,
     onMouseUp,
+    width,
   }) => {
     const [isEditing, setIsEditing] = useState(false);
     const [editValue, setEditValue] = useState(data?.value || "");
@@ -51,10 +52,11 @@ const Cell = memo(
         formatting?.topBorder === "black" ? "1px solid black" : undefined,
       borderBottom:
         formatting?.bottomBorder === "black" ? "1px solid black" : undefined,
+      width: `${width}px`,
     };
 
     const cellClasses = `
-      border border-gray-200 p-0.5 h-5 w-16 bg-white text-[10px]
+      border border-gray-200 p-0.5 h-5 bg-white text-[10px]
       ${isSelected ? "outline outline-2 outline-blue-500" : ""}
       ${isFormulaReference && isEditMode ? "outline outline-2 outline-red-500" : ""}
       ${isCurrentFormulaCell ? "outline outline-2 outline-orange-500" : ""}

@@ -26,7 +26,7 @@ export async function POST(request) {
 
     const { data, error } = await supabase
       .from("spreadsheets")
-      .select("data, formatting, check_data, name")  // Add name to the select query
+      .select("data, formatting, check_data, name, column_widths")
       .eq("id", id)
       .single();
 
@@ -37,7 +37,8 @@ export async function POST(request) {
         data: JSON.parse(data.data),
         formatting: JSON.parse(data.formatting || '{}'),
         check_data: JSON.parse(data.check_data || '{}'),
-        name: data.name,  // Include the name in the response
+        name: data.name,
+        column_widths: JSON.parse(data.column_widths || '[]'),
       });
     } else {
       return NextResponse.json(
