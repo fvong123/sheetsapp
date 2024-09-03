@@ -16,6 +16,7 @@ import ChecksModal from './ChecksModal';
 import UserChecksModal from './UserChecksModal';
 import ProgressIndicator from './ProgressIndicator';
 import Link from "next/link";
+import debounce from 'lodash/debounce';
 
 const Spreadsheet = dynamic(() => import("./Spreadsheet"), {
   ssr: false,
@@ -26,6 +27,9 @@ const FormulaBar = dynamic(() => import("./FormulaBar"), {
 const FormatBar = dynamic(() => import("./FormatBar"), {
   ssr: false,
 });
+
+const DEFAULT_COLUMN_WIDTH = 200;
+const DEBOUNCE_TIME = 100; // milliseconds
 
 export default function SpreadsheetApp({ creator, initialData, nextPageLink }) {
   // spreadsheet states
@@ -51,7 +55,7 @@ export default function SpreadsheetApp({ creator, initialData, nextPageLink }) {
   const [isSelecting, setIsSelecting] = useState(false);
   const [selectionStart, setSelectionStart] = useState(null);
   const [name, setName] = useState("");  // New state for spreadsheet name
-  const [columnWidths, setColumnWidths] = useState(Array(13).fill(200));  // New state for column widths
+  const [columnWidths, setColumnWidths] = useState(Array(13).fill(DEFAULT_COLUMN_WIDTH));  // New state for column widths
 
   // states for save and load modals
   const [isSaveModalOpen, setIsSaveModalOpen] = useState(false);
@@ -62,6 +66,18 @@ export default function SpreadsheetApp({ creator, initialData, nextPageLink }) {
   
   // Other variables
   const [isEditing, setIsEditing] = useState(false); // New state for spreadsheet name editing
+
+  const debouncedSetColumnWidths = useRef(
+    debounce((newWidths) => {
+      console.log("Debounced column width update:", newWidths);
+      setColumnWidths(newWidths);
+    }, DEBOUNCE_TIME)
+  ).current;
+
+  const handleColumnWidthsChange = useCallback((newWidths) => {
+    console.log("Column width change requested:", newWidths);
+    debouncedSetColumnWidths(newWidths);
+  }, [debouncedSetColumnWidths]);
 
   // save and load functions
 
@@ -124,7 +140,7 @@ export default function SpreadsheetApp({ creator, initialData, nextPageLink }) {
       setCheckData(check_data || {})
       setCellFormatting(formatting || {});
       setName(name);  // Set the name state
-      setColumnWidths(column_widths || Array(13).fill(200));
+      setColumnWidths(column_widths || Array(13).fill(DEFAULT_COLUMN_WIDTH));
       setIsLoadModalOpen(false);
 
       // Log loaded data for debugging
@@ -448,7 +464,9 @@ export default function SpreadsheetApp({ creator, initialData, nextPageLink }) {
   const handleCheckAnswers = useCallback(() => {
     const results = Object.entries(checkData).map(([cellRef, check]) => {
       const cellValue = cellData[cellRef]?.displayValue;
-      const isCorrect = cellValue === check.checkValue;
+      const normalizedCellValue = cellValue?.replace(/,/g, ''); // Remove commas from cell value
+      const normalizedCheckValue = check.checkValue?.replace(/,/g, ''); // Remove commas from check value
+      const isCorrect = normalizedCellValue === normalizedCheckValue;
       return {
         name: check.name,
         correct: isCorrect,
@@ -558,8 +576,8 @@ export default function SpreadsheetApp({ creator, initialData, nextPageLink }) {
         onSelectionStart={handleSelectionStart}
         onSelectionMove={handleSelectionMove}
         onSelectionEnd={handleSelectionEnd}
-        onColumnWidthsChange={setColumnWidths}
-        initialColumnWidths={columnWidths}
+        onColumnWidthsChange={handleColumnWidthsChange}
+        columnWidths={columnWidths}
       />
     ),
     [
@@ -576,7 +594,7 @@ export default function SpreadsheetApp({ creator, initialData, nextPageLink }) {
       handleSelectionStart,
       handleSelectionMove,
       handleSelectionEnd,
-      setColumnWidths,
+      handleColumnWidthsChange,
       columnWidths,
     ],
   );
@@ -789,6 +807,7 @@ export default function SpreadsheetApp({ creator, initialData, nextPageLink }) {
         onClose={() => setIsChecksModalOpen(false)}
         onSave={handleSaveChecks}
         cellData={cellData}
+        existingChecks={checkData}
       />
 
       <UserChecksModal

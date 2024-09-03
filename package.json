@@ -18,6 +18,7 @@
     "eslint": "8.47.0",
     "eslint-config-next": "13.4.19",
     "form-data": "^4.0.0",
+    "lodash": "^4.17.21",
     "mailgun.js": "^9.4.1",
     "next": "^14.1.4",
     "next-plausible": "^3.12.0",

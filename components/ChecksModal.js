@@ -1,9 +1,22 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { cellReferenceToId, idToCellReference, isValidCellReference } from '../utils/arithmeticUtils';
 
-export default function ChecksModal({ isOpen, onClose, onSave }) {
-  const [checks, setChecks] = useState([{ name: '', cellReference: '', checkValue: '', hint: '' }]);
+export default function ChecksModal({ isOpen, onClose, onSave, existingChecks }) {
+  const [checks, setChecks] = useState([]);
   const [error, setError] = useState('');
+
+  useEffect(() => {
+    if (isOpen && existingChecks) {
+      // Convert existing checks to the format used in the modal
+      const formattedChecks = Object.entries(existingChecks).map(([cellId, check]) => ({
+        name: check.name,
+        cellReference: idToCellReference(cellId),
+        checkValue: check.checkValue,
+        hint: check.hint
+      }));
+      setChecks(formattedChecks.length > 0 ? formattedChecks : [{ name: '', cellReference: '', checkValue: '', hint: '' }]);
+    }
+  }, [isOpen, existingChecks]);
 
   const handleInputChange = (index, field, value) => {
     const newChecks = [...checks];

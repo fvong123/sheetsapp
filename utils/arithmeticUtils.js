@@ -10,7 +10,11 @@ export function evaluateArithmetic(formula, cellData) {
     if (cellValue === undefined) {
       throw new Error(`Cell ${match} not found`);
     }
-    return typeof cellValue === 'number' ? cellValue : `"${cellValue}"`;
+    // If the cell value is a formula, evaluate it recursively
+    if (typeof cellValue === 'string' && cellValue.startsWith('=')) {
+      return evaluateArithmetic(cellValue.slice(1), cellData);
+    }
+    return typeof cellValue === 'number' ? cellValue.toFixed(10) : `"${cellValue}"`;
   });
 
   console.log("After cell reference replacement:", processedFormula); // Debug log
@@ -30,13 +34,13 @@ export function evaluateArithmetic(formula, cellData) {
     // For simple numeric expressions, use a basic evaluation
     if (/^[\d\s\+\-\*\/\(\)\.]+$/.test(processedFormula)) {
       console.log("Using basic evaluation"); // Debug log
-      return eval(processedFormula);
+      return eval(processedFormula).toFixed(10);
     }
 
     console.log("Using Function evaluation"); // Debug log
     const result = Function(`"use strict"; return (${processedFormula});`)();
     console.log("Evaluation result:", result); // Debug log
-    return result;
+    return result.toFixed(10);
   } catch (error) {
     console.error("Formula evaluation error:", error);
     throw new Error(`Invalid formula: ${error.message}`);
@@ -55,14 +59,14 @@ export function processInput(input) {
   if (input.endsWith('%')) {
     const numValue = parseFloat(input) / 100;
     console.log("Processed percentage:", { value: numValue, displayValue: input }); // Debug log
-    return { value: numValue, displayValue: input };
+    return { value: numValue.toFixed(10), displayValue: input };
   }
 
   // Handle numbers and decimals
   const numValue = parseFloat(input);
   if (!isNaN(numValue) && input.trim() === numValue.toString()) {
     console.log("Processed number:", { value: numValue, displayValue: input }); // Debug log
-    return { value: numValue, displayValue: input };
+    return { value: numValue.toFixed(10), displayValue: input };
   }
 
   // Handle other inputs (text, symbols, etc.)
@@ -72,15 +76,9 @@ export function processInput(input) {
 
 export function formatResult(result) {
   console.log("Formatting result:", result); // Debug log
-  if (typeof result === 'number') {
-    // Check if the result is a percentage (between 0 and 1)
-    if (result >= 0 && result <= 1) {
-      const formattedResult = (result * 100).toFixed(2) + '%';
-      console.log("Formatted as percentage:", formattedResult); // Debug log
-      return formattedResult;
-    }
-    // Format number with up to 4 decimal places
-    const formattedResult = result.toLocaleString(undefined, { maximumFractionDigits: 4 });
+  if (typeof result === 'number' || !isNaN(result)) {
+    // Format number with 1 decimal place
+    const formattedResult = parseFloat(result).toFixed(1);
     console.log("Formatted as number:", formattedResult); // Debug log
     return formattedResult;
   }

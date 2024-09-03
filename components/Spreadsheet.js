@@ -1,7 +1,7 @@
 // components/Spreadsheet.js
 "use client";
 
-import { memo, useCallback, useMemo, useState, useRef, useEffect } from "react";
+import { memo, useCallback, useMemo, useRef, useEffect } from "react";
 import Cell from "./Cell";
 import ResizeHandle from "./ResizeHandle";
 
@@ -27,31 +27,14 @@ const Spreadsheet = memo(
     onSelectionMove,
     onSelectionEnd,
     onColumnWidthsChange,
-    initialColumnWidths, // Add this prop
+    columnWidths, // Add this prop
   }) => {
-    const [columnWidths, setColumnWidths] = useState(
-      initialColumnWidths || Array(cols).fill(DEFAULT_COLUMN_WIDTH)
-    );
+    const columnWidthsRef = useRef(columnWidths);
     const containerRef = useRef(null);
 
-    // Add this useEffect to update columnWidths when initialColumnWidths changes
     useEffect(() => {
-      if (initialColumnWidths) {
-        setColumnWidths(initialColumnWidths);
-      }
-    }, [initialColumnWidths]);
-
-    const handleColumnResize = useCallback((columnIndex, delta) => {
-      setColumnWidths((prevWidths) => {
-        const newWidths = [...prevWidths];
-        newWidths[columnIndex] = Math.max(
-          MIN_COLUMN_WIDTH,
-          Math.min(MAX_COLUMN_WIDTH, newWidths[columnIndex] + delta)
-        );
-        onColumnWidthsChange(newWidths);
-        return newWidths;
-      });
-    }, [onColumnWidthsChange]);
+      columnWidthsRef.current = columnWidths;
+    }, [columnWidths]);
 
     useEffect(() => {
       const handleMouseMove = (e) => {
@@ -69,6 +52,17 @@ const Spreadsheet = memo(
         window.removeEventListener('mousemove', handleMouseMove);
       };
     }, []);
+
+    const handleColumnResize = useCallback((columnIndex, delta) => {
+      const newWidths = [...columnWidthsRef.current];
+      newWidths[columnIndex] = Math.max(
+        MIN_COLUMN_WIDTH,
+        Math.min(MAX_COLUMN_WIDTH, newWidths[columnIndex] + delta)
+      );
+      columnWidthsRef.current = newWidths;
+      console.log("Column resized:", columnIndex, "New width:", newWidths[columnIndex]);
+      onColumnWidthsChange(newWidths);
+    }, [onColumnWidthsChange]);
 
     const handleCellClick = useCallback(
       (cellId) => {
@@ -92,7 +86,7 @@ const Spreadsheet = memo(
           <th
             key={colIndex}
             className="sticky top-0 z-10 bg-gray-100 border border-gray-200 p-1 h-4 text-center font-bold text-[10px] relative"
-            style={{ width: `${columnWidths[colIndex]}px` }}
+            style={{ width: `${columnWidthsRef.current[colIndex]}px` }}
           >
             {getColumnLabel(colIndex)}
             <ResizeHandle
@@ -101,7 +95,7 @@ const Spreadsheet = memo(
             />
           </th>
         )),
-      [cols, getColumnLabel, columnWidths, handleColumnResize]
+      [cols, getColumnLabel, handleColumnResize]
     );
 
     const handleMouseDown = useCallback((cellId) => {
@@ -151,7 +145,7 @@ const Spreadsheet = memo(
                   onMouseDown={handleMouseDown}
                   onMouseEnter={handleMouseEnter}
                   onMouseUp={handleMouseUp}
-                  width={columnWidths[colIndex]}
+                  width={columnWidthsRef.current[colIndex]}
                 />
               );
             })}
@@ -173,7 +167,7 @@ const Spreadsheet = memo(
         handleMouseDown,
         handleMouseEnter,
         handleMouseUp,
-        columnWidths,
+        columnWidthsRef.current,
       ]
     );
 

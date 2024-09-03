@@ -34,7 +34,7 @@ const LessonPage = () => {
           <Suspense>
           <SpreadsheetApp
             creator={false}
-            initialData={7}
+            initialData={20}
             nextPageLink="/simplelbo/2"
           />
           </Suspense>

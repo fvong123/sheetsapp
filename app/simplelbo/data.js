@@ -29,8 +29,16 @@ export const instruction_text = {
           {/* Instructions */}
           <div>
             <h3 className="font-semibold">Instructions</h3>
-            <p className="mt-2">Change <code className="bg-base-300 px-1 rounded">codecademy</code> to your name in the script to the right. Run the code to see what it does!</p>
-            <p className="mt-2">As soon as you&apos;re ready, move on to the next exercise to begin learning to write your own Python programs!</p>
+            <p className="prose">
+              The spreadsheet on the right is a basic excel clone to help you learn modelling. In C3, lets try to enter a value. Enter 50 in the cell. Then press Enter. <br/><br/>
+              Next try to enter a formula by first entering '=' followed by the formula you want to use. Once you enter '=' you can use the arrow keys to move around and select a cell to use in your formulas.
+              In C4, add 50 to C3. You should see the value in C4 update to 100. <br/><br/>
+              You can also use the mouse to select cells.<br/><br/>
+              Finally you can change the format of cells - Change the background in C5 to dark blue. <br/><br/>
+              Once you have completed those steps, click 'Check Answers'.<br/><br/> 
+              If your answers are correct, the system will let you progress by clicking 'Go To Next'.
+
+            </p>
           </div>
         </>
       ),
@@ -149,9 +157,9 @@ export const instruction_text = {
               with Market Capitalization (just equity) and easy to compare with
               Enterprise Value.
           </p>
-
+          <h3 className="font-semibold">Instructions</h3>
           <p className="prose">
-          In the Spreadsheet above, work out the Enterprise Values of each
+          In the Spreadsheet, work out the Enterprise Values of each
               of the companies below. We&apos;ve added the inputs of the first, but
               have left you to do the second and third. <br />
               <b>Company A:</b> Equity $50M, Debt $20M, Cash $30M <br />
@@ -194,10 +202,12 @@ export const instruction_text = {
               The interest rate on debt is 10% p.a. <br />
               We expect to exit this investment in 3 years at a 10x LTM EBITDA
               multiple.
-              <br />
-              <br />
-              We&apos;ll have this scenario at the bottom of each lesson on
-              subsequent pages.
+              
+        </p>
+        <h3 className="font-semibold">Instructions</h3>
+        <p className="prose">
+          Nothing to do on this sheet, We&apos;ll have this scenario at the bottom of each lesson on
+          subsequent pages.
         </p>
 
         </>
@@ -218,7 +228,24 @@ export const instruction_text = {
               is to use a LTM EBITDA multiple.
               <br />
               <br />
-              In this example, we aren&apos;t given the EBITDA directly, but we are
+              Multiples are a widely used method of valuing a company and are typically based off two things.
+              <br />
+              <br />
+              1. Trading comparables - these are the listed companies that are similar to the company we are valuing, and therefore
+              provide a visible, liquid and traded benchmark for how to value the company we are looking at.
+              <br />
+              <br />
+              2. Transaction comparables - these are transactions that represent how similar companies have been bought and sold in
+              in the past, providing a guide as to how previous buyers and sellers have looked at valuation.
+              <br />
+              <br />
+              By combining a combination of these, and any idiosyncracies of the current deal, the buyer and seller will arrive at a EBITDA multiple
+              to buy and sell the company. While EBITDA is the most frequently used metric, there are other metrics that can be used, such as Revenue, EBIT, EBITDAR,
+              ARR, etc.
+      </p>
+      <h3 className="font-semibold">Instructions</h3>
+      <p className="prose">
+      In this example, we aren&apos;t given the EBITDA directly, but we are
               given two components that can be used to determine EBITDA.
               <br />
               <br />
@@ -233,10 +260,33 @@ export const instruction_text = {
               This is a simple, but widely used method of arriving at the
               Purchase Price.
       </p>
+      <h3 className="font-semibold">Formulas</h3>
       <p className="prose">
       EBITDA = Revenue x EBITDA Margin <br />
       Purchase Price = EBITDA & Purchase Multiple
       </p>
+      <h3 className="font-semibold">Case Study</h3>
+      <p className="prose">
+        Assume that we are a private equity firm purchasing &quot;Company A&quot; at
+              the end of 2024
+              <br />
+              <br />
+              Purchase multiple is 10x LTM EBITDA
+              <br />
+              The Company has the following: <br />
+              $200mm of Revenue in 2024 and expected to grow at $25mm annually
+              through the forecast period. <br />
+              EBITDA margins are 50% which remain flat. <br />
+              D&A and Capex are both 10% of revenues and flat throughout the
+              forecast period. <br />
+              There is no change in net working capital year to year. <br />
+              The tax rate is 50% <br />
+              The initial leverage is 5x LTM EBITDA <br />
+              The interest rate on debt is 10% p.a. <br />
+              We expect to exit this investment in 3 years at a 10x LTM EBITDA
+              multiple.
+              
+        </p>
       </>
   )
   
@@ -264,20 +314,43 @@ export const instruction_text = {
               <br />
               <br />
               On the company side, a &apos;utility like&apos; acquisition such as data
-              centre with long dated contracts with high quality customers where
+              centre with long dated contracts and high quality customers where
               EBITDA is highly predictable over the long term will allow a
               higher leverage multiple as compared to a &apos;Direct to Customer&apos;
-              consumer product company where EBITDA from year to year is
+              consumer product brand where EBITDA from year to year is
               unpredicatable.
-              <br />
-              <br />
-              In our model, use the &apos;Leverage&apos; section to complete find out the
-              amount of debt we will use to fund the transaction.
       </p>
+      <h3 className="font-semibold">Instructions</h3>
+      <p className="prose">
+      In the spreadsheet, work out the total debt used by taking the LTM EBITDA we worked out earlier and multiplying it by the leverage multiple.
+      </p>
+      <h3 className="font-semibold">Formulas</h3>
       <p className="prose">
       EBITDA = Revenue x EBITDA Margin <br />
               Debt = Leverage Multiple x EBITDA
       </p>
+      <h3 className="font-semibold">Case Study</h3>
+      <p className="prose">
+        Assume that we are a private equity firm purchasing &quot;Company A&quot; at
+              the end of 2024
+              <br />
+              <br />
+              Purchase multiple is 10x LTM EBITDA
+              <br />
+              The Company has the following: <br />
+              $200mm of Revenue in 2024 and expected to grow at $25mm annually
+              through the forecast period. <br />
+              EBITDA margins are 50% which remain flat. <br />
+              D&A and Capex are both 10% of revenues and flat throughout the
+              forecast period. <br />
+              There is no change in net working capital year to year. <br />
+              The tax rate is 50% <br />
+              The initial leverage is 5x LTM EBITDA <br />
+              The interest rate on debt is 10% p.a. <br />
+              We expect to exit this investment in 3 years at a 10x LTM EBITDA
+              multiple.
+              
+        </p>
       </>
   )
   
@@ -291,15 +364,81 @@ export const instruction_text = {
   ), content: (
       <>
       <p className="prose">
-      Now that we have our transaction assumptions finalised, we can
-              jump into the meat of the model. Here we need to forecast out the
-              cashflows from the business.
+      The next step in this process is to set the foundations of the model. Firstly we want to map out the actual earnings of the company for the
+      last full financial year. This provides a basis upon which we can forecast revenue, earnings and cashflow into the future. Secondly, we want to
+      set out what those forecasts are. The approach we have taken today is somewhat simplistic with a flat revenue growth rate.
               <br />
               <br />
-              The important thing to keep in mind is that we are{" "}
-              <b>only interested in the cash implications</b>. That means that
-              while it would be useful to have, we do not need a full income
-              statement, or 3 statement model to forecast this.
+              
+      </p>
+      <h3 className="font-semibold">Instructions</h3>
+      <p className="prose">
+      Let's firstly fill in the build assumptions which are the forecast parameters we've been given. Next set out the actuals for the first year.
+      </p>
+      <h3 className="font-semibold">Formulas</h3>
+      <p className="prose">
+      NA
+      </p>
+      <h3 className="font-semibold">Case Study</h3>
+      <p className="prose">
+        Assume that we are a private equity firm purchasing &quot;Company A&quot; at
+              the end of 2024
+              <br />
+              <br />
+              Purchase multiple is 10x LTM EBITDA
+              <br />
+              The Company has the following: <br />
+              $200mm of Revenue in 2024 and expected to grow at $25mm annually
+              through the forecast period. <br />
+              EBITDA margins are 50% which remain flat. <br />
+              D&A and Capex are both 10% of revenues and flat throughout the
+              forecast period. <br />
+              There is no change in net working capital year to year. <br />
+              The tax rate is 50% <br />
+              The initial leverage is 5x LTM EBITDA <br />
+              The interest rate on debt is 10% p.a. <br />
+              We expect to exit this investment in 3 years at a 10x LTM EBITDA
+              multiple.
+              
+        </p>
+      </>
+  )
+  
+}, pg8: {
+  header: (
+      <div>
+          <h2 className="text-xs font-semibold text-base-content/70 uppercase">Building the Model</h2>
+          <h1 className="text-2xl font-bold mt-1">Forecast Cashflows 2</h1>
+          <p className="text-sm text-base-content/70 mt-1">10 min</p>
+    </div>
+  ), content: (
+      <>
+      <p className="prose">
+              So we&apos;ve got our actuals, the next step is to create the forecast
+              cashflows for the next 3 years.
+              <br />
+              <br />
+              We start at the Revenue assumption, which says that Revenue is
+              expected to grow $25mm each year in the forecast period, so let&apos;s
+              increment Revenue by $25mm each year.
+              <br />
+              <br />
+              Next, one of the most common methods of forecasting subsequent
+              line items is to use a percentage of revenue method. This is
+              because it captures the cost of scaling, which is that when you
+              increase revenue, your cost base such as employees, COGS and
+              investments into things like equipment will also need to grow to
+              service that increased revenue.
+              <br />
+              <br />
+              Of course, it is somewhat simplistic as it ignores any benefits of
+              scaling, but generally in modelling you want to take a slightly
+              conservative approach so as not to overpay on your acquisition.
+              <br />
+              <br />
+              The important thing to keep in mind is that cash is key in an LBO model,
+              as we want to make sure we always have enough cash to service debt both
+              in the form of interest and mandatory amortization (repayment).
               <br />
               <br />
               Let&apos;s take a look at what we&apos;ve been given from our transaction
@@ -323,57 +462,33 @@ export const instruction_text = {
       <p className="prose">
       EBITDA = Revenue x EBITDA Margin <br />
               EBIT = EBITDA - D&A <br />
-              Interest = Debt x Interest Rate <br />
               EBT = EBIT - Interest <br />
               Tax = EBT x Tax Rate <br />
               Net Income = EBT - Tax <br />
               Free cash flow = Net Income + D&A - Capex
       </p>
-      </>
-  )
-  
-}, pg8: {
-  header: (
-      <div>
-          <h2 className="text-xs font-semibold text-base-content/70 uppercase">Building the Model</h2>
-          <h1 className="text-2xl font-bold mt-1">Forecast Cashflows 2</h1>
-          <p className="text-sm text-base-content/70 mt-1">10 min</p>
-    </div>
-  ), content: (
-      <>
+      <h3 className="font-semibold">Case Study</h3>
       <p className="prose">
-      So we&apos;ve got our actuals, the next step is to create the forecast
-              cashflows for the next 3 years.
+        Assume that we are a private equity firm purchasing &quot;Company A&quot; at
+              the end of 2024
               <br />
               <br />
-              We start at the Revenue assumption, which says that Revenue is
-              expected to grow $25mm each year in the forecast period, so let&apos;s
-              increment Revenue by $25mm each year.
+              Purchase multiple is 10x LTM EBITDA
               <br />
-              <br />
-              Next, one of the most common methods of forecasting subsequent
-              line items is to use a percentage of revenue method. This is
-              because it captures the cost of scaling, which is that when you
-              increase revenue, your cost base such as employees, COGS and
-              investments into things like equipment will also need to grow to
-              service that increased revenue.
-              <br />
-              <br />
-              Of course, it is somewhat simplistic as it ignores any benefits of
-              scaling, but generally in modelling you want to take a slightly
-              conservative approach so as not to overpay on your acquisition.
-              <br />
-              <br />
-              From here, work out each line item according to the assumptions.
-      </p>
-      <p className="prose">
-      EBITDA = Revenue x EBITDA Margin <br />
-              EBIT = EBITDA - D&A <br />
-              EBT = EBIT - Interest <br />
-              Tax = EBT x Tax Rate <br />
-              Net Income = EBT - Tax <br />
-              Free cash flow = Net Income + D&A - Capex
-      </p>
+              The Company has the following: <br />
+              $200mm of Revenue in 2024 and expected to grow at $25mm annually
+              through the forecast period. <br />
+              EBITDA margins are 50% which remain flat. <br />
+              D&A and Capex are both 10% of revenues and flat throughout the
+              forecast period. <br />
+              There is no change in net working capital year to year. <br />
+              The tax rate is 50% <br />
+              The initial leverage is 5x LTM EBITDA <br />
+              The interest rate on debt is 10% p.a. <br />
+              We expect to exit this investment in 3 years at a 10x LTM EBITDA
+              multiple.
+              
+        </p>
       </>
   )
   
@@ -407,6 +522,28 @@ export const instruction_text = {
       <p className="prose">
       Ending Net Debt = Initial Debt - Final Cash Balance
       </p>
+      <h3 className="font-semibold">Case Study</h3>
+      <p className="prose">
+        Assume that we are a private equity firm purchasing &quot;Company A&quot; at
+              the end of 2024
+              <br />
+              <br />
+              Purchase multiple is 10x LTM EBITDA
+              <br />
+              The Company has the following: <br />
+              $200mm of Revenue in 2024 and expected to grow at $25mm annually
+              through the forecast period. <br />
+              EBITDA margins are 50% which remain flat. <br />
+              D&A and Capex are both 10% of revenues and flat throughout the
+              forecast period. <br />
+              There is no change in net working capital year to year. <br />
+              The tax rate is 50% <br />
+              The initial leverage is 5x LTM EBITDA <br />
+              The interest rate on debt is 10% p.a. <br />
+              We expect to exit this investment in 3 years at a 10x LTM EBITDA
+              multiple.
+              
+        </p>
       </>
   )
   
@@ -454,6 +591,28 @@ export const instruction_text = {
               <br />
               Equity Value = Enterprise Value - Final Net Debt
       </p>
+      <h3 className="font-semibold">Case Study</h3>
+      <p className="prose">
+        Assume that we are a private equity firm purchasing &quot;Company A&quot; at
+              the end of 2024
+              <br />
+              <br />
+              Purchase multiple is 10x LTM EBITDA
+              <br />
+              The Company has the following: <br />
+              $200mm of Revenue in 2024 and expected to grow at $25mm annually
+              through the forecast period. <br />
+              EBITDA margins are 50% which remain flat. <br />
+              D&A and Capex are both 10% of revenues and flat throughout the
+              forecast period. <br />
+              There is no change in net working capital year to year. <br />
+              The tax rate is 50% <br />
+              The initial leverage is 5x LTM EBITDA <br />
+              The interest rate on debt is 10% p.a. <br />
+              We expect to exit this investment in 3 years at a 10x LTM EBITDA
+              multiple.
+              
+        </p>
       </>
   )
   
@@ -504,6 +663,28 @@ export const instruction_text = {
               <br />
               Equity Value = Enterprise Value - Final Net Debt
       </p>
+      <h3 className="font-semibold">Case Study</h3>
+      <p className="prose">
+        Assume that we are a private equity firm purchasing &quot;Company A&quot; at
+              the end of 2024
+              <br />
+              <br />
+              Purchase multiple is 10x LTM EBITDA
+              <br />
+              The Company has the following: <br />
+              $200mm of Revenue in 2024 and expected to grow at $25mm annually
+              through the forecast period. <br />
+              EBITDA margins are 50% which remain flat. <br />
+              D&A and Capex are both 10% of revenues and flat throughout the
+              forecast period. <br />
+              There is no change in net working capital year to year. <br />
+              The tax rate is 50% <br />
+              The initial leverage is 5x LTM EBITDA <br />
+              The interest rate on debt is 10% p.a. <br />
+              We expect to exit this investment in 3 years at a 10x LTM EBITDA
+              multiple.
+              
+        </p>
       </>
   )
   
