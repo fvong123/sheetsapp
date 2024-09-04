@@ -14,7 +14,8 @@ export function evaluateArithmetic(formula, cellData) {
     if (typeof cellValue === 'string' && cellValue.startsWith('=')) {
       return evaluateArithmetic(cellValue.slice(1), cellData);
     }
-    return typeof cellValue === 'number' ? cellValue.toFixed(10) : `"${cellValue}"`;
+    // Convert numeric strings to numbers
+    return !isNaN(cellValue) ? Number(cellValue) : `"${cellValue}"`;
   });
 
   console.log("After cell reference replacement:", processedFormula); // Debug log

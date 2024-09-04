@@ -69,7 +69,7 @@ export default function MainApp() {
                   <span className="mr-2">📋</span>
                   <div>
                     <p className="text-sm text-gray-600">Prerequisites</p>
-                    <p className="font-semibold">1 course</p>
+                    <p className="font-semibold">None</p>
                   </div>
                 </div>
               </div>

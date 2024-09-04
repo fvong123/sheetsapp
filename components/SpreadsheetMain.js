@@ -462,10 +462,15 @@ export default function SpreadsheetApp({ creator, initialData, nextPageLink }) {
   }, []);
 
   const handleCheckAnswers = useCallback(() => {
+    const roundToZeroDP = (value) => {
+      const num = parseFloat(value);
+      return isNaN(num) ? value : Math.round(num).toString();
+    };
+
     const results = Object.entries(checkData).map(([cellRef, check]) => {
       const cellValue = cellData[cellRef]?.displayValue;
-      const normalizedCellValue = cellValue?.replace(/,/g, ''); // Remove commas from cell value
-      const normalizedCheckValue = check.checkValue?.replace(/,/g, ''); // Remove commas from check value
+      const normalizedCellValue = roundToZeroDP(cellValue?.replace(/,/g, '')); // Remove commas and round
+      const normalizedCheckValue = roundToZeroDP(check.checkValue?.replace(/,/g, '')); // Remove commas and round
       const isCorrect = normalizedCellValue === normalizedCheckValue;
       return {
         name: check.name,

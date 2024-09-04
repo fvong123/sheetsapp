@@ -7,10 +7,7 @@ export const instruction_text = {
             <p>This LBO model is a simplified version of the full LBO model that
               most investment banks, private equity firms and other investment
               teams use. The reason it is popular is that you can get 80% of the
-              accuracy in a very short amount of time. For example, if you were
-              an analyst you could run this while listening to a company&apos;s pitch
-              and very quickly get a sense of whether it is a good investment,
-              given your transaction assumptions.</p> <br/><br/>
+              accuracy in a very short amount of time.</p> <br/><br/>
               <p className="prose">
               The model is also widely used in modelling tests and investment
               banking / private equity interviews, particularly for analysts and
@@ -75,9 +72,10 @@ export const instruction_text = {
               be as high as possible. The exact amount of debt that will be used
               depends on the market lending conditions, investor appetite, and
               the amount of cash flow that the company is expected to generate
-              after takeover. The bonds issued in the buyout usually aren&apos;t
-              investment grade and are referred to as junk bonds because of this
-              high debt/equity ratio.
+              after takeover. 
+              <br />
+              <br />
+              Debt for LBOs are typically in the form of bank loans, private credit or high yield bonds.
               <br />
               <br />
               Returns are generated in an LBO through:
