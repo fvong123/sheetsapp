@@ -54,15 +54,14 @@ const Spreadsheet = memo(
     }, []);
 
     const handleColumnResize = useCallback((columnIndex, delta) => {
-      const newWidths = [...columnWidthsRef.current];
+      const newWidths = [...columnWidths];
       newWidths[columnIndex] = Math.max(
         MIN_COLUMN_WIDTH,
         Math.min(MAX_COLUMN_WIDTH, newWidths[columnIndex] + delta)
       );
-      columnWidthsRef.current = newWidths;
       console.log("Column resized:", columnIndex, "New width:", newWidths[columnIndex]);
       onColumnWidthsChange(newWidths);
-    }, [onColumnWidthsChange]);
+    }, [onColumnWidthsChange, columnWidths]);
 
     const handleCellClick = useCallback(
       (cellId) => {
@@ -95,7 +94,7 @@ const Spreadsheet = memo(
             />
           </th>
         )),
-      [cols, getColumnLabel, handleColumnResize]
+      [cols, getColumnLabel, handleColumnResize, columnWidths]
     );
 
     const handleMouseDown = useCallback((cellId) => {

@@ -32,9 +32,6 @@ const Cell = memo(
       setEditValue(data?.value || "");
     }, [data?.value]);
 
-    const shouldWrap =
-      columnIndex < rowData.length - 1 && !rowData[columnIndex + 1]?.value;
-
     const cellStyle = {
       backgroundColor:
         formatting?.backgroundColor !== "default"
@@ -53,6 +50,9 @@ const Cell = memo(
       borderBottom:
         formatting?.bottomBorder === "black" ? "1px solid black" : undefined,
       width: `${width}px`,
+      maxWidth: `${width}px`, // Add this line to prevent cell from expanding
+      minWidth: `${width}px`, // Add this line to prevent shrinking
+      overflow: 'hidden', // Ensure content doesn't overflow
     };
 
     const cellClasses = `
@@ -60,7 +60,7 @@ const Cell = memo(
       ${isSelected ? "outline outline-2 outline-blue-500" : ""}
       ${isFormulaReference && isEditMode ? "outline outline-2 outline-red-500" : ""}
       ${isCurrentFormulaCell ? "outline outline-2 outline-orange-500" : ""}
-      ${shouldWrap ? "whitespace-normal overflow-hidden" : "whitespace-nowrap overflow-hidden text-ellipsis"}
+      whitespace-nowrap overflow-hidden text-ellipsis
     `;
 
     const handleClick = useCallback(() => {
@@ -133,9 +133,7 @@ const Cell = memo(
             style={cellStyle}
           />
         ) : (
-          <div
-            className={`w-full h-full ${shouldWrap ? "break-words" : "truncate"} text-[10px]`}
-          >
+          <div className="w-full h-full truncate text-[10px]">
             {data?.displayValue || data?.value || ""}
           </div>
         )}

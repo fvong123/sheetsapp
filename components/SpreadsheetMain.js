@@ -16,7 +16,6 @@ import ChecksModal from './ChecksModal';
 import UserChecksModal from './UserChecksModal';
 import ProgressIndicator from './ProgressIndicator';
 import Link from "next/link";
-import debounce from 'lodash/debounce';
 
 const Spreadsheet = dynamic(() => import("./Spreadsheet"), {
   ssr: false,
@@ -28,8 +27,7 @@ const FormatBar = dynamic(() => import("./FormatBar"), {
   ssr: false,
 });
 
-const DEFAULT_COLUMN_WIDTH = 200;
-const DEBOUNCE_TIME = 100; // milliseconds
+const DEFAULT_COLUMN_WIDTH = 100;
 
 export default function SpreadsheetApp({ creator, initialData, nextPageLink }) {
   // spreadsheet states
@@ -67,17 +65,10 @@ export default function SpreadsheetApp({ creator, initialData, nextPageLink }) {
   // Other variables
   const [isEditing, setIsEditing] = useState(false); // New state for spreadsheet name editing
 
-  const debouncedSetColumnWidths = useRef(
-    debounce((newWidths) => {
-      console.log("Debounced column width update:", newWidths);
-      setColumnWidths(newWidths);
-    }, DEBOUNCE_TIME)
-  ).current;
-
   const handleColumnWidthsChange = useCallback((newWidths) => {
     console.log("Column width change requested:", newWidths);
-    debouncedSetColumnWidths(newWidths);
-  }, [debouncedSetColumnWidths]);
+    setColumnWidths(newWidths);
+  }, []);
 
   // save and load functions
 
@@ -140,7 +131,14 @@ export default function SpreadsheetApp({ creator, initialData, nextPageLink }) {
       setCheckData(check_data || {})
       setCellFormatting(formatting || {});
       setName(name);  // Set the name state
-      setColumnWidths(column_widths || Array(13).fill(DEFAULT_COLUMN_WIDTH));
+
+      // Load saved column widths or use default if not available
+      if (Array.isArray(column_widths) && column_widths.length === 13) {
+        setColumnWidths(column_widths);
+      } else {
+        setColumnWidths(Array(13).fill(DEFAULT_COLUMN_WIDTH));
+      }
+
       setIsLoadModalOpen(false);
 
       // Log loaded data for debugging
@@ -462,15 +460,24 @@ export default function SpreadsheetApp({ creator, initialData, nextPageLink }) {
   }, []);
 
   const handleCheckAnswers = useCallback(() => {
-    const roundToZeroDP = (value) => {
-      const num = parseFloat(value);
-      return isNaN(num) ? value : Math.round(num).toString();
+    const normalizeValue = (value) => {
+      // Remove commas and trim whitespace
+      let normalized = value?.replace(/,/g, '').trim();
+      
+      // Convert percentage to decimal
+      if (normalized?.endsWith('%')) {
+        normalized = (parseFloat(normalized) / 100).toString();
+      }
+      
+      // Parse to float and round to 0 decimal places
+      const num = parseFloat(normalized);
+      return isNaN(num) ? normalized : Math.round(num).toString();
     };
 
     const results = Object.entries(checkData).map(([cellRef, check]) => {
       const cellValue = cellData[cellRef]?.displayValue;
-      const normalizedCellValue = roundToZeroDP(cellValue?.replace(/,/g, '')); // Remove commas and round
-      const normalizedCheckValue = roundToZeroDP(check.checkValue?.replace(/,/g, '')); // Remove commas and round
+      const normalizedCellValue = normalizeValue(cellValue);
+      const normalizedCheckValue = normalizeValue(check.checkValue);
       const isCorrect = normalizedCellValue === normalizedCheckValue;
       return {
         name: check.name,
