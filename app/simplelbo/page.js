@@ -14,7 +14,7 @@ export default function MainApp() {
                 <p className="mb-6">
                   Walk through the process of building a simple LBO model that incorporates all the primary concepts.
                 </p>
-                <Link href="/simplelbo/1" className="btn btn-primary">Start Lesson</Link>
+                <Link href="/simplelbo/welcome" className="btn btn-primary">Start Lesson</Link>
               </div>
               
               <div className="md:w-1/2 mt-8 md:mt-0">

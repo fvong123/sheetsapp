@@ -4,12 +4,17 @@ import SpreadsheetApp from "../../../components/SpreadsheetMain";
 import { instruction_text } from "../data";
 
 
-const LessonPage = () => {
+const LessonPage = ({params}) => {
   const [instructionText, setInstructionText] = useState(null);
 
   useEffect(() => {
-    setInstructionText(instruction_text.pg5);
-  }, []);
+    const pageKey = `${params.slug}`;
+    if (instruction_text[pageKey]) {
+      setInstructionText(instruction_text[pageKey]);
+    } else {
+      setInstructionText('Instructions not found for this page.');
+    }
+  }, [params.slug]);
 
   return (
     <div className="flex h-screen bg-base-100">
@@ -24,19 +29,20 @@ const LessonPage = () => {
           ) : (
             <p>Loading instruction text...</p>
           )}
-          
         </div>
       </div>
 
       {/* SpreadsheetApp (3/4 width) */}
       <div className="w-3/4 flex bg-gray-900 flex-col">
         <div className="flex-grow overflow-auto">
-          <Suspense>
-          <SpreadsheetApp
-            creator={false}
-            initialData={8}
-            nextPageLink="/simplelbo/6"
-          />
+          <Suspense fallback={<p>Loading spreadsheet...</p>}>
+            {instructionText && (
+              <SpreadsheetApp
+                creator={false}
+                initialData={instructionText.initial_data}
+                nextPageLink={instructionText.next_page}
+              />
+            )}
           </Suspense>
         </div>
       </div>

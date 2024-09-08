@@ -1,5 +1,7 @@
 export const instruction_text = {
-    pg1: { 
+    welcome: { 
+      initial_data: 20,
+      next_page: "/simplelbo/lbo",
         content:(
         <>
           {/* Main Content */}
@@ -50,7 +52,9 @@ export const instruction_text = {
       </>
       ),
     },
-    pg2: {
+    lbo: {
+      initial_data: 18,
+      next_page: "/simplelbo/enterprise_value",
         header: (
             <div>
                 <h2 className="text-xs font-semibold text-base-content/70 uppercase">Key Concepts</h2>
@@ -108,7 +112,9 @@ export const instruction_text = {
         )
         
     },
-    pg3: {
+    enterprise_value: {
+      initial_data: 7,
+      next_page: "/simplelbo/ebitda",
       header: (
           <div>
               <h2 className="text-xs font-semibold text-base-content/70 uppercase">Key Concepts</h2>
@@ -172,7 +178,9 @@ export const instruction_text = {
           </>
       )
       
-  },  pg4: {
+  },  case_study: {
+    initial_data: 19,
+    next_page: "/simplelbo/transaction_assumptions",
     header: (
         <div>
             <h2 className="text-xs font-semibold text-base-content/70 uppercase">Case Study</h2>
@@ -211,7 +219,9 @@ export const instruction_text = {
         </>
     )
     
-}, pg5: {
+}, transaction_assumptions: {
+  initial_data: 8,
+  next_page: "/simplelbo/transaction_assumptions2",
   header: (
       <div>
           <h2 className="text-xs font-semibold text-base-content/70 uppercase">Building the Model</h2>
@@ -288,7 +298,10 @@ export const instruction_text = {
       </>
   )
   
-}, pg6: {
+}, transaction_assumptions2: {
+  initial_data: 11,
+
+  next_page: "/simplelbo/forecast_cashflows1",
   header: (
       <div>
           <h2 className="text-xs font-semibold text-base-content/70 uppercase">Building the Model</h2>
@@ -352,7 +365,9 @@ export const instruction_text = {
       </>
   )
   
-}, pg7: {
+}, forecast_cashflows1: {
+  initial_data: 12,
+  next_page: "/simplelbo/forecast_cashflows2",
   header: (
       <div>
           <h2 className="text-xs font-semibold text-base-content/70 uppercase">Building the Model</h2>
@@ -402,7 +417,9 @@ export const instruction_text = {
       </>
   )
   
-}, pg8: {
+}, forecast_cashflows2: {
+  initial_data: 12,
+  next_page: "/simplelbo/debt_paydown",
   header: (
       <div>
           <h2 className="text-xs font-semibold text-base-content/70 uppercase">Building the Model</h2>
@@ -490,7 +507,9 @@ export const instruction_text = {
       </>
   )
   
-}, pg9: {
+}, debt_paydown: {
+  initial_data: 13,
+  next_page: "/simplelbo/final_sale_price",
   header: (
       <div>
           <h2 className="text-xs font-semibold text-base-content/70 uppercase">Building the Model</h2>
@@ -545,7 +564,9 @@ export const instruction_text = {
       </>
   )
   
-}, pg10: {
+}, final_sale_price: {
+  initial_data: 14,
+  next_page: "/simplelbo/returns",
   header: (
       <div>
           <h2 className="text-xs font-semibold text-base-content/70 uppercase">Building the Model</h2>
@@ -614,7 +635,9 @@ export const instruction_text = {
       </>
   )
   
-}, pg11: {
+}, returns: {
+  initial_data: 15,
+  next_page: "/simplelbo/final_model",
   header: (
       <div>
           <h2 className="text-xs font-semibold text-base-content/70 uppercase">Wrapping Up</h2>
@@ -686,7 +709,9 @@ export const instruction_text = {
       </>
   )
   
-}, pg12: {
+}, final_model: {
+  initial_data: 16,
+  next_page: "/simplelbo/complete",
   header: (
       <div>
           <h2 className="text-xs font-semibold text-base-content/70 uppercase">Wrapping Up</h2>
@@ -731,6 +756,60 @@ export const instruction_text = {
               Equity Value = Enterprise Value - Final Net Debt
       </p>
       </>
+  )
+  
+}, ebitda: {
+  initial_data: 21,
+  next_page: "/simplelbo/case_study",
+  header: (
+      <div>
+          <h2 className="text-xs font-semibold text-base-content/70 uppercase">Key Concepts</h2>
+          <h1 className="text-2xl font-bold mt-1">EBITDA</h1>
+          <p className="text-sm text-base-content/70 mt-1">7 min</p>
+    </div>
+  ), content: (
+    <>
+    <p className="prose">
+      EBITDA (Earnings Before Interest, Taxes, Depreciation and Amortization) is a measure of a 
+      company's financial performance alongside others that you may have come across such as Revenue, EBIT, EBITDAR, 
+      Net Income etc. The difference between these is where the line is drawn in the Income Statement, and 
+      each is used to measure things that are more important to different stakeholders and across
+      companies.
+      <br />
+      <br />
+      In a very simple income statement in the excel, we set out where each of these measures of financial
+      performance sit in the income statement. <br />
+      <b>Revenue</b> is the top line and represents the total amount of money the company has made from its business. <br />
+      <b>COGS</b> is the cost of goods sold and is subtracted from revenue to get to Gross Profit. <br />
+      <b>Gross Profit</b> is then reduced by <b>Operating Expenses</b> to get to <b>EBITDA</b>. <br />
+      <b>EBITDA</b> is then reduced by <b>D&A</b> and <b>Interest Expense</b> to get to <b>EBIT</b>. <br />
+      <b>EBIT</b> is then reduced by <b>Tax</b> to get to <b>Net Income</b>. <br />
+      <br />
+      <b>Why is EBITDA so commonly used?</b> EBITDA is commonly used as it excludes two things that can vary
+      greatly between companies due to management decisions and accounting policies. These are <b>D&A</b> and <b>Interest Expense</b>. As
+      we covered in the previous section, interest cost is a result of a decision around what sort of leverage
+      and the mix and type of debt management prefers. Moreover, when we acquire the company through an LBO, we will most
+      likely have our own preference for mix and type of debt.
+      <br />
+      <br />
+      Finally, tax is also a noisy component as it depends on the Interest and D&A assumptions and also the company's effective tax rate, which
+      can be affected by things such as country of operation, tax incentives, capital/ownership structure and more.
+      <br />
+      <br />
+      Now if you were an investor in public equities, you would be less interested in EBITDA, and more interested in Net Income. This is because
+      you have no control over the capital structure and accounting policies and so Net Income is a better reflection of what you will receive
+      as a public investor.
+      <br />
+    </p>
+    <h3 className="font-semibold">Instructions</h3>
+    <p className="prose">
+      In the <code className="bg-base-300 px-1 rounded">Spreadsheet</code> , place YES next to all answers that
+      describe how investors generate returns in an LBO.
+      <br />
+      <br />
+      Once you have completed the excercise, Click 'Check Answers' and then 'Go To Next' to continue.
+    </p>
+    </>
   )
   
 }
