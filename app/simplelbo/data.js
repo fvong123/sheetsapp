@@ -30,12 +30,12 @@ export const instruction_text = {
             <h3 className="font-semibold">Instructions</h3>
             <p className="prose">
               The spreadsheet on the right is a basic excel clone to help you learn modelling. In C3, lets try to enter a value. Enter 50 in the cell. Then press Enter. <br/><br/>
-              Next try to enter a formula by first entering '=' followed by the formula you want to use. Once you enter '=' you can use the arrow keys to move around and select a cell to use in your formulas.
+              Next try to enter a formula by first entering &apos;=&apos; followed by the formula you want to use. Once you enter &apos;=&apos; you can use the arrow keys to move around and select a cell to use in your formulas.
               In C4, add 50 to C3. You should see the value in C4 update to 100. <br/><br/>
               You can also use the mouse to select cells.<br/><br/>
               Finally you can change the format of cells - Change the background in C5 to dark blue. <br/><br/>
-              Once you have completed those steps, click 'Check Answers'.<br/><br/> 
-              If your answers are correct, the system will let you progress by clicking 'Go To Next'.
+              Once you have completed those steps, click &apos;Check Answers&apos;.<br/><br/> 
+              If your answers are correct, the system will let you progress by clicking &apos;Go To Next&apos;.
 
             </p>
           </div>
@@ -91,12 +91,12 @@ export const instruction_text = {
             <h3 className="font-semibold">Instructions</h3>
             <p className="prose">
               The spreadsheet on the right is a basic excel clone to help you learn modelling. In C3, lets try to enter a value. Enter 50 in the cell. Then press Enter. <br/><br/>
-              Next try to enter a formula by first entering '=' followed by the formula you want to use. Once you enter '=' you can use the arrow keys to move around and select a cell to use in your formulas.
+              Next try to enter a formula by first entering &apos;=&apos; followed by the formula you want to use. Once you enter &apos;=&apos; you can use the arrow keys to move around and select a cell to use in your formulas.
               In C4, add 50 to C3. You should see the value in C4 update to 100. <br/><br/>
               You can also use the mouse to select cells.<br/><br/>
               Finally you can change the format of cells - Change the background in C5 to dark blue. <br/><br/>
-              Once you have completed those steps, click 'Check Answers'.<br/><br/> 
-              If your answers are correct, the system will let you progress by clicking 'Go To Next'.
+              Once you have completed those steps, click &apos;Check Answers&apos;.<br/><br/> 
+              If your answers are correct, the system will let you progress by clicking &apos;Go To Next&apos;.
 
             </p>
           </div>
@@ -157,7 +157,7 @@ export const instruction_text = {
               describe how investors generate returns in an LBO.
               <br />
               <br />
-              Once you have completed the excercise, Click 'Check Answers' and then 'Go To Next' to continue.
+              Once you have completed the excercise, Click &apos;Check Answers&apos; and then &apos;Go To Next&apos; to continue.
             </p>
             </>
         )
@@ -440,7 +440,7 @@ export const instruction_text = {
       </p>
       <h3 className="font-semibold">Instructions</h3>
       <p className="prose">
-      Let's firstly fill in the build assumptions which are the forecast parameters we've been given. Next set out the actuals for the first year.
+      Let&apos;s firstly fill in the build assumptions which are the forecast parameters we&apos;ve been given. Next set out the actuals for the first year.
       </p>
       <h3 className="font-semibold">Formulas</h3>
       <p className="prose">
@@ -511,7 +511,7 @@ export const instruction_text = {
               <br />
               <br />
               Let&apos;s take a look at what we&apos;ve been given from our transaction
-              assumptions. We've also filled in the first year of the forecast. The
+              assumptions. We&apos;ve also filled in the first year of the forecast. The
               first thing we need to do is build out earnings deducting D&A and
               interest until we get to Earnings Before Tax, this allows us to
               find out what the tax cost is each year. This gives us Net Income.
@@ -722,13 +722,13 @@ export const instruction_text = {
               The second is Internal Rate of Return (IRR) which is the return of
               the investment per year. Private equity firms typically target IRRs in the 20%-30% range. that
               means they grow and compound their equity investment at a rate of 20%-30% per year. Working this out
-              is slightly complicated, but we've set up the formula for you to use a trial and error approach to find the IRR.
+              is slightly complicated, but we&apos;ve set up the formula for you to use a trial and error approach to find the IRR.
       </p>
       <h3 className="font-semibold">Instructions</h3>
       <p className="prose">
       Using the available information, calculate the MOM and IRR for the investment. <br /><br />
       For MOM, divide the Final Equity Value by the Initial Equity Investment. Look through your inputs and see how you can work our those inputs. <br /><br />
-      For IRR, we've set up the formula for you to use a trial and error approach to find the IRR. Enter the starting equity, then have a guess at the IRR input
+      For IRR, we&apos;ve set up the formula for you to use a trial and error approach to find the IRR. Enter the starting equity, then have a guess at the IRR input
       to see what you get. Increase and decrease the IRR and see what the final equity value is.
       </p>
       <h3 className="font-semibold">Formulas</h3>
@@ -796,7 +796,7 @@ export const instruction_text = {
     <>
     <p className="prose">
       EBITDA (Earnings Before Interest, Taxes, Depreciation and Amortization) is a measure of a 
-      company's financial performance alongside others that you may have come across such as Revenue, EBIT, EBITDAR, 
+      company&apos;s financial performance alongside others that you may have come across such as Revenue, EBIT, EBITDAR, 
       Net Income etc. The difference between these is where the line is drawn in the Income Statement, and 
       each is used to measure things that are more important to different stakeholders and across
       companies.
@@ -817,7 +817,7 @@ export const instruction_text = {
       likely have our own preference for mix and type of debt.
       <br />
       <br />
-      Finally, tax is also a noisy component as it depends on the Interest and D&A assumptions and also the company's effective tax rate, which
+      Finally, tax is also a noisy component as it depends on the Interest and D&A assumptions and also the company&apos;s effective tax rate, which
       can be affected by things such as country of operation, tax incentives, capital/ownership structure and more.
       <br />
       <br />
@@ -828,7 +828,7 @@ export const instruction_text = {
     </p>
     <h3 className="font-semibold">Instructions</h3>
     <p className="prose">
-      In the <code className="bg-base-300 px-1 rounded">Spreadsheet</code> , we've set up a simple income statement for you to fill in. 
+      In the <code className="bg-base-300 px-1 rounded">Spreadsheet</code> , we&apos;ve set up a simple income statement for you to fill in. 
       <br />
       <br />
       This excercise is more about understanding what elements are INCLUDED and EXCLUDED for each of these financial measures. As you get to each earnings
@@ -838,7 +838,7 @@ export const instruction_text = {
       Maths wise, simply subtract the additional expenses from the prior line item to get to the next.
       <br />
       <br />
-      Once you have completed the excercise, Click 'Check Answers' and then 'Go To Next' to continue.
+      Once you have completed the excercise, Click &apos;Check Answers&apos; and then &apos;Go To Next&apos; to continue.
     </p>
     </>
   )
