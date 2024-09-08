@@ -1,7 +1,7 @@
 export const instruction_text = {
     welcome: { 
       initial_data: 20,
-      next_page: "/simplelbo/lbo",
+      next_page: "/simplelbo/formatting",
         content:(
         <>
           {/* Main Content */}
@@ -50,6 +50,57 @@ export const instruction_text = {
         <p className="text-sm text-base-content/70 mt-1">3 min</p>
       </div>
       </>
+      ),
+    },formatting: { 
+      initial_data: 20,
+      next_page: "/simplelbo/lbo",
+      header: (
+        <>
+        {/* HELLO WORLD Section */}
+        <div>
+        <h2 className="text-xs font-semibold text-base-content/70 uppercase">Before We Start</h2>
+        <h1 className="text-2xl font-bold mt-1">Formatting</h1>
+        <p className="text-sm text-base-content/70 mt-1">3 min</p>
+      </div>
+      </>
+      ),
+        content:(
+        <>
+          {/* Main Content */}
+          <div className="prose">
+            <p>Formatting is one of the most important things to learn in modelling. Not only does it make your model
+              look neat, but it makes it easier to read and understand. When you go to build models professionally, your models
+              will not just be created for you, but for multiple stakeholders such as clients, acquirors, board members, bankers etc.
+              </p> <br/>
+              <p className="prose">
+              While each bank or firm may have its own formatting preferences, set out the formatting legend at the beginning of the model laying
+              out what each type of formatting signifies. This will make your model more understandable to others. Here is an formatting that we will
+              use throughout the lesson.
+              <ul>
+                <li>• For formulas, use black text on a white background</li>
+                <li>• For a hardcode input, use blue text with a yellow background</li>
+                <li>• For headings, use white text on a dark blue background</li>
+                <li>• For links to other sheets, use green text on white background</li>
+                <li>• Where there is a sudden change in formula that is not expected, use a red font</li>
+              </ul>
+            </p> <br/>
+          </div>
+
+          {/* Instructions */}
+          <div>
+            <h3 className="font-semibold">Instructions</h3>
+            <p className="prose">
+              The spreadsheet on the right is a basic excel clone to help you learn modelling. In C3, lets try to enter a value. Enter 50 in the cell. Then press Enter. <br/><br/>
+              Next try to enter a formula by first entering '=' followed by the formula you want to use. Once you enter '=' you can use the arrow keys to move around and select a cell to use in your formulas.
+              In C4, add 50 to C3. You should see the value in C4 update to 100. <br/><br/>
+              You can also use the mouse to select cells.<br/><br/>
+              Finally you can change the format of cells - Change the background in C5 to dark blue. <br/><br/>
+              Once you have completed those steps, click 'Check Answers'.<br/><br/> 
+              If your answers are correct, the system will let you progress by clicking 'Go To Next'.
+
+            </p>
+          </div>
+        </>
       ),
     },
     lbo: {
@@ -233,13 +284,13 @@ export const instruction_text = {
       <p className="prose">
       The first thing we need to figure out is how much we are buying
               the company for. The most common way to do this in LBO modelling
-              is to use a LTM EBITDA multiple.
+              is to use a LTM (Last Twelve Months) EBITDA multiple.
               <br />
               <br />
               Multiples are a widely used method of valuing a company and are typically based off two things.
               <br />
               <br />
-              1. Trading comparables - these are the listed companies that are similar to the company we are valuing, and therefore
+              1. Trading comparables - look at the multiples that listed companies in the same space are trading at, this reflects the multiple for the industry and therefore
               provide a visible, liquid and traded benchmark for how to value the company we are looking at.
               <br />
               <br />
@@ -250,6 +301,9 @@ export const instruction_text = {
               By combining a combination of these, and any idiosyncracies of the current deal, the buyer and seller will arrive at a EBITDA multiple
               to buy and sell the company. While EBITDA is the most frequently used metric, there are other metrics that can be used, such as Revenue, EBIT, EBITDAR,
               ARR, etc.
+              <br />
+              <br />
+              We have a more in depth lesson on multiples.
       </p>
       <h3 className="font-semibold">Instructions</h3>
       <p className="prose">
@@ -299,7 +353,7 @@ export const instruction_text = {
   )
   
 }, transaction_assumptions2: {
-  initial_data: 11,
+  initial_data: 10,
 
   next_page: "/simplelbo/forecast_cashflows1",
   header: (
@@ -366,7 +420,7 @@ export const instruction_text = {
   )
   
 }, forecast_cashflows1: {
-  initial_data: 12,
+  initial_data: 11,
   next_page: "/simplelbo/forecast_cashflows2",
   header: (
       <div>
@@ -457,7 +511,7 @@ export const instruction_text = {
               <br />
               <br />
               Let&apos;s take a look at what we&apos;ve been given from our transaction
-              assumptions. Fill in column 2024A (Actual numbers from 2024). The
+              assumptions. We've also filled in the first year of the forecast. The
               first thing we need to do is build out earnings deducting D&A and
               interest until we get to Earnings Before Tax, this allows us to
               find out what the tax cost is each year. This gives us Net Income.
@@ -473,6 +527,12 @@ export const instruction_text = {
               immensely simplified and in most long form LBO models, there will
               be a separate section on calculating interest and debt
               amortization.
+      </p>
+      <h3 className="font-semibold">Instructions</h3>
+      <p className="prose">
+      In the spreadsheet, use the first year forecast as a reference and fill in the remaining years. If you get stuck,
+      check either the previous year or the formula guide below. The key thing to work out is how much cash we are generating
+      each year, and how that changes the cash balance each year.
       </p>
       <p className="prose">
       EBITDA = Revenue x EBITDA Margin <br />
@@ -660,52 +720,22 @@ export const instruction_text = {
               <br />
               <br />
               The second is Internal Rate of Return (IRR) which is the return of
-              the investment per year. This is slightly complicated to work out
-              as it requires us to backsolve the IRR through trial and error, or
-              through goal-seek in excel. We&apos;ll show you two ways to work it
-              out.
-              <br />
-              <br />
-              The rule of thumb is that for &quot;double your money&quot; scenarios, you
-              take 100%, divide by the # of years, and then estimate the IRR as
-              about 75-80% of that value. For example, if you double your money
-              in 3 years, 100% / 3 = 33%. 75% of 33% is about 25%, which is the
-              approximate IRR in this case.
-              <br />
-              <br />
-              The second method is to take your initial Equity Investment, and
-              set a variable x as IRR, then multiply your initial Equity
-              Investment by that IRR to get a final Equity Value. Keep changing
-              your variable x until you get the exact final Equity Value as your
-              model.
+              the investment per year. Private equity firms typically target IRRs in the 20%-30% range. that
+              means they grow and compound their equity investment at a rate of 20%-30% per year. Working this out
+              is slightly complicated, but we've set up the formula for you to use a trial and error approach to find the IRR.
       </p>
+      <h3 className="font-semibold">Instructions</h3>
       <p className="prose">
-      Exit Price = LTM EBITDA x Exit Multiple
-              <br />
-              Equity Value = Enterprise Value - Final Net Debt
+      Using the available information, calculate the MOM and IRR for the investment. <br /><br />
+      For MOM, divide the Final Equity Value by the Initial Equity Investment. Look through your inputs and see how you can work our those inputs. <br /><br />
+      For IRR, we've set up the formula for you to use a trial and error approach to find the IRR. Enter the starting equity, then have a guess at the IRR input
+      to see what you get. Increase and decrease the IRR and see what the final equity value is.
       </p>
-      <h3 className="font-semibold">Case Study</h3>
+      <h3 className="font-semibold">Formulas</h3>
       <p className="prose">
-        Assume that we are a private equity firm purchasing &quot;Company A&quot; at
-              the end of 2024
-              <br />
-              <br />
-              Purchase multiple is 10x LTM EBITDA
-              <br />
-              The Company has the following: <br />
-              $200mm of Revenue in 2024 and expected to grow at $25mm annually
-              through the forecast period. <br />
-              EBITDA margins are 50% which remain flat. <br />
-              D&A and Capex are both 10% of revenues and flat throughout the
-              forecast period. <br />
-              There is no change in net working capital year to year. <br />
-              The tax rate is 50% <br />
-              The initial leverage is 5x LTM EBITDA <br />
-              The interest rate on debt is 10% p.a. <br />
-              We expect to exit this investment in 3 years at a 10x LTM EBITDA
-              multiple.
-              
-        </p>
+        MoM = Final Equity Value / Initial Equity Investment <br />
+        IRR = Initial Equity Investment x (1 + IRR)^N (where N is the number of years)
+      </p>
       </>
   )
   
@@ -749,11 +779,6 @@ export const instruction_text = {
               <br />
               We&apos;re putting together more advanced modelling courses to stay
               tuned!
-      </p>
-      <p className="prose">
-      Exit Price = LTM EBITDA x Exit Multiple
-              <br />
-              Equity Value = Enterprise Value - Final Net Debt
       </p>
       </>
   )
@@ -803,8 +828,14 @@ export const instruction_text = {
     </p>
     <h3 className="font-semibold">Instructions</h3>
     <p className="prose">
-      In the <code className="bg-base-300 px-1 rounded">Spreadsheet</code> , place YES next to all answers that
-      describe how investors generate returns in an LBO.
+      In the <code className="bg-base-300 px-1 rounded">Spreadsheet</code> , we've set up a simple income statement for you to fill in. 
+      <br />
+      <br />
+      This excercise is more about understanding what elements are INCLUDED and EXCLUDED for each of these financial measures. As you get to each earnings
+      measure, think about WHY you would care about each of these and in what situations.
+      <br />
+      <br />
+      Maths wise, simply subtract the additional expenses from the prior line item to get to the next.
       <br />
       <br />
       Once you have completed the excercise, Click 'Check Answers' and then 'Go To Next' to continue.

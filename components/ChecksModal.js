@@ -31,6 +31,11 @@ export default function ChecksModal({ isOpen, onClose, onSave, existingChecks })
     setChecks([...checks, { name: '', cellReference: '', checkValue: '', hint: '' }]);
   };
 
+  const deleteRow = (index) => {
+    const newChecks = checks.filter((_, i) => i !== index);
+    setChecks(newChecks);
+  };
+
   const handleSave = () => {
     setError('');
     const validatedChecks = checks.map(check => {
@@ -70,6 +75,7 @@ export default function ChecksModal({ isOpen, onClose, onSave, existingChecks })
               <th className="text-left bg-white">Cell Reference</th>
               <th className="text-left bg-white">Value</th>
               <th className="text-left bg-white">Hint</th>
+              <th className="text-left bg-white">Action</th>
             </tr>
           </thead>
           <tbody>
@@ -106,6 +112,14 @@ export default function ChecksModal({ isOpen, onClose, onSave, existingChecks })
                     onChange={(e) => handleInputChange(index, 'hint', e.target.value)}
                     className="border rounded px-2 py-1 w-full"
                   />
+                </td>
+                <td className="bg-white">
+                  <button
+                    onClick={() => deleteRow(index)}
+                    className="btn btn-sm btn-error"
+                  >
+                    Delete
+                  </button>
                 </td>
               </tr>
             ))}

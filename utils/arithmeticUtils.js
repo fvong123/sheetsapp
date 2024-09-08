@@ -1,7 +1,7 @@
 // utils/arithmeticUtils.js
 
 export function evaluateArithmetic(formula, cellData) {
-  console.log("Original formula:", formula); // Debug log
+  console.log("Original formula:", formula);
 
   const cellRefRegex = /[A-Z]+[0-9]+/g;
   let processedFormula = formula.replace(cellRefRegex, (match) => {
@@ -10,38 +10,36 @@ export function evaluateArithmetic(formula, cellData) {
     if (cellValue === undefined) {
       throw new Error(`Cell ${match} not found`);
     }
-    // If the cell value is a formula, evaluate it recursively
     if (typeof cellValue === 'string' && cellValue.startsWith('=')) {
       return evaluateArithmetic(cellValue.slice(1), cellData);
     }
-    // Convert numeric strings to numbers
     return !isNaN(cellValue) ? Number(cellValue) : `"${cellValue}"`;
   });
 
-  console.log("After cell reference replacement:", processedFormula); // Debug log
+  console.log("After cell reference replacement:", processedFormula);
 
-  // Handle standalone percentage
   if (/^\s*\d+(\.\d+)?%\s*$/.test(processedFormula)) {
-    console.log("Handling standalone percentage"); // Debug log
+    console.log("Handling standalone percentage");
     return parseFloat(processedFormula) / 100;
   }
 
-  // Handle percentages in the formula
   processedFormula = processedFormula.replace(/(\d+(\.\d+)?)%/g, (match, p1) => `(${p1}/100)`);
 
-  console.log("After percentage handling:", processedFormula); // Debug log
+  console.log("After percentage handling:", processedFormula);
 
   try {
-    // For simple numeric expressions, use a basic evaluation
-    if (/^[\d\s\+\-\*\/\(\)\.]+$/.test(processedFormula)) {
-      console.log("Using basic evaluation"); // Debug log
-      return eval(processedFormula).toFixed(10);
+    let result;
+    if (/^[\d\s\+\-\*\/\(\)\.\^]+$/.test(processedFormula)) {
+      console.log("Using JavaScript eval for basic arithmetic");
+      // Use JavaScript's eval for basic arithmetic (including exponentiation)
+      result = eval(processedFormula.replace('^', '**'));
+    } else {
+      console.log("Using math.js for complex expressions");
+      const math = require('mathjs');
+      result = math.evaluate(processedFormula);
     }
-
-    console.log("Using Function evaluation"); // Debug log
-    const result = Function(`"use strict"; return (${processedFormula});`)();
-    console.log("Evaluation result:", result); // Debug log
-    return result.toFixed(10);
+    console.log("Evaluation result:", result);
+    return result;
   } catch (error) {
     console.error("Formula evaluation error:", error);
     throw new Error(`Invalid formula: ${error.message}`);
@@ -78,8 +76,8 @@ export function processInput(input) {
 export function formatResult(result) {
   console.log("Formatting result:", result); // Debug log
   if (typeof result === 'number' || !isNaN(result)) {
-    // Format number with 1 decimal place
-    const formattedResult = parseFloat(result).toFixed(1);
+    // Format number with up to 10 decimal places, removing trailing zeros
+    const formattedResult = Number(parseFloat(result).toFixed(10)).toString();
     console.log("Formatted as number:", formattedResult); // Debug log
     return formattedResult;
   }

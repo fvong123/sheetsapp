@@ -10,6 +10,7 @@ const nextConfig = {
       "pbs.twimg.com",
       "images.unsplash.com",
       "logos-world.net",
+      "i.pinimg.com"
     ],
   },
 };
