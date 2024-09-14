@@ -52,7 +52,7 @@ export const instruction_text = {
       </>
       ),
     },formatting: { 
-      initial_data: 20,
+      initial_data: 23,
       next_page: "/simplelbo/lbo",
       header: (
         <>
@@ -90,13 +90,7 @@ export const instruction_text = {
           <div>
             <h3 className="font-semibold">Instructions</h3>
             <p className="prose">
-              The spreadsheet on the right is a basic excel clone to help you learn modelling. In C3, lets try to enter a value. Enter 50 in the cell. Then press Enter. <br/><br/>
-              Next try to enter a formula by first entering &apos;=&apos; followed by the formula you want to use. Once you enter &apos;=&apos; you can use the arrow keys to move around and select a cell to use in your formulas.
-              In C4, add 50 to C3. You should see the value in C4 update to 100. <br/><br/>
-              You can also use the mouse to select cells.<br/><br/>
-              Finally you can change the format of cells - Change the background in C5 to dark blue. <br/><br/>
-              Once you have completed those steps, click &apos;Check Answers&apos;.<br/><br/> 
-              If your answers are correct, the system will let you progress by clicking &apos;Go To Next&apos;.
+              Nothing to do here, but we've put together an example of what this style of formatting should look like.
 
             </p>
           </div>
