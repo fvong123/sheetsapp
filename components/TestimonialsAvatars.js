@@ -63,7 +63,7 @@ const TestimonialsAvatars = ({ priority = false }) => {
         </div>
 
         <div className="text-base text-base-content/80">
-          <span className="font-semibold text-base-content">32</span> future investment bankers
+          <span className="font-semibold text-base-content">32</span> future financial modelling experts
         </div>
       </div>
     </div>

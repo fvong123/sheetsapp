@@ -9,10 +9,10 @@ const Hero = () => {
       <div className="flex flex-col gap-10 lg:gap-14 items-center justify-center text-center lg:text-left lg:items-start">
         
         <h1 className="font-extrabold text-4xl lg:text-6xl tracking-tight md:-mb-4">
-          Break into investment banking
+          The next generation of financial modelling education
         </h1>
         <p className="text-lg opacity-80 leading-relaxed">
-          IBAcademy is the best way to prepare for investment banking interviews. We provide web based lessons and modelling excercises so that you can get up to speed.
+          Kick start your career in financial modelling with our interactive course. Whether you're looking to break into investment banking, private equity, or hedge funds, we've got you covered.
         </p>
         <Link href="/simplelbo" className="btn btn-primary btn-wide">
           Try {config.appName}
