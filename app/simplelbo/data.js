@@ -90,7 +90,7 @@ export const instruction_text = {
           <div>
             <h3 className="font-semibold">Instructions</h3>
             <p className="prose">
-              Nothing to do here, but we've put together an example of what this style of formatting should look like.
+              Nothing to do here, but we&apos;ve put together an example of what this style of formatting should look like.
 
             </p>
           </div>
