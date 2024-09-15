@@ -28,12 +28,12 @@ const Hero = () => {
           <span className="bg-neutral text-neutral-content px-2 md:px-4 ml-1 md:ml-1.5 leading-relaxed whitespace-nowrap">
             {models[currentModelIndex]}
           </span> <br/>
-          models on our next generation platform
+          models on our online platform
         </h1>
         <p className="text-sm lg:text-base opacity-80 leading-relaxed">
           Start your financial modelling career with our interactive, online course. Break into investment banking, private equity, or hedge funds.
         </p>
-        <Link href="/simplelbo" className="btn btn-primary btn-wide">
+        <Link href="/courses" className="btn btn-primary btn-wide">
           Get Started
         </Link>
         <p className="text-xs">No Credit Card Required!</p>
