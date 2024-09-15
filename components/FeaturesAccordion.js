@@ -12,12 +12,12 @@ import Image from "next/image";
 // - alt: The alt text of the image (if type is 'image')
 const features = [
   {
-    title: "Technical skills",
+    title: "Online learning",
     description:
-      "Work through hundreds of hours of real life interview questions with answers and full explanations",
-    type: "video",
-    path: "https://d3m8mk7e1mf7xn.cloudfront.net/app/newsletter.webm",
-    format: "video/webm",
+      "Access to your excercises wherever you are",
+    // type: "video",
+    // path: "https://d3m8mk7e1mf7xn.cloudfront.net/app/newsletter.webm",
+    // format: "video/webm",
     svg: (
       <svg
         xmlns="http://www.w3.org/2000/svg"
@@ -37,10 +37,10 @@ const features = [
   {
     title: "Modelling",
     description:
-      "Use our platform to learn, apply and practice your skills with real life modelling exercises across LBO's, DCF's, merger models and all the permutations",
-    type: "image",
-    path: "https://images.unsplash.com/photo-1571171637578-41bc2dd41cd2?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=3540&q=80",
-    alt: "A computer",
+      "Wide range of models with full explanations and step by step walkthroughs",
+    // type: "image",
+    // path: "https://images.unsplash.com/photo-1571171637578-41bc2dd41cd2?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=3540&q=80",
+    // alt: "A computer",
     svg: (
       <svg
         xmlns="http://www.w3.org/2000/svg"
@@ -59,9 +59,9 @@ const features = [
     ),
   },
   {
-    title: "Deal Intel",
+    title: "Excel template",
     description:
-      "Get relevant deal intel to talk about in your interview",
+      "Final excel templates for you to download and work through in your own time",
     svg: (
       <svg
         xmlns="http://www.w3.org/2000/svg"
@@ -80,9 +80,9 @@ const features = [
     ),
   },
   {
-    title: "Style",
+    title: "AI generated workbooks",
     description:
-      "Components, animations & sections (like this features section), 20+ themes with daisyUI, automatic dark mode",
+      "Get a heap of exposure with AI generated excercises that you can work through in your own time.",
     svg: (
       <svg
         xmlns="http://www.w3.org/2000/svg"

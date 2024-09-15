@@ -5,9 +5,10 @@ import TestimonialsAvatars from "./TestimonialsAvatars";
 import config from "../config";
 import Link from "next/link";
 import { useState, useEffect } from "react";
+import intro from "../app/intro.gif";
 
 const Hero = () => {
-  const models = ['Leveraged Buyout', 'DCF', 'Trading Comps', 'Merger', 'Interest Rate Swap'];
+  const models = ['Leveraged Buyout', 'DCF', 'Trading Comps', 'Merger', '3 Statement', 'Interest Rate Swap'];
   const [currentModelIndex, setCurrentModelIndex] = useState(0);
 
   useEffect(() => {
@@ -41,7 +42,7 @@ const Hero = () => {
       </div>
       <div className="lg:w-full">
         <Image
-          src="https://images.unsplash.com/photo-1571171637578-41bc2dd41cd2?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=3540&q=80"
+          src={intro}
           alt="Product Demo"
           className="w-full"
           priority={true}
