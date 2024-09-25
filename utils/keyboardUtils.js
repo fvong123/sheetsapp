@@ -12,6 +12,7 @@ export const handleNonEditModeKeyDown = (
     setFormulaValue,
     setFormulaReferences,
     setFocusFormulaBar,
+    setCurrentInput,  // Add this parameter
   }
 ) => {
   const [row, col] = selectedCell.split("-").map(Number);
@@ -52,6 +53,7 @@ export const handleNonEditModeKeyDown = (
         updateCellData(cellId, "", false);
       });
       setFormulaValue("");
+      setCurrentInput("");  // Clear the current input immediately
       setFormulaReferences([]);
       break;
     default:

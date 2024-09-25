@@ -54,6 +54,7 @@ export default function SpreadsheetApp({ creator, initialData, nextPageLink }) {
   const [selectionStart, setSelectionStart] = useState(null);
   const [name, setName] = useState("");  // New state for spreadsheet name
   const [columnWidths, setColumnWidths] = useState(Array(13).fill(DEFAULT_COLUMN_WIDTH));  // New state for column widths
+  const [currentInput, setCurrentInput] = useState("");
 
   // states for save and load modals
   const [isSaveModalOpen, setIsSaveModalOpen] = useState(false);
@@ -301,6 +302,7 @@ export default function SpreadsheetApp({ creator, initialData, nextPageLink }) {
     (value) => {
       const stringValue = value?.toString() ?? "";
       setFormulaValue(stringValue);
+      setCurrentInput(stringValue);  // Update currentInput
       if (stringValue.startsWith('=')) {
         updateFormulaReferences(stringValue);
       } else {
@@ -357,6 +359,7 @@ export default function SpreadsheetApp({ creator, initialData, nextPageLink }) {
         
         const newValue = cellData[firstSelectedCell]?.value ?? "";
         setFormulaValue(newValue?.toString() ?? "");
+        setCurrentInput(newValue?.toString() ?? "");  // Reset currentInput
         setFormulaReferences([]);
         console.log("Selected cell value:", newValue);
       }
@@ -499,17 +502,28 @@ export default function SpreadsheetApp({ creator, initialData, nextPageLink }) {
       console.log('keydown', e.key)
 
       if (!isEditMode) {
-        handleNonEditModeKeyDown(e, {
-          selectedCell,
-          selectedCells,
-          cellData,
-          handleCellSelect,
-          enterEditMode,
-          updateCellData,
-          setFormulaValue,
-          setFormulaReferences,
-          setFocusFormulaBar,
-        });
+        if (e.key === 'Delete') {
+          e.preventDefault();
+          selectedCells.forEach(cellId => {
+            updateCellData(cellId, "", false);
+          });
+          setFormulaValue("");
+          setCurrentInput("");  // Clear the current input immediately
+          setFormulaReferences([]);
+        } else {
+          handleNonEditModeKeyDown(e, {
+            selectedCell,
+            selectedCells,
+            cellData,
+            handleCellSelect,
+            enterEditMode,
+            updateCellData,
+            setFormulaValue,
+            setFormulaReferences,
+            setFocusFormulaBar,
+            setCurrentInput,  // Pass this function to handleNonEditModeKeyDown
+          });
+        }
       } else {
         handleEditModeKeyDown(e, {
           formulaValue,
@@ -519,6 +533,7 @@ export default function SpreadsheetApp({ creator, initialData, nextPageLink }) {
           handleFormulaCancel,
           setFormulaValue,
           setCurrentFormulaCell,
+          setCurrentInput
         });
       }
     },
@@ -590,6 +605,8 @@ export default function SpreadsheetApp({ creator, initialData, nextPageLink }) {
         onSelectionEnd={handleSelectionEnd}
         onColumnWidthsChange={handleColumnWidthsChange}
         columnWidths={columnWidths}
+        currentInput={currentInput}
+        selectedCell={selectedCell}
       />
     ),
     [
@@ -608,6 +625,8 @@ export default function SpreadsheetApp({ creator, initialData, nextPageLink }) {
       handleSelectionEnd,
       handleColumnWidthsChange,
       columnWidths,
+      currentInput,
+    selectedCell,
     ],
   );
 

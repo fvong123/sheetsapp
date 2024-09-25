@@ -28,6 +28,8 @@ const Spreadsheet = memo(
     onSelectionEnd,
     onColumnWidthsChange,
     columnWidths, // Add this prop
+    currentInput,
+    selectedCell,
   }) => {
     const columnWidthsRef = useRef(columnWidths);
     const containerRef = useRef(null);
@@ -145,6 +147,8 @@ const Spreadsheet = memo(
                   onMouseEnter={handleMouseEnter}
                   onMouseUp={handleMouseUp}
                   width={columnWidthsRef.current[colIndex]}
+                  currentInput={currentInput}
+                  selectedCell={selectedCell}
                 />
               );
             })}
@@ -167,6 +171,8 @@ const Spreadsheet = memo(
         handleMouseEnter,
         handleMouseUp,
         columnWidthsRef.current,
+        currentInput,
+        selectedCell,
       ]
     );
 

@@ -17,6 +17,8 @@ const Cell = memo(
     onMouseEnter,
     onMouseUp,
     width,
+    currentInput,  // Add this new prop
+    selectedCell,  // Add this new prop
   }) => {
     const [isEditing, setIsEditing] = useState(false);
     const [editValue, setEditValue] = useState(data?.value || "");
@@ -121,11 +123,11 @@ const Cell = memo(
         onMouseUp={onMouseUp}
         style={cellStyle}
       >
-        {isEditing ? (
+        {isEditing || (isSelected && selectedCell === id) ? (
           <input
             ref={inputRef}
             type="text"
-            value={editValue}
+            value={isSelected && selectedCell === id ? currentInput : editValue}
             onChange={handleChange}
             onBlur={handleBlur}
             onKeyDown={handleKeyDown}
